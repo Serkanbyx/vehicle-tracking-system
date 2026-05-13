@@ -7,6 +7,7 @@ import { HealthController } from "./common/controllers/health.controller";
 import { appConfig } from "./config/app.config";
 import { databaseModule } from "./config/database.config";
 import { validate } from "./config/env.validation";
+import { UsersModule } from "./modules/users/users.module";
 
 @Module({
   imports: [
@@ -51,6 +52,8 @@ import { validate } from "./config/env.validation";
     ]),
 
     databaseModule,
+
+    UsersModule,
   ],
   controllers: [HealthController],
   providers: [{ provide: APP_GUARD, useClass: ThrottlerGuard }],

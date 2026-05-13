@@ -1,1 +1,5 @@
-// UserRole enum — implemented in STEP 5
+export enum UserRole {
+  ADMIN = "admin",
+  MANAGER = "manager",
+  VIEWER = "viewer",
+}
