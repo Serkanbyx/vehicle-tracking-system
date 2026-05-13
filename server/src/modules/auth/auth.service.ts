@@ -18,6 +18,11 @@ interface TokenUser {
   email: string;
 }
 
+export interface TokenPair {
+  accessToken: string;
+  refreshToken: string;
+}
+
 @Injectable()
 export class AuthService {
   private readonly jwtRefresh: JwtService;
@@ -93,6 +98,77 @@ export class AuthService {
       sameSite: "lax",
       path: "/api/auth",
       maxAge: 0,
+    });
+  }
+
+  /* ───── Refresh rotation with reuse detection ───── */
+
+  async verifyAndRotateRefresh(rawToken: string): Promise<TokenPair> {
+    let payload: { sub: string; jti: string };
+
+    try {
+      payload = await this.jwtRefresh.verifyAsync(rawToken);
+    } catch {
+      throw new UnauthorizedException();
+    }
+
+    const user = await this.usersRepo.findOne({
+      where: { id: payload.sub },
+      select: ["id", "role", "email", "isActive", "refreshTokenHash"],
+    });
+
+    if (!user || !user.isActive || !user.refreshTokenHash) {
+      throw new UnauthorizedException();
+    }
+
+    const match = await bcrypt.compare(payload.jti, user.refreshTokenHash);
+
+    if (!match) {
+      await this.usersRepo.update(user.id, { refreshTokenHash: null });
+      throw new UnauthorizedException("Session revoked");
+    }
+
+    const { token: newRefresh, jti: newJti } = this.signRefreshToken(user);
+    await this.usersRepo.update(user.id, {
+      refreshTokenHash: await this.hashJti(newJti),
+    });
+
+    const accessToken = this.signAccessToken(user);
+    return { accessToken, refreshToken: newRefresh };
+  }
+
+  /* ───── Logout ───── */
+
+  async logout(userId: string, res: Response): Promise<void> {
+    await this.usersRepo.update(userId, { refreshTokenHash: null });
+    this.clearRefreshCookie(res);
+  }
+
+  /* ───── Change password ───── */
+
+  async changePassword(
+    userId: string,
+    currentPassword: string,
+    newPassword: string,
+  ): Promise<void> {
+    const user = await this.usersRepo.findOne({
+      where: { id: userId },
+      select: ["id", "password"],
+    });
+
+    if (!user) {
+      throw new UnauthorizedException();
+    }
+
+    const isMatch = await this.comparePassword(currentPassword, user.password);
+    if (!isMatch) {
+      throw new UnauthorizedException("Current password is incorrect");
+    }
+
+    const hashedPassword = await this.hashPassword(newPassword);
+    await this.usersRepo.update(userId, {
+      password: hashedPassword,
+      refreshTokenHash: null,
     });
   }
 
