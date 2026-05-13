@@ -4,8 +4,8 @@ import { DataSource } from "typeorm";
 export const dataSource = new DataSource({
   type: "postgres",
   url: process.env.DATABASE_URL,
-  entities: ["dist/**/*.entity.js"],
-  migrations: ["dist/migrations/*.js"],
+  entities: ["src/**/*.entity.ts"],
+  migrations: ["src/migrations/*.ts"],
   migrationsRun: false,
   synchronize: false,
   logging:

@@ -8,7 +8,9 @@ export const databaseModule = TypeOrmModule.forRootAsync({
     type: "postgres" as const,
     url: cfg.get<string>("DATABASE_URL"),
     autoLoadEntities: true,
+    migrationsRun: false,
     synchronize: false,
+    migrations: ["dist/migrations/*.js"],
     logging:
       cfg.get<string>("NODE_ENV") !== "production"
         ? (["error", "warn"] as const)
