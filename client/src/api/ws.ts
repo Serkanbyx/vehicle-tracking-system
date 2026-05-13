@@ -23,6 +23,7 @@ class DashboardSocket {
 
     this.ws.onopen = () => {
       this.reconnectAttempt = 0;
+      this.emit("connect", {});
       for (const id of this.subscriptions) {
         this.send({ type: "subscribe", vehicleId: id });
       }
@@ -40,7 +41,10 @@ class DashboardSocket {
     this.ws.onclose = () => {
       this.ws = null;
       if (!this.explicitClose) {
+        this.emit("reconnect", {});
         this.scheduleReconnect();
+      } else {
+        this.emit("disconnect", {});
       }
     };
 
