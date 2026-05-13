@@ -5,6 +5,7 @@ import { ThrottlerGuard, ThrottlerModule } from "@nestjs/throttler";
 import { LoggerModule } from "nestjs-pino";
 import { HealthController } from "./common/controllers/health.controller";
 import { appConfig } from "./config/app.config";
+import { databaseModule } from "./config/database.config";
 import { validate } from "./config/env.validation";
 
 @Module({
@@ -48,6 +49,8 @@ import { validate } from "./config/env.validation";
       { name: "export", ttl: 900_000, limit: 20 },
       { name: "admin", ttl: 300_000, limit: 60 },
     ]),
+
+    databaseModule,
   ],
   controllers: [HealthController],
   providers: [{ provide: APP_GUARD, useClass: ThrottlerGuard }],
