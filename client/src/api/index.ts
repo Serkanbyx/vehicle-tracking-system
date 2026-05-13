@@ -9,3 +9,4 @@ export * from "./trips";
 export * from "./uploads";
 export * from "./admin";
 export * from "./types";
+export { dashboardSocket } from "./ws";
