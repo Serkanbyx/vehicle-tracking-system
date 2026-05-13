@@ -11,6 +11,7 @@ import { jwtConfig } from "./config/jwt.config";
 import { databaseModule } from "./config/database.config";
 import { validate } from "./config/env.validation";
 import { AuthModule } from "./modules/auth/auth.module";
+import { GeofencesModule } from "./modules/geofences/geofences.module";
 import { UsersModule } from "./modules/users/users.module";
 import { LocationsModule } from "./modules/locations/locations.module";
 import { RealtimeModule } from "./modules/realtime/realtime.module";
@@ -65,6 +66,7 @@ import { VehiclesModule } from "./modules/vehicles/vehicles.module";
     AuthModule,
     VehiclesModule,
     LocationsModule,
+    GeofencesModule,
     UploadsModule,
     RealtimeModule,
   ],
