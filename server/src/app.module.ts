@@ -5,8 +5,10 @@ import { ThrottlerGuard, ThrottlerModule } from "@nestjs/throttler";
 import { LoggerModule } from "nestjs-pino";
 import { HealthController } from "./common/controllers/health.controller";
 import { appConfig } from "./config/app.config";
+import { jwtConfig } from "./config/jwt.config";
 import { databaseModule } from "./config/database.config";
 import { validate } from "./config/env.validation";
+import { AuthModule } from "./modules/auth/auth.module";
 import { UsersModule } from "./modules/users/users.module";
 
 @Module({
@@ -16,7 +18,7 @@ import { UsersModule } from "./modules/users/users.module";
       validate,
       envFilePath: [".env.local", ".env"],
       cache: true,
-      load: [appConfig],
+      load: [appConfig, jwtConfig],
     }),
 
     LoggerModule.forRoot({
@@ -54,6 +56,7 @@ import { UsersModule } from "./modules/users/users.module";
     databaseModule,
 
     UsersModule,
+    AuthModule,
   ],
   controllers: [HealthController],
   providers: [{ provide: APP_GUARD, useClass: ThrottlerGuard }],
