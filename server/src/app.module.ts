@@ -10,6 +10,7 @@ import { appConfig } from "./config/app.config";
 import { jwtConfig } from "./config/jwt.config";
 import { databaseModule } from "./config/database.config";
 import { validate } from "./config/env.validation";
+import { AdminModule } from "./modules/admin/admin.module";
 import { AlertsModule } from "./modules/alerts/alerts.module";
 import { AuthModule } from "./modules/auth/auth.module";
 import { GeofencesModule } from "./modules/geofences/geofences.module";
@@ -71,6 +72,7 @@ import { VehiclesModule } from "./modules/vehicles/vehicles.module";
     GeofencesModule,
     AlertsModule,
     TripsModule,
+    AdminModule,
     UploadsModule,
     RealtimeModule,
   ],
