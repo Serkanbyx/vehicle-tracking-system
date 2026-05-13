@@ -1,10 +1,17 @@
-import { Injectable } from "@nestjs/common";
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
+import { DataSource, Repository } from "typeorm";
+import { UserRole } from "../../common/enums/user-role.enum.js";
+import { escapeRegex } from "../../common/utils/escape-regex.js";
 import { Alert } from "../alerts/alert.entity.js";
 import { Trip } from "../trips/trip.entity.js";
 import { User } from "../users/user.entity.js";
 import { Vehicle } from "../vehicles/vehicle.entity.js";
+import type { AdminUserQueryDto } from "./dto/admin-user-query.dto.js";
 
 @Injectable()
 export class AdminService {
@@ -17,6 +24,7 @@ export class AdminService {
     private readonly alertsRepo: Repository<Alert>,
     @InjectRepository(Trip)
     private readonly tripsRepo: Repository<Trip>,
+    private readonly dataSource: DataSource,
   ) {}
 
   async getStats() {
@@ -29,6 +37,166 @@ export class AdminService {
     ]);
 
     return { users, vehicles, alerts, trips, topViolators };
+  }
+
+  async findUsers(query: AdminUserQueryDto) {
+    const qb = this.usersRepo.createQueryBuilder("u");
+
+    if (query.q) {
+      const escaped = escapeRegex(query.q);
+      qb.andWhere("(u.name ILIKE :q OR u.email ILIKE :q)", {
+        q: `%${escaped}%`,
+      });
+    }
+
+    if (query.role) {
+      qb.andWhere("u.role = :role", { role: query.role });
+    }
+
+    if (query.isActive !== undefined) {
+      qb.andWhere("u.isActive = :isActive", { isActive: query.isActive });
+    }
+
+    qb.orderBy("u.createdAt", "DESC");
+
+    const page = query.page ?? 1;
+    const limit = query.limit ?? 20;
+
+    qb.skip((page - 1) * limit).take(limit);
+
+    const [items, total] = await qb.getManyAndCount();
+
+    return {
+      items,
+      page,
+      totalPages: Math.ceil(total / limit),
+      total,
+    };
+  }
+
+  async findUserById(id: string): Promise<User> {
+    const user = await this.usersRepo.findOne({ where: { id } });
+
+    if (!user) {
+      throw new NotFoundException("User not found");
+    }
+
+    return user;
+  }
+
+  async setUserRole(
+    targetId: string,
+    newRole: UserRole,
+    currentUserId: string,
+  ): Promise<User> {
+    this.assertNotSelf(targetId, currentUserId);
+
+    return this.dataSource.transaction(async (trx) => {
+      const target = await trx.findOne(User, { where: { id: targetId } });
+
+      if (!target) {
+        throw new NotFoundException("User not found");
+      }
+
+      if (target.role === UserRole.ADMIN && newRole !== UserRole.ADMIN) {
+        const adminCount = await trx.count(User, {
+          where: { role: UserRole.ADMIN, isActive: true },
+        });
+
+        if (adminCount <= 1) {
+          throw new BadRequestException(
+            "System must retain at least one admin",
+          );
+        }
+      }
+
+      target.role = newRole;
+
+      return trx.save(User, target);
+    });
+  }
+
+  async setUserActive(
+    targetId: string,
+    isActive: boolean,
+    currentUserId: string,
+  ): Promise<User> {
+    this.assertNotSelf(targetId, currentUserId);
+
+    const user = await this.findUserById(targetId);
+
+    if (!isActive && user.role === UserRole.ADMIN) {
+      const adminCount = await this.usersRepo.count({
+        where: { role: UserRole.ADMIN, isActive: true },
+      });
+
+      if (adminCount <= 1) {
+        throw new BadRequestException(
+          "System must retain at least one admin",
+        );
+      }
+    }
+
+    user.isActive = isActive;
+
+    return this.usersRepo.save(user);
+  }
+
+  async removeUser(targetId: string, currentUserId: string): Promise<void> {
+    this.assertNotSelf(targetId, currentUserId);
+
+    await this.dataSource.transaction(async (trx) => {
+      const target = await trx.findOne(User, { where: { id: targetId } });
+
+      if (!target) {
+        throw new NotFoundException("User not found");
+      }
+
+      if (target.role === UserRole.ADMIN) {
+        const adminCount = await trx.count(User, {
+          where: { role: UserRole.ADMIN, isActive: true },
+        });
+
+        if (adminCount <= 1) {
+          throw new BadRequestException(
+            "System must retain at least one admin",
+          );
+        }
+      }
+
+      await trx.remove(User, target);
+    });
+  }
+
+  async fleetOverview() {
+    const rows = await this.vehiclesRepo.query(`
+      SELECT
+        v.id,
+        v.plate,
+        v."vehicleType",
+        v."isActive",
+        v."lastLocation",
+        v."updatedAt",
+        COALESCE(ac."alertCount", 0)::int AS "alertCount24h"
+      FROM vehicle v
+      LEFT JOIN LATERAL (
+        SELECT COUNT(*)::int AS "alertCount"
+        FROM alert a
+        WHERE a."vehicleId" = v.id
+          AND a."createdAt" >= NOW() - INTERVAL '24 hours'
+      ) ac ON true
+      ORDER BY v."updatedAt" DESC
+    `);
+
+    return rows;
+  }
+
+  private assertNotSelf(targetId: string, currentUserId: string): void {
+    if (targetId === currentUserId) {
+      throw new BadRequestException(
+        "Cannot perform this operation on your own account",
+      );
+    }
   }
 
   private async getUserStats() {
