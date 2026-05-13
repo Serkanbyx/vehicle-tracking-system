@@ -5,6 +5,7 @@ import type { NestExpressApplication } from "@nestjs/platform-express";
 import compression from "compression";
 import cookieParser from "cookie-parser";
 import helmet from "helmet";
+import { Logger } from "nestjs-pino";
 import { AppModule } from "./app.module";
 import { AllExceptionsFilter } from "./common/filters/all-exceptions.filter";
 import { TransformInterceptor } from "./common/interceptors/transform.interceptor";
@@ -13,6 +14,8 @@ async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     bufferLogs: true,
   });
+
+  app.useLogger(app.get(Logger));
 
   const config = app.get(ConfigService);
   const port = config.get<number>("app.port", 5000);

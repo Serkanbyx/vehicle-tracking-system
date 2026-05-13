@@ -2,6 +2,8 @@ import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { APP_GUARD } from "@nestjs/core";
 import { ThrottlerGuard, ThrottlerModule } from "@nestjs/throttler";
+import { LoggerModule } from "nestjs-pino";
+import { HealthController } from "./common/controllers/health.controller";
 import { appConfig } from "./config/app.config";
 import { validate } from "./config/env.validation";
 
@@ -15,6 +17,30 @@ import { validate } from "./config/env.validation";
       load: [appConfig],
     }),
 
+    LoggerModule.forRoot({
+      pinoHttp: {
+        level: process.env.LOG_LEVEL || "info",
+        transport:
+          process.env.NODE_ENV === "production"
+            ? undefined
+            : { target: "pino-pretty", options: { singleLine: true } },
+        redact: {
+          paths: [
+            "req.headers.authorization",
+            "req.headers.cookie",
+            "req.body.password",
+            "req.body.currentPassword",
+            "req.body.newPassword",
+            'res.headers["set-cookie"]',
+          ],
+          remove: true,
+        },
+        autoLogging: {
+          ignore: (req) => (req as { url?: string }).url === "/api/health",
+        },
+      },
+    }),
+
     ThrottlerModule.forRoot([
       { name: "default", ttl: 60_000, limit: 100 },
       { name: "auth", ttl: 900_000, limit: 10 },
@@ -23,7 +49,7 @@ import { validate } from "./config/env.validation";
       { name: "admin", ttl: 300_000, limit: 60 },
     ]),
   ],
-  controllers: [],
+  controllers: [HealthController],
   providers: [{ provide: APP_GUARD, useClass: ThrottlerGuard }],
 })
 export class AppModule {}
