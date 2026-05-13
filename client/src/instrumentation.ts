@@ -1,9 +1,9 @@
 import * as Sentry from "@sentry/react";
 import { env } from "./env";
 
-if (env.sentryDsn) {
+if (env.SENTRY_DSN) {
   Sentry.init({
-    dsn: env.sentryDsn,
+    dsn: env.SENTRY_DSN,
     integrations: [
       Sentry.browserTracingIntegration(),
       Sentry.replayIntegration(),

@@ -1,8 +1,9 @@
-export const env = {
-  apiUrl: import.meta.env.VITE_API_URL as string || "http://localhost:5000/api",
-  wsUrl: import.meta.env.VITE_WS_URL as string || "ws://localhost:5000",
-  mapStyleUrl:
-    (import.meta.env.VITE_MAP_STYLE_URL as string) ||
-    "https://tiles.openfreemap.org/styles/liberty",
-  sentryDsn: import.meta.env.VITE_SENTRY_DSN as string || "",
-} as const;
+const get = (k: string) => import.meta.env[k] as string | undefined;
+
+export const env = Object.freeze({
+  API_URL: get("VITE_API_URL") ?? "http://localhost:5000/api",
+  WS_URL: get("VITE_WS_URL") ?? "ws://localhost:5000",
+  MAP_STYLE_URL:
+    get("VITE_MAP_STYLE_URL") ?? "https://tiles.openfreemap.org/styles/liberty",
+  SENTRY_DSN: get("VITE_SENTRY_DSN") ?? "",
+});
