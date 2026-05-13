@@ -1,9 +1,26 @@
 {
   "$schema": "https://biomejs.dev/schemas/1.9.0/schema.json",
   "extends": ["../biome.json"],
+  "linter": {
+    "rules": {
+      "a11y": {
+        "recommended": true
+      },
+      "style": {
+        "useImportType": "error"
+      },
+      "correctness": {
+        "useExhaustiveDependencies": "error"
+      },
+      "suspicious": {
+        "noArrayIndexKey": "error"
+      }
+    }
+  },
   "javascript": {
     "parser": {
-      "unsafeParameterDecoratorsEnabled": false
+      "unsafeParameterDecoratorsEnabled": false,
+      "jsxEverywhere": true
     },
     "jsxRuntime": "reactClassic"
   }
