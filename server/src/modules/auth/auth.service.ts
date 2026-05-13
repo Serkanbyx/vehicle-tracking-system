@@ -1,4 +1,8 @@
-import { Injectable, UnauthorizedException } from "@nestjs/common";
+import {
+  ConflictException,
+  Injectable,
+  UnauthorizedException,
+} from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
 import { InjectRepository } from "@nestjs/typeorm";
@@ -6,8 +10,10 @@ import * as bcrypt from "bcrypt";
 import { randomUUID } from "node:crypto";
 import type { Response } from "express";
 import { Repository } from "typeorm";
-import type { UserRole } from "../../common/enums/user-role.enum.js";
+import { UserRole } from "../../common/enums/user-role.enum.js";
 import { User } from "../users/user.entity.js";
+import type { RegisterDto } from "./dto/register.dto.js";
+import type { UpdateMeDto } from "./dto/update-me.dto.js";
 
 const PASSWORD_ROUNDS = 12;
 const JTI_ROUNDS = 10;
@@ -21,6 +27,20 @@ interface TokenUser {
 export interface TokenPair {
   accessToken: string;
   refreshToken: string;
+}
+
+export interface SanitizedUser {
+  id: string;
+  name: string;
+  email: string;
+  role: UserRole;
+  avatarUrl: string | null;
+  preferences: Record<string, unknown>;
+}
+
+export interface AuthResponse {
+  accessToken: string;
+  user: SanitizedUser;
 }
 
 @Injectable()
@@ -194,5 +214,123 @@ export class AuthService {
 
     const { password: _, ...result } = user;
     return result;
+  }
+
+  /* ───── Registration ───── */
+
+  async register(
+    dto: RegisterDto,
+    res: Response,
+  ): Promise<AuthResponse> {
+    const existingUser = await this.usersRepo.findOne({
+      where: { email: dto.email.toLowerCase() },
+    });
+
+    if (existingUser) {
+      throw new ConflictException("Email already in use");
+    }
+
+    const hashedPassword = await this.hashPassword(dto.password);
+
+    const user = this.usersRepo.create({
+      name: dto.name,
+      email: dto.email.toLowerCase(),
+      password: hashedPassword,
+      role: UserRole.VIEWER,
+    });
+
+    const savedUser = await this.usersRepo.save(user);
+
+    const accessToken = this.signAccessToken(savedUser);
+    const { token: refreshToken, jti } = this.signRefreshToken(savedUser);
+
+    await this.usersRepo.update(savedUser.id, {
+      refreshTokenHash: await this.hashJti(jti),
+    });
+
+    this.setRefreshCookie(res, refreshToken);
+
+    return {
+      accessToken,
+      user: this.sanitizeUser(savedUser),
+    };
+  }
+
+  /* ───── Login ───── */
+
+  async login(
+    user: Omit<User, "password">,
+    res: Response,
+  ): Promise<AuthResponse> {
+    const accessToken = this.signAccessToken(user as TokenUser);
+    const { token: refreshToken, jti } = this.signRefreshToken(user);
+
+    await this.usersRepo.update(user.id, {
+      refreshTokenHash: await this.hashJti(jti),
+      lastLoginAt: new Date(),
+    });
+
+    this.setRefreshCookie(res, refreshToken);
+
+    return {
+      accessToken,
+      user: this.sanitizeUser(user),
+    };
+  }
+
+  /* ───── Profile ───── */
+
+  async getMe(userId: string): Promise<SanitizedUser> {
+    const user = await this.usersRepo.findOne({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      throw new UnauthorizedException();
+    }
+
+    return this.sanitizeUser(user);
+  }
+
+  async updateMe(
+    userId: string,
+    dto: UpdateMeDto,
+  ): Promise<SanitizedUser> {
+    await this.usersRepo.update(userId, dto);
+
+    return this.getMe(userId);
+  }
+
+  /* ───── Account deletion ───── */
+
+  async deleteAccount(userId: string, password: string): Promise<void> {
+    const user = await this.usersRepo.findOne({
+      where: { id: userId },
+      select: ["id", "password"],
+    });
+
+    if (!user) {
+      throw new UnauthorizedException();
+    }
+
+    const isMatch = await this.comparePassword(password, user.password);
+    if (!isMatch) {
+      throw new UnauthorizedException("Invalid password");
+    }
+
+    await this.usersRepo.remove(user);
+  }
+
+  /* ───── Helpers ───── */
+
+  private sanitizeUser(user: Partial<User>): SanitizedUser {
+    return {
+      id: user.id!,
+      name: user.name!,
+      email: user.email!,
+      role: user.role!,
+      avatarUrl: user.avatarUrl ?? null,
+      preferences: (user.preferences as Record<string, unknown>) ?? {},
+    };
   }
 }
