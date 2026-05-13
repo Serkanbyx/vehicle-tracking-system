@@ -1,17 +1,20 @@
-import { Module } from "@nestjs/common";
+import { Module, forwardRef } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { JwtModule } from "@nestjs/jwt";
 import { ScheduleModule } from "@nestjs/schedule";
 import { LocationsModule } from "../locations/locations.module.js";
+import { VehiclesModule } from "../vehicles/vehicles.module.js";
 import { DashboardGateway } from "./dashboard.gateway.js";
 import { HeartbeatService } from "./heartbeat.service.js";
+import { LocationIngestionService } from "./location-ingestion.service.js";
 import { RoomManager } from "./room-manager.service.js";
 import { VehiclesGateway } from "./vehicles.gateway.js";
 
 @Module({
   imports: [
     ScheduleModule.forRoot(),
-    LocationsModule,
+    forwardRef(() => LocationsModule),
+    VehiclesModule,
 
     JwtModule.registerAsync({
       inject: [ConfigService],
@@ -20,7 +23,13 @@ import { VehiclesGateway } from "./vehicles.gateway.js";
       }),
     }),
   ],
-  providers: [RoomManager, HeartbeatService, VehiclesGateway, DashboardGateway],
-  exports: [RoomManager, HeartbeatService],
+  providers: [
+    RoomManager,
+    HeartbeatService,
+    LocationIngestionService,
+    VehiclesGateway,
+    DashboardGateway,
+  ],
+  exports: [RoomManager, HeartbeatService, LocationIngestionService],
 })
 export class RealtimeModule {}

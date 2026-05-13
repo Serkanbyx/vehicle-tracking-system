@@ -13,9 +13,9 @@ import type { IncomingMessage } from "node:http";
 import { Server } from "ws";
 import WebSocket from "ws";
 import { timingSafeEqual } from "../../common/utils/timing-safe-equal.js";
-import { LocationsService } from "../locations/locations.service.js";
 import { LocationUpdatePayloadDto } from "./dto/location-update.dto.js";
 import { HeartbeatService } from "./heartbeat.service.js";
+import { LocationIngestionService } from "./location-ingestion.service.js";
 import { RoomManager } from "./room-manager.service.js";
 
 const MAX_EVENTS_PER_SECOND = 5;
@@ -43,7 +43,7 @@ export class VehiclesGateway
     private readonly configService: ConfigService,
     private readonly roomManager: RoomManager,
     private readonly heartbeatService: HeartbeatService,
-    private readonly locationsService: LocationsService,
+    private readonly ingestionService: LocationIngestionService,
   ) {
     this.simulatorKey =
       configService.get<string>("SIMULATOR_API_KEY") ?? "";
@@ -94,7 +94,8 @@ export class VehiclesGateway
       return;
     }
 
-    await this.locationsService.persist(dto.vehicleId, {
+    await this.ingestionService.handle({
+      vehicleId: dto.vehicleId,
       lng: dto.lng,
       lat: dto.lat,
       speed: dto.speed,
@@ -103,18 +104,6 @@ export class VehiclesGateway
       accuracy: dto.accuracy,
       source: "simulator",
       timestamp: dto.timestamp ? new Date(dto.timestamp) : undefined,
-    });
-
-    this.roomManager.broadcast(`vehicle:${dto.vehicleId}`, {
-      event: "location_update",
-      data: {
-        vehicleId: dto.vehicleId,
-        lng: dto.lng,
-        lat: dto.lat,
-        speed: dto.speed,
-        heading: dto.heading,
-        timestamp: dto.timestamp ?? new Date().toISOString(),
-      },
     });
   }
 

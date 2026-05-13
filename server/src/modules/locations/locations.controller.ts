@@ -18,11 +18,15 @@ import {
   LocationIngestDto,
   StatsQueryDto,
 } from "./dto/index.js";
+import { LocationIngestionService } from "../realtime/location-ingestion.service.js";
 import { LocationsService } from "./locations.service.js";
 
 @Controller("vehicles/:vehicleId")
 export class LocationsController {
-  constructor(private readonly locationsService: LocationsService) {}
+  constructor(
+    private readonly locationsService: LocationsService,
+    private readonly ingestionService: LocationIngestionService,
+  ) {}
 
   @Get("history")
   async getHistory(
@@ -74,8 +78,15 @@ export class LocationsController {
     @Param("vehicleId", ParseUUIDPipe) vehicleId: string,
     @Body() dto: LocationIngestDto,
   ) {
-    await this.locationsService.persist(vehicleId, {
-      ...dto,
+    await this.ingestionService.handle({
+      vehicleId,
+      lng: dto.lng,
+      lat: dto.lat,
+      speed: dto.speed,
+      heading: dto.heading,
+      altitude: dto.altitude,
+      accuracy: dto.accuracy,
+      source: "device",
       timestamp: dto.timestamp ? new Date(dto.timestamp) : undefined,
     });
 
