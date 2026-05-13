@@ -23,6 +23,7 @@ import {
   BulkActivateDto,
   CreateVehicleDto,
   ExportFormat,
+  HeatmapQueryDto,
   NearbyQueryDto,
   RouteExportQueryDto,
   UpdateVehicleDto,
@@ -61,6 +62,20 @@ export class VehiclesController {
     const vehicles = await this.vehiclesService.nearby(query);
 
     return { success: true, data: vehicles };
+  }
+
+  @Get(":id/heatmap")
+  async heatmap(
+    @Param("id", ParseUUIDPipe) id: string,
+    @Query() query: HeatmapQueryDto,
+  ) {
+    const result = await this.locationsService.getHeatmap(
+      id,
+      new Date(query.from),
+      new Date(query.to),
+    );
+
+    return { success: true, data: result };
   }
 
   @Throttle({ export: {} })

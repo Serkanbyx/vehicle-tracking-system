@@ -6,6 +6,8 @@ import { Location } from "./location.entity.js";
 const DEFAULT_HISTORY_LIMIT = 5000;
 const MAX_HISTORY_LIMIT = 20_000;
 const MAX_LATEST_COUNT = 500;
+const HEATMAP_DOWNSAMPLE_THRESHOLD = 20_000;
+const HEATMAP_MAX_POINTS = 50_000;
 
 interface PersistPayload {
   lng: number;
@@ -167,5 +169,57 @@ export class LocationsService {
       maxSpeedKmh: row.maxSpeedKmh ?? 0,
       distanceKm: row.distanceKm ?? 0,
     };
+  }
+
+  async getHeatmap(
+    vehicleId: string,
+    from: Date,
+    to: Date,
+  ): Promise<{ points: [number, number, number][]; total: number; downsampled: boolean }> {
+    const [countRow] = await this.locationsRepo.query(
+      `SELECT COUNT(*)::int AS total
+       FROM "location"
+       WHERE "vehicleId" = $1 AND "timestamp" BETWEEN $2 AND $3`,
+      [vehicleId, from, to],
+    );
+
+    const total: number = countRow?.total ?? 0;
+
+    if (total > HEATMAP_DOWNSAMPLE_THRESHOLD) {
+      const rows = await this.locationsRepo.query(
+        `SELECT
+          ROUND(ST_X("geom")::numeric, 4)::float AS lng,
+          ROUND(ST_Y("geom")::numeric, 4)::float AS lat,
+          COUNT(*)::int                           AS intensity
+        FROM "location"
+        WHERE "vehicleId" = $1 AND "timestamp" BETWEEN $2 AND $3
+        GROUP BY 1, 2
+        ORDER BY intensity DESC
+        LIMIT $4`,
+        [vehicleId, from, to, HEATMAP_MAX_POINTS],
+      );
+
+      const points = rows.map((r: { lng: number; lat: number; intensity: number }) =>
+        [r.lng, r.lat, r.intensity] as [number, number, number],
+      );
+
+      return { points, total, downsampled: true };
+    }
+
+    const rows = await this.locationsRepo.query(
+      `SELECT
+        ST_X("geom")::float AS lng,
+        ST_Y("geom")::float AS lat
+      FROM "location"
+      WHERE "vehicleId" = $1 AND "timestamp" BETWEEN $2 AND $3
+      ORDER BY "timestamp" ASC`,
+      [vehicleId, from, to],
+    );
+
+    const points = rows.map((r: { lng: number; lat: number }) =>
+      [r.lng, r.lat, 1] as [number, number, number],
+    );
+
+    return { points, total, downsampled: false };
   }
 }
