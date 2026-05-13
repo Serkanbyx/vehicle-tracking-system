@@ -2,6 +2,7 @@ import { ValidationPipe } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { NestFactory } from "@nestjs/core";
 import type { NestExpressApplication } from "@nestjs/platform-express";
+import { WsAdapter } from "@nestjs/platform-ws";
 import compression from "compression";
 import cookieParser from "cookie-parser";
 import helmet from "helmet";
@@ -16,6 +17,7 @@ async function bootstrap() {
   });
 
   app.useLogger(app.get(Logger));
+  app.useWebSocketAdapter(new WsAdapter(app));
 
   const config = app.get(ConfigService);
   const port = config.get<number>("app.port", 5000);
