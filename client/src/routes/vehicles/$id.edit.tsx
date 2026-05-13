@@ -1,6 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { requireManagerOrAdmin } from "@/components/guards";
 
 export const Route = createFileRoute("/vehicles/$id/edit")({
+  beforeLoad: requireManagerOrAdmin,
   component: EditVehiclePage,
 });
 

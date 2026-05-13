@@ -1,6 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { requireAuth } from "@/components/guards";
 
 export const Route = createFileRoute("/settings/profile")({
+  beforeLoad: requireAuth,
   component: SettingsProfilePage,
 });
 

@@ -1,6 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { requireAdmin } from "@/components/guards";
 
 export const Route = createFileRoute("/admin/users")({
+  beforeLoad: requireAdmin,
   component: AdminUsersPage,
 });
 
