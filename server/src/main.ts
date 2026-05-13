@@ -6,6 +6,8 @@ import compression from "compression";
 import cookieParser from "cookie-parser";
 import helmet from "helmet";
 import { AppModule } from "./app.module";
+import { AllExceptionsFilter } from "./common/filters/all-exceptions.filter";
+import { TransformInterceptor } from "./common/interceptors/transform.interceptor";
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
@@ -26,6 +28,9 @@ async function bootstrap() {
     origin: clientUrl,
     credentials: true,
   });
+
+  app.useGlobalFilters(new AllExceptionsFilter());
+  app.useGlobalInterceptors(new TransformInterceptor());
 
   app.useGlobalPipes(
     new ValidationPipe({
