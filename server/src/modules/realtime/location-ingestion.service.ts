@@ -2,6 +2,7 @@ import { Injectable, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
+import { AlertEngineService } from "../alerts/alert-engine.service.js";
 import { Vehicle } from "../vehicles/vehicle.entity.js";
 import type { VehicleLastLocation } from "../vehicles/vehicle.entity.js";
 import { LocationsService } from "../locations/locations.service.js";
@@ -33,6 +34,7 @@ export class LocationIngestionService {
     private readonly vehiclesRepo: Repository<Vehicle>,
     private readonly roomManager: RoomManager,
     private readonly configService: ConfigService,
+    private readonly alertEngine: AlertEngineService,
   ) {
     const idleMin = configService.get<number>("app.idleThresholdMin") ?? 10;
     this.idleThresholdMs = idleMin * 60 * 1000;
@@ -45,7 +47,7 @@ export class LocationIngestionService {
 
     const vehicle = await this.vehiclesRepo.findOne({
       where: { id: vehicleId },
-      select: ["id", "plate", "lastLocation"],
+      select: ["id", "plate", "lastLocation", "speedLimitKmh"],
     });
 
     if (!vehicle) {
@@ -81,6 +83,15 @@ export class LocationIngestionService {
     await this.vehiclesRepo.update(vehicleId, {
       lastLocation: newLocation,
     });
+
+    const prevPoint = vehicle.lastLocation
+      ? { lng: vehicle.lastLocation.lng, lat: vehicle.lastLocation.lat, speed: vehicle.lastLocation.speed }
+      : null;
+    const nextPoint = { lng: payload.lng, lat: payload.lat, speed: payload.speed };
+
+    this.alertEngine
+      .run(vehicle, prevPoint, nextPoint)
+      .catch((err) => this.logger.error("AlertEngine error", err));
 
     const broadcastPayload = {
       type: "vehicle:update",

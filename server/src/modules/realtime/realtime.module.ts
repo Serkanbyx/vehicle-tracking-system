@@ -2,6 +2,7 @@ import { Module, forwardRef } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { JwtModule } from "@nestjs/jwt";
 import { ScheduleModule } from "@nestjs/schedule";
+import { AlertsModule } from "../alerts/alerts.module.js";
 import { LocationsModule } from "../locations/locations.module.js";
 import { VehiclesModule } from "../vehicles/vehicles.module.js";
 import { DashboardGateway } from "./dashboard.gateway.js";
@@ -14,6 +15,7 @@ import { VehiclesGateway } from "./vehicles.gateway.js";
   imports: [
     ScheduleModule.forRoot(),
     forwardRef(() => LocationsModule),
+    forwardRef(() => AlertsModule),
     VehiclesModule,
 
     JwtModule.registerAsync({
