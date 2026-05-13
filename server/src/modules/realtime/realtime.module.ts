@@ -9,6 +9,7 @@ import { DashboardGateway } from "./dashboard.gateway.js";
 import { HeartbeatService } from "./heartbeat.service.js";
 import { LocationIngestionService } from "./location-ingestion.service.js";
 import { RoomManager } from "./room-manager.service.js";
+import { StatusSweeperService } from "./status-sweeper.service.js";
 import { VehiclesGateway } from "./vehicles.gateway.js";
 
 @Module({
@@ -28,6 +29,7 @@ import { VehiclesGateway } from "./vehicles.gateway.js";
   providers: [
     RoomManager,
     HeartbeatService,
+    StatusSweeperService,
     LocationIngestionService,
     VehiclesGateway,
     DashboardGateway,

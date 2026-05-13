@@ -187,6 +187,23 @@ export class AlertEngineService {
     return alert;
   }
 
+  async createIdleAlert(vehicle: {
+    id: string;
+    lastLocation: { lng: number; lat: number } | null;
+  }): Promise<Alert> {
+    const lng = vehicle.lastLocation?.lng ?? 0;
+    const lat = vehicle.lastLocation?.lat ?? 0;
+
+    return this.persistAlert({
+      vehicleId: vehicle.id,
+      type: AlertType.IDLE,
+      severity: AlertSeverity.INFO,
+      message: "Vehicle has been idle beyond threshold",
+      lng,
+      lat,
+    });
+  }
+
   private broadcastAlert(vehicleId: string, alert: Alert): void {
     this.roomManager.broadcastToMany(
       [`vehicle:${vehicleId}`, "role:manager", "role:admin"],
