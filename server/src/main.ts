@@ -1,8 +1,48 @@
+import { ValidationPipe } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 import { NestFactory } from "@nestjs/core";
+import type { NestExpressApplication } from "@nestjs/platform-express";
+import compression from "compression";
+import cookieParser from "cookie-parser";
+import helmet from "helmet";
 import { AppModule } from "./app.module";
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-  await app.listen(process.env.PORT ?? 5000);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
+    bufferLogs: true,
+  });
+
+  const config = app.get(ConfigService);
+  const port = config.get<number>("app.port", 5000);
+  const clientUrl = config.get<string>("app.clientUrl", "http://localhost:3000");
+
+  app.set("trust proxy", 1);
+
+  app.use(helmet());
+  app.use(cookieParser());
+  app.use(compression());
+
+  app.enableCors({
+    origin: clientUrl,
+    credentials: true,
+  });
+
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+      transformOptions: { enableImplicitConversion: true },
+      stopAtFirstError: false,
+    }),
+  );
+
+  app.useBodyParser("json", { limit: "10kb" });
+  app.useBodyParser("urlencoded", { limit: "10kb", extended: true });
+
+  app.disable("x-powered-by");
+
+  await app.listen(port);
 }
+
 bootstrap();
