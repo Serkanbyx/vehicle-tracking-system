@@ -13,6 +13,7 @@ import { validate } from "./config/env.validation";
 import { AuthModule } from "./modules/auth/auth.module";
 import { UsersModule } from "./modules/users/users.module";
 import { LocationsModule } from "./modules/locations/locations.module";
+import { UploadsModule } from "./modules/uploads/uploads.module";
 import { VehiclesModule } from "./modules/vehicles/vehicles.module";
 
 @Module({
@@ -63,6 +64,7 @@ import { VehiclesModule } from "./modules/vehicles/vehicles.module";
     AuthModule,
     VehiclesModule,
     LocationsModule,
+    UploadsModule,
   ],
   controllers: [HealthController],
   providers: [
