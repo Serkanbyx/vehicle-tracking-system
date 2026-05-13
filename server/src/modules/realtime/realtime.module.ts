@@ -1,8 +1,11 @@
 import { Module } from "@nestjs/common";
+import { ScheduleModule } from "@nestjs/schedule";
+import { HeartbeatService } from "./heartbeat.service.js";
 import { RoomManager } from "./room-manager.service.js";
 
 @Module({
-  providers: [RoomManager],
-  exports: [RoomManager],
+  imports: [ScheduleModule.forRoot()],
+  providers: [RoomManager, HeartbeatService],
+  exports: [RoomManager, HeartbeatService],
 })
 export class RealtimeModule {}
