@@ -3,6 +3,7 @@ import { ConfigService } from "@nestjs/config";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { AlertEngineService } from "../alerts/alert-engine.service.js";
+import { TripAggregatorService } from "../trips/trip-aggregator.service.js";
 import { Vehicle } from "../vehicles/vehicle.entity.js";
 import type { VehicleLastLocation } from "../vehicles/vehicle.entity.js";
 import { LocationsService } from "../locations/locations.service.js";
@@ -35,6 +36,7 @@ export class LocationIngestionService {
     private readonly roomManager: RoomManager,
     private readonly configService: ConfigService,
     private readonly alertEngine: AlertEngineService,
+    private readonly tripAggregator: TripAggregatorService,
   ) {
     const idleMin = configService.get<number>("app.idleThresholdMin") ?? 10;
     this.idleThresholdMs = idleMin * 60 * 1000;
@@ -92,6 +94,10 @@ export class LocationIngestionService {
     this.alertEngine
       .run(vehicle, prevPoint, nextPoint)
       .catch((err) => this.logger.error("AlertEngine error", err));
+
+    this.tripAggregator
+      .tick(vehicle, status, nextPoint)
+      .catch((err) => this.logger.error("TripAggregator error", err));
 
     const broadcastPayload = {
       type: "vehicle:update",

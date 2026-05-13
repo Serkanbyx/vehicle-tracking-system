@@ -16,6 +16,7 @@ import { GeofencesModule } from "./modules/geofences/geofences.module";
 import { UsersModule } from "./modules/users/users.module";
 import { LocationsModule } from "./modules/locations/locations.module";
 import { RealtimeModule } from "./modules/realtime/realtime.module";
+import { TripsModule } from "./modules/trips/trips.module";
 import { UploadsModule } from "./modules/uploads/uploads.module";
 import { VehiclesModule } from "./modules/vehicles/vehicles.module";
 
@@ -69,6 +70,7 @@ import { VehiclesModule } from "./modules/vehicles/vehicles.module";
     LocationsModule,
     GeofencesModule,
     AlertsModule,
+    TripsModule,
     UploadsModule,
     RealtimeModule,
   ],
