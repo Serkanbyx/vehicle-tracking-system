@@ -39,6 +39,8 @@ export class VehiclesGateway
   private readonly rateCounters = new WeakMap<WebSocket, RateEntry>();
   private readonly simulatorKey: string;
 
+  private readonly clientUrl: string;
+
   constructor(
     private readonly configService: ConfigService,
     private readonly roomManager: RoomManager,
@@ -47,9 +49,17 @@ export class VehiclesGateway
   ) {
     this.simulatorKey =
       configService.get<string>("SIMULATOR_API_KEY") ?? "";
+    this.clientUrl =
+      configService.get<string>("CLIENT_URL") ?? "http://localhost:3000";
   }
 
   handleConnection(socket: WebSocket, req: IncomingMessage): void {
+    const origin = req.headers.origin;
+    if (origin && origin !== this.clientUrl) {
+      socket.close(4003, "Forbidden origin");
+      return;
+    }
+
     const provided = req.headers["x-simulator-key"] as string | undefined;
 
     if (!provided || !timingSafeEqual(provided, this.simulatorKey)) {

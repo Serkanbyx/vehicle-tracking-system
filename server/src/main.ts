@@ -34,6 +34,8 @@ async function bootstrap() {
     credentials: true,
   });
 
+  app.setGlobalPrefix("api");
+
   app.useGlobalFilters(new AllExceptionsFilter());
   app.useGlobalInterceptors(new TransformInterceptor());
 
