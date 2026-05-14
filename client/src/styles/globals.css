@@ -27,6 +27,9 @@
   .density-compact     { --app-gap: 0.5rem; }
   .density-comfortable { --app-gap: 0.75rem; }
   .density-spacious    { --app-gap: 1rem; }
+
+  .gap-app { gap: var(--app-gap, 0.75rem); }
+  .p-app   { padding: var(--app-gap, 0.75rem); }
 }
 
 @media (prefers-reduced-motion: reduce) {

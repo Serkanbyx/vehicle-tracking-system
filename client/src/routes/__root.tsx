@@ -1,5 +1,11 @@
-import { Outlet, createRootRouteWithContext, Link } from "@tanstack/react-router";
+import {
+  Outlet,
+  createRootRouteWithContext,
+  Link,
+} from "@tanstack/react-router";
+import { Compass, RefreshCw, AlertTriangle } from "lucide-react";
 import type { RouterContext } from "@/router";
+import { Button } from "@/components/ui";
 
 export const Route = createRootRouteWithContext<RouterContext>()({
   component: RootComponent,
@@ -13,11 +19,14 @@ function RootComponent() {
 
 function NotFoundPage() {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center gap-4">
-      <h1 className="text-6xl font-bold text-gray-300">404</h1>
-      <p className="text-lg text-gray-500">Sayfa bulunamadı</p>
-      <Link to="/" className="text-brand-600 hover:underline">
-        Ana sayfaya dön
+    <div className="flex min-h-[60vh] flex-col items-center justify-center gap-4 px-4 text-center">
+      <Compass className="h-16 w-16 text-gray-300 dark:text-gray-600" />
+      <h1 className="text-2xl font-semibold">Sayfa bulunamadı</h1>
+      <p className="max-w-md text-gray-500">
+        Aradığınız sayfa taşınmış veya silinmiş olabilir.
+      </p>
+      <Link to="/">
+        <Button>Ana Sayfaya Dön</Button>
       </Link>
     </div>
   );
@@ -25,16 +34,17 @@ function NotFoundPage() {
 
 function ErrorBoundaryPage({ error }: { error: Error }) {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center gap-4">
-      <h1 className="text-4xl font-bold text-danger">Bir hata oluştu</h1>
-      <p className="max-w-md text-center text-gray-500">{error.message}</p>
-      <button
-        type="button"
+    <div className="flex min-h-[60vh] flex-col items-center justify-center gap-4 px-4 text-center">
+      <AlertTriangle className="h-16 w-16 text-danger" />
+      <h1 className="text-2xl font-semibold">Bir hata oluştu</h1>
+      <p className="max-w-md text-gray-500">{error.message}</p>
+      <Button
+        variant="outline"
         onClick={() => window.location.reload()}
-        className="rounded-md bg-brand-600 px-4 py-2 text-sm text-white hover:bg-brand-700"
       >
-        Sayfayı yenile
-      </button>
+        <RefreshCw className="mr-2 h-4 w-4" />
+        Sayfayı Yenile
+      </Button>
     </div>
   );
 }

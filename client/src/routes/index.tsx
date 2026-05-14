@@ -14,11 +14,17 @@ function DashboardPage() {
   return (
     <div className="mx-auto max-w-7xl space-y-4 p-4">
       <h1 className="text-2xl font-bold">Dashboard</h1>
+
       <StatsRow />
-      <div className="h-[500px] overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700">
+
+      <div
+        className="overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700"
+        style={{ height: "clamp(320px, calc(100vh - 20rem), 600px)" }}
+      >
         <LiveMap />
       </div>
-      <div className="grid gap-4 md:grid-cols-2">
+
+      <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2">
         <RecentAlerts />
         <TopViolators />
       </div>
