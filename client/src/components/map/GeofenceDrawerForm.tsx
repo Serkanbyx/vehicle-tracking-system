@@ -1,9 +1,15 @@
 import { useForm } from "@tanstack/react-form";
 import { useQueryClient } from "@tanstack/react-query";
-import { Loader2 } from "lucide-react";
+import { Loader2, Pencil, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { createGeofence, updateGeofence } from "@/api/geofences";
-import type { Geofence, GeofenceAppliesTo, GeofenceDirection, GeofenceShape } from "@/api/types";
+import type {
+  Geofence,
+  GeofenceAppliesTo,
+  GeofenceDirection,
+  GeofenceShape,
+} from "@/api/types";
+import type { GeofenceGeometry } from "@/components/map/GeofenceMap";
 import {
   Button,
   Input,
@@ -35,6 +41,9 @@ interface GeofenceDrawerFormProps {
   geofence?: Geofence | null;
   shapeMode: GeofenceShape;
   onShapeModeChange: (shape: GeofenceShape) => void;
+  geometry: GeofenceGeometry | null;
+  onStartDraw: (shape: GeofenceShape) => void;
+  onCancelDraw: () => void;
 }
 
 export function GeofenceDrawerForm({
@@ -43,6 +52,9 @@ export function GeofenceDrawerForm({
   geofence,
   shapeMode,
   onShapeModeChange,
+  geometry,
+  onStartDraw,
+  onCancelDraw,
 }: GeofenceDrawerFormProps) {
   const editing = !!geofence;
   const queryClient = useQueryClient();
@@ -61,16 +73,27 @@ export function GeofenceDrawerForm({
     onSubmit: async ({ value }) => {
       setError(null);
       try {
-        const payload = {
+        const payload: Record<string, unknown> = {
           name: value.name,
           description: value.description || null,
           direction: value.direction,
           appliesTo: value.appliesTo,
           color: value.color,
           shape: shapeMode,
-          radiusMeters: shapeMode === "circle" ? value.radiusMeters : undefined,
           isActive: value.isActive,
         };
+
+        if (geometry?.type === "polygon" && geometry.polygon) {
+          payload.geometry = geometry.polygon;
+        } else if (geometry?.type === "circle" && geometry.circle) {
+          payload.circleCenter = {
+            type: "Point",
+            coordinates: geometry.circle.center,
+          };
+          payload.radiusMeters = geometry.circle.radiusMeters;
+        } else if (shapeMode === "circle") {
+          payload.radiusMeters = value.radiusMeters;
+        }
 
         if (editing && geofence) {
           await updateGeofence(geofence.id, payload);
@@ -85,6 +108,8 @@ export function GeofenceDrawerForm({
       }
     },
   });
+
+  const hasGeometry = !!geometry;
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
@@ -160,7 +185,40 @@ export function GeofenceDrawerForm({
             </div>
           </div>
 
-          {shapeMode === "circle" && (
+          <div className="flex flex-col gap-1.5">
+            <Label>Geometri</Label>
+            <div className="flex gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="flex-1"
+                onClick={() => onStartDraw(shapeMode)}
+              >
+                <Pencil className="mr-1.5 h-3.5 w-3.5" />
+                {hasGeometry ? "Yeniden Çiz" : "Haritada Çiz"}
+              </Button>
+              {hasGeometry && (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={onCancelDraw}
+                >
+                  <Trash2 className="h-3.5 w-3.5" />
+                </Button>
+              )}
+            </div>
+            {hasGeometry && (
+              <p className="text-xs text-success">
+                {geometry.type === "polygon"
+                  ? `Poligon çizildi (${(geometry.polygon?.coordinates[0]?.length ?? 1) - 1} köşe)`
+                  : `Daire çizildi (${geometry.circle?.radiusMeters} m)`}
+              </p>
+            )}
+          </div>
+
+          {shapeMode === "circle" && !hasGeometry && (
             <form.Field name="radiusMeters">
               {(field) => (
                 <div className="flex flex-col gap-1.5">
@@ -187,7 +245,9 @@ export function GeofenceDrawerForm({
                 <Select
                   id="gf-direction"
                   value={field.state.value}
-                  onChange={(e) => field.handleChange(e.target.value as GeofenceDirection)}
+                  onChange={(e) =>
+                    field.handleChange(e.target.value as GeofenceDirection)
+                  }
                 >
                   {DIRECTION_OPTIONS.map((opt) => (
                     <option key={opt.value} value={opt.value}>
@@ -278,8 +338,14 @@ export function GeofenceDrawerForm({
             >
               İptal
             </Button>
-            <Button type="submit" className="flex-1" disabled={form.state.isSubmitting}>
-              {form.state.isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            <Button
+              type="submit"
+              className="flex-1"
+              disabled={form.state.isSubmitting}
+            >
+              {form.state.isSubmitting && (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              )}
               {editing ? "Güncelle" : "Oluştur"}
             </Button>
           </div>
