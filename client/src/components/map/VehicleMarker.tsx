@@ -68,6 +68,7 @@ export function VehicleMarker({ id, map }: VehicleMarkerProps) {
     const el = elRef.current;
     el.className = `vehicle-marker status-${vehicle.status}`;
     el.style.transform = `rotate(${vehicle.heading}deg)`;
+    el.setAttribute("aria-label", `${vehicle.plate} — ${vehicle.status}`);
   }, [vehicle?.status, vehicle?.heading]);
 
   useEffect(() => {

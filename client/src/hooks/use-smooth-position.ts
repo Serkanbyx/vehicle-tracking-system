@@ -1,5 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 
+function prefersReducedMotion(): boolean {
+  if (typeof window === "undefined") return false;
+  return (
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
+    document.body.classList.contains("no-anim")
+  );
+}
+
 export function useSmoothPosition(
   target: [number, number],
   durationMs = 1500,
@@ -12,6 +20,11 @@ export function useSmoothPosition(
   } | null>(null);
 
   useEffect(() => {
+    if (prefersReducedMotion()) {
+      setPos(target);
+      return;
+    }
+
     startRef.current = { from: pos, to: target, t0: performance.now() };
     let raf = 0;
 

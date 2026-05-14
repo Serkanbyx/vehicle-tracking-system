@@ -8,4 +8,5 @@ export { Spinner } from "./Spinner";
 export { StatCard } from "./StatCard";
 export { StatsRow } from "./StatsRow";
 export { StatusBadge } from "./StatusBadge";
+export { TableRowSkeleton } from "./TableRowSkeleton";
 export { TopViolators } from "./TopViolators";

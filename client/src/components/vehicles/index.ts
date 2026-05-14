@@ -9,5 +9,6 @@ export { StatsPanel } from "./StatsPanel";
 export { StatusCard } from "./StatusCard";
 export { TripsTab } from "./TripsTab";
 export { VehicleCard } from "./VehicleCard";
+export { VehicleCardSkeleton, VehicleGridSkeleton } from "./VehicleCardSkeleton";
 export { VehicleFilters } from "./VehicleFilters";
 export { VehicleForm } from "./VehicleForm";

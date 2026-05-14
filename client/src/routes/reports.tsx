@@ -7,7 +7,7 @@ import { requireAuth } from "@/components/guards";
 import { listTrips, exportTripsCsv } from "@/api/trips";
 import type { ListTripsQuery } from "@/api/trips";
 import { Button } from "@/components/ui";
-import { PageNavigator } from "@/components/common";
+import { PageNavigator, TableRowSkeleton } from "@/components/common";
 import {
   ReportFilters,
   DailySummaryChart,
@@ -65,7 +65,7 @@ function ReportsPage() {
   const navigate = Route.useNavigate();
 
   const query = buildQuery(search);
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["trips", query],
     queryFn: () => listTrips(query),
   });
@@ -132,7 +132,11 @@ function ReportsPage() {
 
       <div className="grid gap-4 lg:grid-cols-[1fr_24rem]">
         <div className="space-y-4">
-          <TripTable trips={filtered} />
+          {isLoading ? (
+            <TableRowSkeleton columns={7} rows={5} />
+          ) : (
+            <TripTable trips={filtered} />
+          )}
           <PageNavigator
             page={search.page ?? 1}
             totalPages={data?.totalPages ?? 1}

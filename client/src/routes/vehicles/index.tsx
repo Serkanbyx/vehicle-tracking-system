@@ -1,9 +1,12 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import { requireAuth } from "@/components/guards";
 import { listVehicles } from "@/api/vehicles";
 import { VehicleCard } from "@/components/vehicles/VehicleCard";
+import { VehicleCardSkeleton } from "@/components/vehicles/VehicleCardSkeleton";
 import { VehicleFilters } from "@/components/vehicles/VehicleFilters";
-import { PageNavigator } from "@/components/common/PageNavigator";
+import { EmptyState, PageNavigator } from "@/components/common";
+import { Car } from "lucide-react";
 
 const VEHICLE_TYPES = ["car", "truck", "van", "motorcycle", "bus", "other"] as const;
 
@@ -44,17 +47,29 @@ function VehicleListPage() {
   const search = Route.useSearch();
   const navigate = useNavigate();
 
+  const { isLoading } = useQuery({
+    queryKey: ["vehicles", search],
+    queryFn: () => listVehicles(search),
+  });
+
   return (
     <div className="mx-auto max-w-7xl space-y-4 p-4">
       <h1 className="text-2xl font-bold">Araçlar</h1>
 
       <VehicleFilters search={search} />
 
-      {data.items.length === 0 ? (
-        <div className="py-12 text-center text-gray-400">
-          <p className="text-lg">Araç bulunamadı</p>
-          <p className="text-sm">Filtrelerinizi değiştirmeyi deneyin</p>
+      {isLoading ? (
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <VehicleCardSkeleton key={`vs-${i.toString()}`} />
+          ))}
         </div>
+      ) : data.items.length === 0 ? (
+        <EmptyState
+          title="Araç bulunamadı"
+          description="Filtrelerinizi değiştirmeyi deneyin"
+          icon={Car}
+        />
       ) : (
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {data.items.map((vehicle) => (

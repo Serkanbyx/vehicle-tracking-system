@@ -19,7 +19,7 @@ import {
   BulkActionBar,
 } from "@/components/alerts";
 import type { AlertsFilters } from "@/components/alerts";
-import { PageNavigator } from "@/components/common";
+import { PageNavigator, TableRowSkeleton } from "@/components/common";
 
 interface AlertsSearch {
   q?: string;
@@ -92,7 +92,7 @@ function AlertsPage() {
   const queryClient = useQueryClient();
 
   const query = buildQuery(search);
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["alerts", query],
     queryFn: () => listAlerts(query),
   });
@@ -209,14 +209,18 @@ function AlertsPage() {
         loading={bulkLoading}
       />
 
-      <AlertsTable
-        alerts={data?.items ?? []}
-        selectedIds={selectedIds}
-        onToggleSelect={handleToggleSelect}
-        onToggleAll={handleToggleAll}
-        onAcknowledge={handleAcknowledge}
-        onDelete={handleDelete}
-      />
+      {isLoading ? (
+        <TableRowSkeleton columns={9} rows={5} />
+      ) : (
+        <AlertsTable
+          alerts={data?.items ?? []}
+          selectedIds={selectedIds}
+          onToggleSelect={handleToggleSelect}
+          onToggleAll={handleToggleAll}
+          onAcknowledge={handleAcknowledge}
+          onDelete={handleDelete}
+        />
+      )}
 
       <PageNavigator
         page={search.page ?? 1}

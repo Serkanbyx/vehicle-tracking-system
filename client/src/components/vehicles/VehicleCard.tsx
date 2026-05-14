@@ -66,13 +66,13 @@ export function VehicleCard({ vehicle }: VehicleCardProps) {
         </div>
 
         <div className="flex shrink-0 flex-col gap-1">
-          <Button variant="ghost" size="icon" asChild>
+          <Button variant="ghost" size="icon" asChild aria-label="Detay görüntüle">
             <Link to="/vehicles/$id" params={{ id: vehicle.id }}>
               <Eye className="h-4 w-4" />
             </Link>
           </Button>
           {hasRole("manager", "admin") && (
-            <Button variant="ghost" size="icon" asChild>
+            <Button variant="ghost" size="icon" asChild aria-label="Düzenle">
               <Link to="/vehicles/$id/edit" params={{ id: vehicle.id }}>
                 <Edit className="h-4 w-4" />
               </Link>
