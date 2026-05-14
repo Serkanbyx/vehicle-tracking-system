@@ -1,16 +1,22 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { Crosshair } from "lucide-react";
+import { Crosshair, Loader2 } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { format, subDays } from "date-fns";
 import { requireAuth } from "@/components/guards";
 import { getVehicle } from "@/api/vehicles";
+import { getHistory } from "@/api/locations";
 import { dashboardSocket } from "@/api";
 import { useLiveVehicle } from "@/stores/live-vehicles.store";
 import { LiveMap } from "@/components/map";
 import { CurrentSpeedGauge } from "@/components/vehicles/CurrentSpeedGauge";
 import { StatusCard } from "@/components/vehicles/StatusCard";
 import { RecentVehicleAlerts } from "@/components/vehicles/RecentVehicleAlerts";
+import { HistoryPlayer } from "@/components/vehicles/HistoryPlayer";
+import { DateRangePicker } from "@/components/vehicles/DateRangePicker";
+import { ExportButtons } from "@/components/vehicles/ExportButtons";
+import { StatsPanel } from "@/components/vehicles/StatsPanel";
 import { Button, Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui";
-import type { Vehicle } from "@/api/types";
+import type { Location, Vehicle } from "@/api/types";
 
 interface DetailSearch {
   tab?: string;
@@ -100,9 +106,7 @@ function VehicleDetailPage() {
         </TabsContent>
 
         <TabsContent value="history">
-          <div className="py-12 text-center text-gray-400">
-            Geçmiş rotalar burada görüntülenecek
-          </div>
+          <HistoryTab vehicleId={id} />
         </TabsContent>
 
         <TabsContent value="trips">
@@ -119,4 +123,95 @@ function VehicleDetailPage() {
       </Tabs>
     </div>
   );
+}
+
+function HistoryTab({ vehicleId }: { vehicleId: string }) {
+  const now = format(new Date(), "yyyy-MM-dd'T'HH:mm");
+  const dayAgo = format(subDays(new Date(), 1), "yyyy-MM-dd'T'HH:mm");
+
+  const [range, setRange] = useState({ from: dayAgo, to: now });
+  const [history, setHistory] = useState<Location[] | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [playerPos, setPlayerPos] = useState<Location | null>(null);
+
+  const loadHistory = async () => {
+    setLoading(true);
+    try {
+      const points = await getHistory({
+        vehicleId,
+        from: new Date(range.from).toISOString(),
+        to: new Date(range.to).toISOString(),
+      });
+      setHistory(points);
+      if (points.length > 0) setPlayerPos(points[0]!);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const stats = history
+    ? computeStats(history)
+    : null;
+
+  return (
+    <div className="grid gap-4 lg:grid-cols-3">
+      <div className="lg:col-span-2">
+        <div className="h-[500px] overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700">
+          <LiveMap className="h-full w-full" />
+        </div>
+      </div>
+      <div className="space-y-4">
+        <DateRangePicker from={range.from} to={range.to} onChange={setRange} />
+        <Button onClick={() => void loadHistory()} disabled={loading} className="w-full">
+          {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          Rotayı Yükle
+        </Button>
+        {stats && (
+          <StatsPanel
+            totalPoints={stats.totalPoints}
+            distanceKm={stats.distanceKm}
+            avgSpeedKmh={stats.avgSpeedKmh}
+            maxSpeedKmh={stats.maxSpeedKmh}
+            durationMin={stats.durationMin}
+          />
+        )}
+        {history && history.length > 0 && (
+          <HistoryPlayer points={history} onTick={setPlayerPos} />
+        )}
+        {history && (
+          <ExportButtons
+            vehicleId={vehicleId}
+            from={new Date(range.from).toISOString()}
+            to={new Date(range.to).toISOString()}
+          />
+        )}
+      </div>
+    </div>
+  );
+}
+
+function computeStats(points: Location[]) {
+  if (points.length === 0) return { totalPoints: 0, distanceKm: 0, avgSpeedKmh: 0, maxSpeedKmh: 0, durationMin: 0 };
+
+  let totalSpeed = 0;
+  let maxSpeed = 0;
+
+  for (const p of points) {
+    totalSpeed += p.speed;
+    if (p.speed > maxSpeed) maxSpeed = p.speed;
+  }
+
+  const firstTs = new Date(points[0]!.timestamp).getTime();
+  const lastTs = new Date(points[points.length - 1]!.timestamp).getTime();
+  const durationMin = (lastTs - firstTs) / 60_000;
+  const avgSpeedKmh = totalSpeed / points.length;
+  const distanceKm = (avgSpeedKmh * durationMin) / 60;
+
+  return {
+    totalPoints: points.length,
+    distanceKm,
+    avgSpeedKmh,
+    maxSpeedKmh: maxSpeed,
+    durationMin,
+  };
 }
