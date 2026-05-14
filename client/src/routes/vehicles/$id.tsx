@@ -15,6 +15,8 @@ import { HistoryPlayer } from "@/components/vehicles/HistoryPlayer";
 import { DateRangePicker } from "@/components/vehicles/DateRangePicker";
 import { ExportButtons } from "@/components/vehicles/ExportButtons";
 import { StatsPanel } from "@/components/vehicles/StatsPanel";
+import { TripsTab } from "@/components/vehicles/TripsTab";
+import { AlertsTab } from "@/components/vehicles/AlertsTab";
 import { Button, Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui";
 import type { Location, Vehicle } from "@/api/types";
 
@@ -110,15 +112,11 @@ function VehicleDetailPage() {
         </TabsContent>
 
         <TabsContent value="trips">
-          <div className="py-12 text-center text-gray-400">
-            Sefer kayıtları burada listelenecek
-          </div>
+          <TripsTab vehicleId={id} />
         </TabsContent>
 
         <TabsContent value="alerts">
-          <div className="py-12 text-center text-gray-400">
-            Araç uyarıları burada listelenecek
-          </div>
+          <AlertsTab vehicleId={id} />
         </TabsContent>
       </Tabs>
     </div>

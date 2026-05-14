@@ -1,3 +1,4 @@
+export { AlertsTab } from "./AlertsTab";
 export { CurrentSpeedGauge } from "./CurrentSpeedGauge";
 export { DateRangePicker } from "./DateRangePicker";
 export { ExportButtons } from "./ExportButtons";
@@ -5,5 +6,6 @@ export { HistoryPlayer } from "./HistoryPlayer";
 export { RecentVehicleAlerts } from "./RecentVehicleAlerts";
 export { StatsPanel } from "./StatsPanel";
 export { StatusCard } from "./StatusCard";
+export { TripsTab } from "./TripsTab";
 export { VehicleCard } from "./VehicleCard";
 export { VehicleFilters } from "./VehicleFilters";
