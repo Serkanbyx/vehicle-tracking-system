@@ -7,7 +7,10 @@ import {
   Logger,
 } from "@nestjs/common";
 import type { Request, Response } from "express";
-import { randomUUID } from "node:crypto";
+
+interface PinoRequest extends Request {
+  id?: string;
+}
 
 interface PostgresError {
   code: string;
@@ -45,8 +48,8 @@ export class AllExceptionsFilter implements ExceptionFilter {
   catch(exception: unknown, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
-    const request = ctx.getRequest<Request>();
-    const requestId = randomUUID();
+    const request = ctx.getRequest<PinoRequest>();
+    const requestId = request.id ?? String(Date.now());
 
     const { status, message, errors } = this.resolveException(
       exception,

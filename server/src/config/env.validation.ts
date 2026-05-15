@@ -99,6 +99,10 @@ export class EnvironmentVariables {
 
   @IsString()
   @IsOptional()
+  LOGTAIL_TOKEN?: string;
+
+  @IsString()
+  @IsOptional()
   LOG_LEVEL: string = "info";
 }
 

@@ -39,7 +39,15 @@ import { VehiclesModule } from "./modules/vehicles/vehicles.module";
         level: process.env.LOG_LEVEL || "info",
         transport:
           process.env.NODE_ENV === "production"
-            ? undefined
+            ? {
+                targets: [
+                  {
+                    target: "@logtail/pino",
+                    options: { sourceToken: process.env.LOGTAIL_TOKEN },
+                  },
+                  { target: "pino/file", options: { destination: 1 } },
+                ],
+              }
             : { target: "pino-pretty", options: { singleLine: true } },
         redact: {
           paths: [
@@ -48,12 +56,21 @@ import { VehiclesModule } from "./modules/vehicles/vehicles.module";
             "req.body.password",
             "req.body.currentPassword",
             "req.body.newPassword",
+            "req.body.refreshToken",
             'res.headers["set-cookie"]',
           ],
           remove: true,
         },
         autoLogging: {
-          ignore: (req) => (req as { url?: string }).url === "/api/health",
+          ignore: (req) => {
+            const url = (req as { url?: string }).url;
+            return url === "/api/health" || (url?.startsWith("/ws/") ?? false);
+          },
+        },
+        customLogLevel: (_req, res, err) => {
+          if (res.statusCode >= 500 || err) return "error";
+          if (res.statusCode >= 400) return "warn";
+          return "info";
         },
       },
     }),
