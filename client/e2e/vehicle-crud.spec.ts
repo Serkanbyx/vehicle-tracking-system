@@ -1,14 +1,12 @@
-import { test, expect } from "@playwright/test";
-import { seedTestData, login, MANAGER, uniqueId } from "./helpers";
+import { expect, test } from "@playwright/test";
+import { login, MANAGER, seedTestData, uniqueId } from "./helpers";
 
 test.beforeAll(() => {
   seedTestData();
 });
 
 test.describe("Vehicle CRUD E2E", () => {
-  test("Manager creates a vehicle → edits it → deletes it", async ({
-    page,
-  }) => {
+  test("Manager creates a vehicle → edits it → deletes it", async ({ page }) => {
     const uid = uniqueId();
     const plate = `34 E2E ${uid}`;
 
@@ -28,9 +26,7 @@ test.describe("Vehicle CRUD E2E", () => {
     await page.getByLabel("Model").fill("Volvo FH16");
     await page.getByLabel("Renk").fill("Beyaz");
 
-    const driverNameInput = page.getByLabel("İsim").or(
-      page.getByLabel(/sürücü.*isim/i),
-    );
+    const driverNameInput = page.getByLabel("İsim").or(page.getByLabel(/sürücü.*isim/i));
     if (await driverNameInput.isVisible()) {
       await driverNameInput.fill("Test Driver");
     }
@@ -42,9 +38,9 @@ test.describe("Vehicle CRUD E2E", () => {
     await expect(page.locator("body")).toContainText(plate);
 
     /* ── 2. Edit vehicle ── */
-    const editBtn = page.getByRole("link", { name: /düzenle|edit/i }).or(
-      page.getByRole("button", { name: /düzenle|edit/i }),
-    );
+    const editBtn = page
+      .getByRole("link", { name: /düzenle|edit/i })
+      .or(page.getByRole("button", { name: /düzenle|edit/i }));
     await editBtn.click();
     await page.waitForLoadState("networkidle");
 

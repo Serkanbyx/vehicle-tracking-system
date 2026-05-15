@@ -46,7 +46,10 @@ export function removeGeofence(id: string): Promise<void> {
   return fetcher(`/geofences/${id}`, { method: "DELETE" });
 }
 
-export function testGeofence(id: string, point: { lng: number; lat: number }): Promise<{ inside: boolean }> {
+export function testGeofence(
+  id: string,
+  point: { lng: number; lat: number },
+): Promise<{ inside: boolean }> {
   return fetcher<{ inside: boolean }>(`/geofences/${id}/test`, {
     method: "POST",
     body: JSON.stringify(point),

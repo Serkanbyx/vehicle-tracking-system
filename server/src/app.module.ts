@@ -1,25 +1,25 @@
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { APP_GUARD } from "@nestjs/core";
-import { SentryModule } from "@sentry/nestjs/setup";
 import { ThrottlerGuard, ThrottlerModule } from "@nestjs/throttler";
+import { SentryModule } from "@sentry/nestjs/setup";
 import { LoggerModule } from "nestjs-pino";
 import { HealthController } from "./common/controllers/health.controller";
 import { JwtAuthGuard } from "./common/guards/jwt-auth.guard";
 import { RolesGuard } from "./common/guards/roles.guard";
 import { appConfig } from "./config/app.config";
-import { jwtConfig } from "./config/jwt.config";
 import { databaseModule } from "./config/database.config";
 import { validate } from "./config/env.validation";
+import { jwtConfig } from "./config/jwt.config";
 import { AdminModule } from "./modules/admin/admin.module";
 import { AlertsModule } from "./modules/alerts/alerts.module";
 import { AuthModule } from "./modules/auth/auth.module";
 import { GeofencesModule } from "./modules/geofences/geofences.module";
-import { UsersModule } from "./modules/users/users.module";
 import { LocationsModule } from "./modules/locations/locations.module";
 import { RealtimeModule } from "./modules/realtime/realtime.module";
 import { TripsModule } from "./modules/trips/trips.module";
 import { UploadsModule } from "./modules/uploads/uploads.module";
+import { UsersModule } from "./modules/users/users.module";
 import { VehiclesModule } from "./modules/vehicles/vehicles.module";
 
 @Module({

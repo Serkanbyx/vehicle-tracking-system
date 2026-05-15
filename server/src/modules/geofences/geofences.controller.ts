@@ -14,13 +14,14 @@ import {
 import { CurrentUser } from "../../common/decorators/current-user.decorator.js";
 import { Roles } from "../../common/decorators/roles.decorator.js";
 import { UserRole } from "../../common/enums/user-role.enum.js";
-import {
+import type { RequestUser } from "../../common/interfaces/request-user.interface.js";
+import type {
   CreateGeofenceDto,
   GeofenceQueryDto,
   TestPointDto,
   UpdateGeofenceDto,
 } from "./dto/index.js";
-import { GeofencesService } from "./geofences.service.js";
+import type { GeofencesService } from "./geofences.service.js";
 
 @Controller("geofences")
 export class GeofencesController {
@@ -28,10 +29,7 @@ export class GeofencesController {
 
   @Roles(UserRole.MANAGER, UserRole.ADMIN)
   @Post()
-  async create(
-    @Body() dto: CreateGeofenceDto,
-    @CurrentUser() user: any,
-  ) {
+  async create(@Body() dto: CreateGeofenceDto, @CurrentUser() user: RequestUser) {
     const geofence = await this.geofencesService.create(dto, user);
 
     return { success: true, data: geofence };
@@ -56,7 +54,7 @@ export class GeofencesController {
   async update(
     @Param("id", ParseUUIDPipe) id: string,
     @Body() dto: UpdateGeofenceDto,
-    @CurrentUser() user: any,
+    @CurrentUser() user: RequestUser,
   ) {
     const geofence = await this.geofencesService.update(id, dto, user);
 
@@ -65,10 +63,7 @@ export class GeofencesController {
 
   @Roles(UserRole.MANAGER, UserRole.ADMIN)
   @Delete(":id")
-  async remove(
-    @Param("id", ParseUUIDPipe) id: string,
-    @CurrentUser() user: any,
-  ) {
+  async remove(@Param("id", ParseUUIDPipe) id: string, @CurrentUser() user: RequestUser) {
     await this.geofencesService.remove(id, user);
 
     return { success: true, data: null };
@@ -76,10 +71,7 @@ export class GeofencesController {
 
   @HttpCode(HttpStatus.OK)
   @Post(":id/test")
-  async test(
-    @Param("id", ParseUUIDPipe) id: string,
-    @Body() point: TestPointDto,
-  ) {
+  async test(@Param("id", ParseUUIDPipe) id: string, @Body() point: TestPointDto) {
     const result = await this.geofencesService.test(id, point);
 
     return { success: true, data: result };

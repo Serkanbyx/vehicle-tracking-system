@@ -1,16 +1,10 @@
+import { useQuery } from "@tanstack/react-query";
 import maplibregl from "maplibre-gl";
 import { useEffect, useRef } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { env } from "@/env";
 import { getHistory } from "@/api/locations";
 import type { Trip } from "@/api/types";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui";
-import { Skeleton } from "@/components/ui";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, Skeleton } from "@/components/ui";
+import { env } from "@/env";
 
 interface TripMapModalProps {
   trip: Trip | null;
@@ -77,13 +71,9 @@ export function TripMapModal({ trip, onClose }: TripMapModalProps) {
       const startCoord = coords[0]!;
       const endCoord = coords[coords.length - 1]!;
 
-      new maplibregl.Marker({ color: "#10b981" })
-        .setLngLat(startCoord)
-        .addTo(map);
+      new maplibregl.Marker({ color: "#10b981" }).setLngLat(startCoord).addTo(map);
 
-      new maplibregl.Marker({ color: "#ef4444" })
-        .setLngLat(endCoord)
-        .addTo(map);
+      new maplibregl.Marker({ color: "#ef4444" }).setLngLat(endCoord).addTo(map);
 
       const bounds = coords.reduce(
         (b, c) => b.extend(c),

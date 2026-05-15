@@ -1,6 +1,6 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen, waitFor, act } from "@testing-library/react";
+import { act, render, screen, waitFor } from "@testing-library/react";
 import React from "react";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const mockRefresh = vi.fn();
 const mockGetMe = vi.fn();
@@ -51,18 +51,10 @@ function AuthConsumer() {
     React.createElement(
       "span",
       { key: "status", "data-testid": "status" },
-      auth.loading
-        ? "loading"
-        : auth.user
-          ? "authenticated"
-          : "unauthenticated",
+      auth.loading ? "loading" : auth.user ? "authenticated" : "unauthenticated",
     ),
     auth.user
-      ? React.createElement(
-          "span",
-          { key: "email", "data-testid": "email" },
-          auth.user.email,
-        )
+      ? React.createElement("span", { key: "email", "data-testid": "email" }, auth.user.email)
       : null,
   ]);
 }
@@ -77,13 +69,7 @@ describe("AuthContext — refresh on mount", () => {
     mockGetMe.mockResolvedValue(testUser);
 
     await act(async () => {
-      render(
-        React.createElement(
-          AuthProvider,
-          null,
-          React.createElement(AuthConsumer),
-        ),
-      );
+      render(React.createElement(AuthProvider, null, React.createElement(AuthConsumer)));
     });
 
     await waitFor(() => {
@@ -99,13 +85,7 @@ describe("AuthContext — refresh on mount", () => {
     mockRefresh.mockRejectedValue(new Error("Token expired"));
 
     await act(async () => {
-      render(
-        React.createElement(
-          AuthProvider,
-          null,
-          React.createElement(AuthConsumer),
-        ),
-      );
+      render(React.createElement(AuthProvider, null, React.createElement(AuthConsumer)));
     });
 
     await waitFor(() => {
@@ -120,13 +100,7 @@ describe("AuthContext — auth:logout event", () => {
     mockGetMe.mockResolvedValue(testUser);
 
     await act(async () => {
-      render(
-        React.createElement(
-          AuthProvider,
-          null,
-          React.createElement(AuthConsumer),
-        ),
-      );
+      render(React.createElement(AuthProvider, null, React.createElement(AuthConsumer)));
     });
 
     await waitFor(() => {
@@ -152,13 +126,7 @@ describe("AuthContext — no PII in localStorage", () => {
     mockGetMe.mockResolvedValue(testUser);
 
     await act(async () => {
-      render(
-        React.createElement(
-          AuthProvider,
-          null,
-          React.createElement(AuthConsumer),
-        ),
-      );
+      render(React.createElement(AuthProvider, null, React.createElement(AuthConsumer)));
     });
 
     await waitFor(() => {

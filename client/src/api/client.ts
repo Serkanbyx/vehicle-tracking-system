@@ -56,10 +56,7 @@ interface ApiResponse<T> {
   errors?: unknown;
 }
 
-export async function fetcher<T = unknown>(
-  input: string,
-  init?: RequestInit,
-): Promise<T> {
+export async function fetcher<T = unknown>(input: string, init?: RequestInit): Promise<T> {
   const url = input.startsWith("http") ? input : `${env.API_URL}${input}`;
 
   const headers = new Headers(init?.headers);
@@ -102,11 +99,7 @@ export async function fetcher<T = unknown>(
 
     if (!retryRes.ok) {
       const body = await retryRes.json().catch(() => ({}));
-      throw new ApiError(
-        retryRes.status,
-        body.message ?? "Request failed",
-        body.errors,
-      );
+      throw new ApiError(retryRes.status, body.message ?? "Request failed", body.errors);
     }
 
     const retryBody: ApiResponse<T> = await retryRes.json();

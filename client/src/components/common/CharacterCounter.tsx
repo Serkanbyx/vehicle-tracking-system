@@ -11,13 +11,7 @@ export function CharacterCounter({ value, max, className }: CharacterCounterProp
   const overLimit = count > max;
 
   return (
-    <span
-      className={cn(
-        "text-xs",
-        overLimit ? "text-danger" : "text-gray-400",
-        className,
-      )}
-    >
+    <span className={cn("text-xs", overLimit ? "text-danger" : "text-gray-400", className)}>
       {count}/{max}
     </span>
   );

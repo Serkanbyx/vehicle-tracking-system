@@ -1,8 +1,8 @@
 import { Link } from "@tanstack/react-router";
-import { MapPin } from "lucide-react";
 import { format } from "date-fns";
 import { tr } from "date-fns/locale";
-import { useState, useCallback } from "react";
+import { MapPin } from "lucide-react";
+import { useCallback, useState } from "react";
 import type { Trip } from "@/api/types";
 import { Badge, Button } from "@/components/ui";
 import { TripMapModal } from "./TripMapModal";
@@ -29,11 +29,7 @@ export function TripTable({ trips }: TripTableProps) {
   }, []);
 
   if (trips.length === 0) {
-    return (
-      <div className="py-12 text-center text-sm text-gray-400">
-        Sefer bulunamadı
-      </div>
-    );
+    return <div className="py-12 text-center text-sm text-gray-400">Sefer bulunamadı</div>;
   }
 
   return (
@@ -72,19 +68,14 @@ export function TripTable({ trips }: TripTableProps) {
                       {trip.vehicle.plate}
                     </Link>
                   ) : (
-                    <span className="text-gray-400">
-                      {trip.vehicleId.slice(0, 8)}
-                    </span>
+                    <span className="text-gray-400">{trip.vehicleId.slice(0, 8)}</span>
                   )}
                 </td>
                 <td className="px-3 py-2">
-                  {trip.distanceKm != null
-                    ? `${trip.distanceKm.toFixed(1)} km`
-                    : "—"}
+                  {trip.distanceKm != null ? `${trip.distanceKm.toFixed(1)} km` : "—"}
                 </td>
                 <td className="px-3 py-2 text-xs">
-                  {trip.avgSpeedKmh?.toFixed(0) ?? "—"} /{" "}
-                  {trip.maxSpeedKmh?.toFixed(0) ?? "—"} km/h
+                  {trip.avgSpeedKmh?.toFixed(0) ?? "—"} / {trip.maxSpeedKmh?.toFixed(0) ?? "—"} km/h
                 </td>
                 <td className="whitespace-nowrap px-3 py-2 text-xs">
                   {formatDuration(trip.startedAt, trip.endedAt)}
@@ -108,9 +99,7 @@ export function TripTable({ trips }: TripTableProps) {
                     )}
                     {trip.speedViolations === 0 &&
                       trip.idleEvents === 0 &&
-                      trip.geofenceEvents === 0 && (
-                        <span className="text-xs text-gray-400">—</span>
-                      )}
+                      trip.geofenceEvents === 0 && <span className="text-xs text-gray-400">—</span>}
                   </div>
                 </td>
                 <td className="px-3 py-2">

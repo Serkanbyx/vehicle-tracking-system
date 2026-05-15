@@ -1,11 +1,11 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { Calendar, Edit, Shield } from "lucide-react";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { format } from "date-fns";
 import { tr } from "date-fns/locale";
-import { requireAuth } from "@/components/guards";
+import { Calendar, Edit, Shield } from "lucide-react";
 import { getAdminUser } from "@/api/admin";
-import { useAuth } from "@/context/auth.context";
+import type { UserRole } from "@/api/types";
+import { requireAuth } from "@/components/guards";
 import {
   Avatar,
   AvatarFallback,
@@ -21,7 +21,7 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui";
-import type { UserRole } from "@/api/types";
+import { useAuth } from "@/context/auth.context";
 
 export const Route = createFileRoute("/profile/$id")({
   beforeLoad: requireAuth,
@@ -56,9 +56,7 @@ function ProfilePage() {
   if (!user) {
     return (
       <div className="mx-auto max-w-3xl p-6">
-        <div className="py-12 text-center text-gray-400">
-          Kullanıcı yükleniyor…
-        </div>
+        <div className="py-12 text-center text-gray-400">Kullanıcı yükleniyor…</div>
       </div>
     );
   }
@@ -89,9 +87,7 @@ function ProfilePage() {
                 tarihinde katıldı
               </span>
             </div>
-            {user.email && (
-              <p className="mt-1 text-sm text-gray-500">{user.email}</p>
-            )}
+            {user.email && <p className="mt-1 text-sm text-gray-500">{user.email}</p>}
           </div>
 
           {isSelf && (
@@ -121,22 +117,14 @@ function ProfilePage() {
                 {user.lastLoginAt ? (
                   <p>
                     Son giriş:{" "}
-                    {format(
-                      new Date(user.lastLoginAt),
-                      "dd MMM yyyy HH:mm",
-                      { locale: tr },
-                    )}
+                    {format(new Date(user.lastLoginAt), "dd MMM yyyy HH:mm", { locale: tr })}
                   </p>
                 ) : (
                   <p>Henüz giriş yapılmamış.</p>
                 )}
                 <p>
                   Hesap durumu:{" "}
-                  <span
-                    className={
-                      user.isActive ? "text-success" : "text-danger"
-                    }
-                  >
+                  <span className={user.isActive ? "text-success" : "text-danger"}>
                     {user.isActive ? "Aktif" : "Pasif"}
                   </span>
                 </p>

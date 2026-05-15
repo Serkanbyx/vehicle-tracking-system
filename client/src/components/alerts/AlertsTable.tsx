@@ -1,10 +1,10 @@
 import { Link } from "@tanstack/react-router";
-import { Check, MapPin, Trash2 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { tr } from "date-fns/locale";
+import { Check, MapPin, Trash2 } from "lucide-react";
 import type { Alert, AlertSeverity, AlertType } from "@/api/types";
-import { useAuth } from "@/context/auth.context";
 import { Badge, Button } from "@/components/ui";
+import { useAuth } from "@/context/auth.context";
 
 const SEVERITY_COLORS: Record<AlertSeverity, string> = {
   info: "bg-blue-500",
@@ -19,7 +19,10 @@ const TYPE_LABELS: Record<AlertType, string> = {
   geofence_exit: "Bölge Çıkış",
 };
 
-const TYPE_VARIANTS: Record<AlertType, "default" | "secondary" | "destructive" | "outline" | "warning"> = {
+const TYPE_VARIANTS: Record<
+  AlertType,
+  "default" | "secondary" | "destructive" | "outline" | "warning"
+> = {
   speed: "destructive",
   idle: "warning",
   geofence_enter: "default",
@@ -47,11 +50,7 @@ export function AlertsTable({
   const allChecked = alerts.length > 0 && alerts.every((a) => selectedIds.has(a.id));
 
   if (alerts.length === 0) {
-    return (
-      <div className="py-12 text-center text-sm text-gray-400">
-        Uyarı bulunamadı
-      </div>
-    );
+    return <div className="py-12 text-center text-sm text-gray-400">Uyarı bulunamadı</div>;
   }
 
   return (
@@ -111,9 +110,7 @@ export function AlertsTable({
                 )}
               </td>
               <td className="px-3 py-2">
-                <Badge variant={TYPE_VARIANTS[alert.type]}>
-                  {TYPE_LABELS[alert.type]}
-                </Badge>
+                <Badge variant={TYPE_VARIANTS[alert.type]}>{TYPE_LABELS[alert.type]}</Badge>
               </td>
               <td className="max-w-[220px] truncate px-3 py-2 text-gray-600 dark:text-gray-300">
                 {alert.message}

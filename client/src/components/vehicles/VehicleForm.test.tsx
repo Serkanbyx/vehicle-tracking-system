@@ -1,8 +1,8 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import React from "react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const mockCreateVehicle = vi.fn();
 const mockUpdateVehicle = vi.fn();
@@ -33,11 +33,7 @@ function Wrapper({ children }: { children: React.ReactNode }) {
   const qc = new QueryClient({
     defaultOptions: { queries: { retry: false } },
   });
-  return React.createElement(
-    QueryClientProvider,
-    { client: qc },
-    children,
-  );
+  return React.createElement(QueryClientProvider, { client: qc }, children);
 }
 
 beforeEach(() => {
@@ -46,9 +42,7 @@ beforeEach(() => {
 
 describe("VehicleForm — Create mode", () => {
   it("should render all form sections", async () => {
-    const { VehicleForm } = await import(
-      "@/components/vehicles/VehicleForm"
-    );
+    const { VehicleForm } = await import("@/components/vehicles/VehicleForm");
 
     render(React.createElement(VehicleForm), { wrapper: Wrapper });
 
@@ -57,18 +51,14 @@ describe("VehicleForm — Create mode", () => {
     expect(screen.getByLabelText("Model")).toBeInTheDocument();
     expect(screen.getByLabelText("Renk")).toBeInTheDocument();
     expect(screen.getByText("Sürücü Bilgileri")).toBeInTheDocument();
-    expect(
-      screen.getByRole("button", { name: /oluştur/i }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /oluştur/i })).toBeInTheDocument();
   });
 
   it("should call createVehicle with correct payload on submit", async () => {
     mockCreateVehicle.mockResolvedValue({ id: "new-v1" });
     const user = userEvent.setup();
 
-    const { VehicleForm } = await import(
-      "@/components/vehicles/VehicleForm"
-    );
+    const { VehicleForm } = await import("@/components/vehicles/VehicleForm");
 
     render(React.createElement(VehicleForm), { wrapper: Wrapper });
 
@@ -94,9 +84,7 @@ describe("VehicleForm — Create mode", () => {
     mockCreateVehicle.mockRejectedValue(new Error("Server error"));
     const user = userEvent.setup();
 
-    const { VehicleForm } = await import(
-      "@/components/vehicles/VehicleForm"
-    );
+    const { VehicleForm } = await import("@/components/vehicles/VehicleForm");
 
     render(React.createElement(VehicleForm), { wrapper: Wrapper });
 
@@ -132,34 +120,22 @@ describe("VehicleForm — Edit mode", () => {
   };
 
   it("should pre-fill form fields in edit mode", async () => {
-    const { VehicleForm } = await import(
-      "@/components/vehicles/VehicleForm"
-    );
+    const { VehicleForm } = await import("@/components/vehicles/VehicleForm");
 
-    render(
-      React.createElement(VehicleForm, { vehicle: existingVehicle }),
-      { wrapper: Wrapper },
-    );
+    render(React.createElement(VehicleForm, { vehicle: existingVehicle }), { wrapper: Wrapper });
 
     expect(screen.getByLabelText("Plaka *")).toHaveValue("06 EDIT 01");
     expect(screen.getByLabelText("Model")).toHaveValue("Volvo FH");
-    expect(
-      screen.getByRole("button", { name: /güncelle/i }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /güncelle/i })).toBeInTheDocument();
   });
 
   it("should call updateVehicle on submit in edit mode", async () => {
     mockUpdateVehicle.mockResolvedValue(existingVehicle);
     const user = userEvent.setup();
 
-    const { VehicleForm } = await import(
-      "@/components/vehicles/VehicleForm"
-    );
+    const { VehicleForm } = await import("@/components/vehicles/VehicleForm");
 
-    render(
-      React.createElement(VehicleForm, { vehicle: existingVehicle }),
-      { wrapper: Wrapper },
-    );
+    render(React.createElement(VehicleForm, { vehicle: existingVehicle }), { wrapper: Wrapper });
 
     const colorInput = screen.getByLabelText("Renk");
     await user.clear(colorInput);

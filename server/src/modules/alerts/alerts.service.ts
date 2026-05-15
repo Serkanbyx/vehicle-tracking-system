@@ -1,8 +1,8 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { In, Repository } from "typeorm";
-import type { AlertQueryDto } from "./dto/alert-query.dto.js";
+import type { Repository } from "typeorm";
 import { Alert } from "./alert.entity.js";
+import type { AlertQueryDto } from "./dto/alert-query.dto.js";
 
 @Injectable()
 export class AlertsService {
@@ -59,10 +59,7 @@ export class AlertsService {
     };
   }
 
-  async acknowledge(
-    id: string,
-    userId: string,
-  ): Promise<Alert | null> {
+  async acknowledge(id: string, userId: string): Promise<Alert | null> {
     const result = await this.alertsRepo.query(
       `UPDATE alert
        SET acknowledged = true,
@@ -76,10 +73,7 @@ export class AlertsService {
     return result[0] ?? null;
   }
 
-  async acknowledgeMany(
-    ids: string[],
-    userId: string,
-  ): Promise<{ affected: number }> {
+  async acknowledgeMany(ids: string[], userId: string): Promise<{ affected: number }> {
     const result = await this.alertsRepo
       .createQueryBuilder()
       .update(Alert)

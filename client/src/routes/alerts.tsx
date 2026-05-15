@@ -1,25 +1,20 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
-import { requireAuth } from "@/components/guards";
 import {
-  listAlerts,
   acknowledgeAlert,
   acknowledgeMany,
-  removeAlert,
   type ListAlertsQuery,
+  listAlerts,
+  removeAlert,
 } from "@/api/alerts";
-import { dashboardSocket } from "@/api/ws";
 import type { Alert, Pagination } from "@/api/types";
-import {
-  AlertsFilterBar,
-  AlertsStats,
-  AlertsTable,
-  BulkActionBar,
-} from "@/components/alerts";
+import { dashboardSocket } from "@/api/ws";
 import type { AlertsFilters } from "@/components/alerts";
+import { AlertsFilterBar, AlertsStats, AlertsTable, BulkActionBar } from "@/components/alerts";
 import { PageNavigator, TableRowSkeleton } from "@/components/common";
+import { requireAuth } from "@/components/guards";
 
 interface AlertsSearch {
   q?: string;
@@ -39,14 +34,10 @@ export const Route = createFileRoute("/alerts")({
     type: typeof raw.type === "string" ? raw.type : undefined,
     severity: typeof raw.severity === "string" ? raw.severity : undefined,
     vehicleId: typeof raw.vehicleId === "string" ? raw.vehicleId : undefined,
-    acknowledged:
-      typeof raw.acknowledged === "string" ? raw.acknowledged : undefined,
+    acknowledged: typeof raw.acknowledged === "string" ? raw.acknowledged : undefined,
     from: typeof raw.from === "string" ? raw.from : undefined,
     to: typeof raw.to === "string" ? raw.to : undefined,
-    page:
-      typeof raw.page === "number" && raw.page >= 1
-        ? Math.floor(raw.page)
-        : 1,
+    page: typeof raw.page === "number" && raw.page >= 1 ? Math.floor(raw.page) : 1,
   }),
   loaderDeps: ({ search }) => search,
   loader: ({ context, deps }) => {
@@ -67,11 +58,7 @@ function buildQuery(search: AlertsSearch): ListAlertsQuery {
     severity: search.severity || undefined,
     vehicleId: search.vehicleId || undefined,
     acknowledged:
-      search.acknowledged === "true"
-        ? true
-        : search.acknowledged === "false"
-          ? false
-          : undefined,
+      search.acknowledged === "true" ? true : search.acknowledged === "false" ? false : undefined,
     from: search.from || undefined,
     to: search.to || undefined,
   };
@@ -117,12 +104,8 @@ function AlertsPage() {
       if (!alert) return;
 
       if (matchesFilters(alert, search)) {
-        queryClient.setQueryData<Pagination<Alert>>(
-          ["alerts", query],
-          (old) =>
-            old
-              ? { ...old, items: [alert, ...old.items], total: old.total + 1 }
-              : old,
+        queryClient.setQueryData<Pagination<Alert>>(["alerts", query], (old) =>
+          old ? { ...old, items: [alert, ...old.items], total: old.total + 1 } : old,
         );
       }
 

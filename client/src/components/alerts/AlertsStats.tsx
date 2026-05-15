@@ -1,8 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
-import { AlertTriangle, Bell, MapPin, Gauge } from "lucide-react";
+import { AlertTriangle, Bell, Gauge, MapPin } from "lucide-react";
 import { getAlertStats } from "@/api/alerts";
-import { Card } from "@/components/ui";
 import type { AlertType } from "@/api/types";
+import { Card } from "@/components/ui";
 
 const TYPE_META: Record<AlertType, { label: string; icon: typeof Bell; color: string }> = {
   speed: { label: "Hız", icon: Gauge, color: "bg-red-500" },
@@ -20,10 +20,7 @@ export function AlertsStats() {
 
   if (!data) return null;
 
-  const maxType = Math.max(
-    ...Object.values(data.byType),
-    1,
-  );
+  const maxType = Math.max(...Object.values(data.byType), 1);
 
   return (
     <Card className="p-4">
@@ -44,24 +41,25 @@ export function AlertsStats() {
           </div>
         </div>
 
-        <div className="ml-auto flex flex-1 flex-wrap items-end gap-3" style={{ minWidth: "200px" }}>
-          {(Object.entries(data.byType) as [AlertType, number][]).map(
-            ([type, count]) => {
-              const meta = TYPE_META[type];
-              if (!meta) return null;
-              const pct = Math.max((count / maxType) * 100, 4);
-              return (
-                <div key={type} className="flex flex-col items-center gap-1">
-                  <span className="text-xs font-medium">{count}</span>
-                  <div
-                    className={`w-7 rounded-t ${meta.color}`}
-                    style={{ height: `${pct}%`, minHeight: "4px", maxHeight: "48px" }}
-                  />
-                  <span className="text-[10px] text-gray-500">{meta.label}</span>
-                </div>
-              );
-            },
-          )}
+        <div
+          className="ml-auto flex flex-1 flex-wrap items-end gap-3"
+          style={{ minWidth: "200px" }}
+        >
+          {(Object.entries(data.byType) as [AlertType, number][]).map(([type, count]) => {
+            const meta = TYPE_META[type];
+            if (!meta) return null;
+            const pct = Math.max((count / maxType) * 100, 4);
+            return (
+              <div key={type} className="flex flex-col items-center gap-1">
+                <span className="text-xs font-medium">{count}</span>
+                <div
+                  className={`w-7 rounded-t ${meta.color}`}
+                  style={{ height: `${pct}%`, minHeight: "4px", maxHeight: "48px" }}
+                />
+                <span className="text-[10px] text-gray-500">{meta.label}</span>
+              </div>
+            );
+          })}
         </div>
       </div>
     </Card>

@@ -1,17 +1,17 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useState, useCallback, useMemo } from "react";
-import { Search } from "lucide-react";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { formatDistanceToNow } from "date-fns";
 import { tr } from "date-fns/locale";
+import { Search } from "lucide-react";
+import { useCallback, useMemo, useState } from "react";
 import { toast } from "sonner";
-import { requireAdmin } from "@/components/guards";
 import { getAdminFleet } from "@/api/admin";
+import type { VehicleType } from "@/api/types";
 import { bulkActivate } from "@/api/vehicles";
-import type { FleetVehicle, VehicleType } from "@/api/types";
-import { useDebounce } from "@/hooks/use-debounce";
-import { Badge, Button, Input, Select, Switch } from "@/components/ui";
 import { StatusBadge } from "@/components/common";
+import { requireAdmin } from "@/components/guards";
+import { Badge, Button, Input, Select, Switch } from "@/components/ui";
+import { useDebounce } from "@/hooks/use-debounce";
 
 interface FleetSearch {
   type?: string;
@@ -59,18 +59,11 @@ function AdminFleetPage() {
     if (!fleet) return [];
     return fleet.filter((v) => {
       if (search.type && v.vehicleType !== search.type) return false;
-      if (
-        search.status &&
-        (v.lastLocation?.status ?? "offline") !== search.status
-      )
-        return false;
+      if (search.status && (v.lastLocation?.status ?? "offline") !== search.status) return false;
       if (search.tag && !v.tags.includes(search.tag)) return false;
       if (debouncedSearch) {
         const q = debouncedSearch.toLowerCase();
-        if (
-          !v.plate.toLowerCase().includes(q) &&
-          !(v.model ?? "").toLowerCase().includes(q)
-        )
+        if (!v.plate.toLowerCase().includes(q) && !(v.model ?? "").toLowerCase().includes(q))
           return false;
       }
       return true;
@@ -115,9 +108,7 @@ function AdminFleetPage() {
         await bulkActivate([...selectedIds], isActive);
         await queryClient.invalidateQueries({ queryKey: ["admin", "fleet"] });
         setSelectedIds(new Set());
-        toast.success(
-          `${selectedIds.size} araç ${isActive ? "aktif" : "pasif"} yapıldı.`,
-        );
+        toast.success(`${selectedIds.size} araç ${isActive ? "aktif" : "pasif"} yapıldı.`);
       } catch {
         toast.error("Toplu işlem başarısız.");
       } finally {
@@ -134,8 +125,7 @@ function AdminFleetPage() {
     [navigate],
   );
 
-  const allChecked =
-    filtered.length > 0 && filtered.every((v) => selectedIds.has(v.id));
+  const allChecked = filtered.length > 0 && filtered.every((v) => selectedIds.has(v.id));
 
   return (
     <div className="space-y-4">
@@ -191,14 +181,8 @@ function AdminFleetPage() {
 
       {selectedIds.size > 0 && (
         <div className="flex items-center gap-3 rounded-md border border-brand-200 bg-brand-50 px-4 py-2 dark:border-brand-700 dark:bg-brand-900/10">
-          <span className="text-sm font-medium">
-            {selectedIds.size} araç seçildi
-          </span>
-          <Button
-            size="sm"
-            onClick={() => handleBulkActivate(true)}
-            disabled={bulkLoading}
-          >
+          <span className="text-sm font-medium">{selectedIds.size} araç seçildi</span>
+          <Button size="sm" onClick={() => handleBulkActivate(true)} disabled={bulkLoading}>
             Aktifleştir
           </Button>
           <Button
@@ -240,10 +224,7 @@ function AdminFleetPage() {
                 className="cursor-pointer border-b border-gray-100 transition-colors hover:bg-gray-50 dark:border-gray-800 dark:hover:bg-gray-800/50"
                 onClick={() => handleRowClick(v.id)}
               >
-                <td
-                  className="px-3 py-2"
-                  onClick={(e) => e.stopPropagation()}
-                >
+                <td className="px-3 py-2" onClick={(e) => e.stopPropagation()}>
                   <input
                     type="checkbox"
                     checked={selectedIds.has(v.id)}
@@ -256,14 +237,9 @@ function AdminFleetPage() {
                   {TYPE_LABELS[v.vehicleType] ?? v.vehicleType}
                 </td>
                 <td className="px-3 py-2">
-                  <StatusBadge
-                    status={v.lastLocation?.status ?? "offline"}
-                  />
+                  <StatusBadge status={v.lastLocation?.status ?? "offline"} />
                 </td>
-                <td
-                  className="px-3 py-2"
-                  onClick={(e) => e.stopPropagation()}
-                >
+                <td className="px-3 py-2" onClick={(e) => e.stopPropagation()}>
                   <Switch checked={v.isActive} disabled />
                 </td>
                 <td className="px-3 py-2">
@@ -274,15 +250,11 @@ function AdminFleetPage() {
                       </Badge>
                     ))}
                     {v.tags.length > 3 && (
-                      <span className="text-xs text-gray-400">
-                        +{v.tags.length - 3}
-                      </span>
+                      <span className="text-xs text-gray-400">+{v.tags.length - 3}</span>
                     )}
                   </div>
                 </td>
-                <td className="px-3 py-2 text-xs text-gray-500">
-                  {v.recentAlertCount ?? 0}
-                </td>
+                <td className="px-3 py-2 text-xs text-gray-500">{v.recentAlertCount ?? 0}</td>
                 <td className="whitespace-nowrap px-3 py-2 text-xs text-gray-500">
                   {formatDistanceToNow(new Date(v.createdAt), {
                     addSuffix: true,
@@ -293,10 +265,7 @@ function AdminFleetPage() {
             ))}
             {filtered.length === 0 && (
               <tr>
-                <td
-                  colSpan={8}
-                  className="px-3 py-8 text-center text-gray-400"
-                >
+                <td colSpan={8} className="px-3 py-8 text-center text-gray-400">
                   Araç bulunamadı
                 </td>
               </tr>

@@ -1,8 +1,8 @@
-import { Search } from "lucide-react";
 import { useNavigate } from "@tanstack/react-router";
+import { Search } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Button, Input, Select } from "@/components/ui";
 import { useDebounce } from "@/hooks/use-debounce";
-import { useState, useEffect } from "react";
 
 export interface AlertsFilters {
   q?: string;

@@ -1,14 +1,12 @@
-import { test, expect } from "@playwright/test";
-import { seedTestData, ADMIN, uniqueId } from "./helpers";
+import { expect, test } from "@playwright/test";
+import { seedTestData, uniqueId } from "./helpers";
 
 test.beforeAll(() => {
   seedTestData();
 });
 
 test.describe("Auth E2E — Register, Login, Logout flow", () => {
-  test("Register a new user → land on dashboard → logout → login → logout", async ({
-    page,
-  }) => {
+  test("Register a new user → land on dashboard → logout → login → logout", async ({ page }) => {
     const uid = uniqueId();
     const newUser = {
       name: `Test User ${uid}`,
@@ -29,9 +27,9 @@ test.describe("Auth E2E — Register, Login, Logout flow", () => {
     await expect(page.locator("body")).not.toHaveText(/kayıt ol/i);
 
     /* ── 2. Logout ── */
-    const profileBtn = page.getByRole("button", { name: /profil|kullanıcı/i }).or(
-      page.locator('[data-testid="user-menu"]'),
-    );
+    const profileBtn = page
+      .getByRole("button", { name: /profil|kullanıcı/i })
+      .or(page.locator('[data-testid="user-menu"]'));
     if (await profileBtn.isVisible()) {
       await profileBtn.click();
       const logoutItem = page.getByRole("menuitem", { name: /çıkış|logout/i });
@@ -48,9 +46,9 @@ test.describe("Auth E2E — Register, Login, Logout flow", () => {
     await expect(page).toHaveURL("/");
 
     /* ── 4. Logout again ── */
-    const profileBtn2 = page.getByRole("button", { name: /profil|kullanıcı/i }).or(
-      page.locator('[data-testid="user-menu"]'),
-    );
+    const profileBtn2 = page
+      .getByRole("button", { name: /profil|kullanıcı/i })
+      .or(page.locator('[data-testid="user-menu"]'));
     if (await profileBtn2.isVisible()) {
       await profileBtn2.click();
       await page.getByRole("menuitem", { name: /çıkış|logout/i }).click();
@@ -65,9 +63,7 @@ test.describe("Auth E2E — Register, Login, Logout flow", () => {
     await page.getByRole("button", { name: /giriş yap/i }).click();
 
     await expect(
-      page.locator("text=Geçersiz e-posta veya şifre").or(
-        page.locator("text=Bir hata oluştu"),
-      ),
+      page.locator("text=Geçersiz e-posta veya şifre").or(page.locator("text=Bir hata oluştu")),
     ).toBeVisible();
   });
 

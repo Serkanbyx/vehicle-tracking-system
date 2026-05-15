@@ -3,9 +3,9 @@ import { formatDistanceToNow } from "date-fns";
 import { tr } from "date-fns/locale";
 import { Edit, Eye, Truck } from "lucide-react";
 import type { Vehicle } from "@/api/types";
-import { useAuth } from "@/context/auth.context";
-import { Badge, Button, Card, CardContent } from "@/components/ui";
 import { StatusBadge } from "@/components/common/StatusBadge";
+import { Badge, Button, Card, CardContent } from "@/components/ui";
+import { useAuth } from "@/context/auth.context";
 
 interface VehicleCardProps {
   vehicle: Vehicle;

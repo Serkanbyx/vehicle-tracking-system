@@ -1,9 +1,12 @@
 import { Car, Moon, Wifi } from "lucide-react";
-import { Badge } from "@/components/ui";
 import type { VehicleStatus } from "@/api/types";
+import { Badge } from "@/components/ui";
 import { STATUS_LABELS } from "@/utils/constants";
 
-const config: Record<VehicleStatus, { icon: typeof Car; variant: "success" | "warning" | "secondary" }> = {
+const config: Record<
+  VehicleStatus,
+  { icon: typeof Car; variant: "success" | "warning" | "secondary" }
+> = {
   moving: { icon: Car, variant: "success" },
   idle: { icon: Moon, variant: "warning" },
   offline: { icon: Wifi, variant: "secondary" },

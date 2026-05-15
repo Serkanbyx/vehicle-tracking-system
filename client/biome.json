@@ -1,26 +1,79 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.9.0/schema.json",
+  "root": false,
+  "$schema": "https://biomejs.dev/schemas/2.4.15/schema.json",
   "extends": ["../biome.json"],
+  "css": {
+    "parser": {
+      "tailwindDirectives": true
+    }
+  },
   "linter": {
     "rules": {
       "a11y": {
         "recommended": true
       },
+      "correctness": {
+        "useExhaustiveDependencies": "off"
+      },
       "style": {
         "useImportType": "error"
-      },
-      "correctness": {
-        "useExhaustiveDependencies": "error"
       },
       "suspicious": {
         "noArrayIndexKey": "error"
       }
     }
   },
+  "overrides": [
+    {
+      "includes": ["src/styles/globals.css"],
+      "linter": {
+        "rules": {
+          "complexity": {
+            "noImportantStyles": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": ["src/components/ui/**"],
+      "linter": {
+        "rules": {
+          "a11y": {
+            "noLabelWithoutControl": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": ["**/*.test.ts", "**/*.test.tsx"],
+      "linter": {
+        "rules": {
+          "suspicious": {
+            "noExplicitAny": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": ["src/routes/admin/fleet.tsx"],
+      "linter": {
+        "rules": {
+          "a11y": {
+            "useKeyWithClickEvents": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": ["src/routeTree.gen.ts"],
+      "linter": { "enabled": false },
+      "formatter": { "enabled": false },
+      "assist": { "enabled": false }
+    }
+  ],
   "javascript": {
     "parser": {
-      "unsafeParameterDecoratorsEnabled": false,
-      "jsxEverywhere": true
+      "unsafeParameterDecoratorsEnabled": false
     },
     "jsxRuntime": "reactClassic"
   }

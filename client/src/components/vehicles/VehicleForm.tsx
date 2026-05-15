@@ -3,10 +3,9 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
-import { createVehicle, updateVehicle } from "@/api/vehicles";
+import type { Vehicle, VehicleDriver, VehicleType } from "@/api/types";
 import { uploadDriver, uploadVehicle } from "@/api/uploads";
-import { useAuth } from "@/context/auth.context";
-import type { Vehicle, VehicleType } from "@/api/types";
+import { createVehicle, updateVehicle } from "@/api/vehicles";
 import { Button, Input, Label, Select, Slider } from "@/components/ui";
 import { PhotoUpload } from "./PhotoUpload";
 
@@ -20,7 +19,6 @@ export function VehicleForm({ vehicle }: VehicleFormProps) {
   const editing = !!vehicle;
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const { hasRole } = useAuth();
   const [error, setError] = useState<string | null>(null);
 
   const form = useForm({
@@ -33,8 +31,8 @@ export function VehicleForm({ vehicle }: VehicleFormProps) {
       driverName: vehicle?.driver?.name ?? "",
       driverPhone: vehicle?.driver?.phone ?? "",
       driverLicense: vehicle?.driver?.licenseNumber ?? "",
-      driverPhotoUrl: vehicle?.driver?.photoUrl ?? null as string | null,
-      photoUrl: vehicle?.photoUrl ?? null as string | null,
+      driverPhotoUrl: vehicle?.driver?.photoUrl ?? (null as string | null),
+      photoUrl: vehicle?.photoUrl ?? (null as string | null),
       speedLimitKmh: vehicle?.speedLimitKmh ?? 90,
       tags: vehicle?.tags?.join(", ") ?? "",
     },
@@ -47,18 +45,23 @@ export function VehicleForm({ vehicle }: VehicleFormProps) {
           .filter(Boolean)
           .slice(0, 10);
 
+        const driver: VehicleDriver = {};
+        const driverName = value.driverName?.trim();
+        if (driverName) driver.name = driverName;
+        const driverPhone = value.driverPhone?.trim();
+        if (driverPhone) driver.phone = driverPhone;
+        const driverLicense = value.driverLicense?.trim();
+        if (driverLicense) driver.licenseNumber = driverLicense;
+        const driverPhoto = value.driverPhotoUrl?.trim();
+        if (driverPhoto) driver.photoUrl = driverPhoto;
+
         const payload = {
           plate: value.plate.toUpperCase(),
           vehicleType: value.vehicleType,
           model: value.model || null,
           year: value.year || null,
           color: value.color || null,
-          driver: {
-            name: value.driverName || undefined,
-            phone: value.driverPhone || undefined,
-            licenseNumber: value.driverLicense || undefined,
-            photoUrl: value.driverPhotoUrl || undefined,
-          },
+          driver,
           photoUrl: value.photoUrl,
           speedLimitKmh: value.speedLimitKmh,
           tags,
@@ -297,17 +300,11 @@ export function VehicleForm({ vehicle }: VehicleFormProps) {
       </fieldset>
 
       <div className="flex justify-end gap-3 border-t border-gray-200 pt-4 dark:border-gray-700">
-        <Button
-          type="button"
-          variant="outline"
-          onClick={() => window.history.back()}
-        >
+        <Button type="button" variant="outline" onClick={() => window.history.back()}>
           İptal
         </Button>
         <Button type="submit" disabled={form.state.isSubmitting}>
-          {form.state.isSubmitting && (
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-          )}
+          {form.state.isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
           {editing ? "Güncelle" : "Oluştur"}
         </Button>
       </div>

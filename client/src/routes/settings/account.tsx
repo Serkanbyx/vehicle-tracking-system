@@ -1,11 +1,10 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useForm } from "@tanstack/react-form";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
-import { requireAuth } from "@/components/guards";
-import { useAuth } from "@/context/auth.context";
 import * as authService from "@/api/auth";
+import { requireAuth } from "@/components/guards";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -23,6 +22,7 @@ import {
   Input,
   Label,
 } from "@/components/ui";
+import { useAuth } from "@/context/auth.context";
 
 export const Route = createFileRoute("/settings/account")({
   beforeLoad: requireAuth,
@@ -96,9 +96,7 @@ function SettingsAccountPage() {
           <div className="flex flex-col gap-1.5">
             <Label>E-posta Adresi</Label>
             <Input value={user.email} disabled className="max-w-sm" />
-            <p className="text-xs text-gray-500">
-              E-posta adresi değiştirilemez.
-            </p>
+            <p className="text-xs text-gray-500">E-posta adresi değiştirilemez.</p>
           </div>
         </CardContent>
       </Card>
@@ -163,10 +161,7 @@ function SettingsAccountPage() {
             </passwordForm.Field>
 
             <div>
-              <Button
-                type="submit"
-                disabled={passwordForm.state.isSubmitting}
-              >
+              <Button type="submit" disabled={passwordForm.state.isSubmitting}>
                 {passwordForm.state.isSubmitting && (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 )}
@@ -179,19 +174,13 @@ function SettingsAccountPage() {
 
       <Card className="border-danger/30">
         <CardHeader>
-          <CardTitle className="text-base text-danger">
-            Tehlikeli Bölge
-          </CardTitle>
+          <CardTitle className="text-base text-danger">Tehlikeli Bölge</CardTitle>
         </CardHeader>
         <CardContent>
           <p className="mb-4 text-sm text-gray-500">
-            Hesabınızı sildiğinizde tüm verileriniz kalıcı olarak silinir. Bu
-            işlem geri alınamaz.
+            Hesabınızı sildiğinizde tüm verileriniz kalıcı olarak silinir. Bu işlem geri alınamaz.
           </p>
-          <Button
-            variant="destructive"
-            onClick={() => setDeleteOpen(true)}
-          >
+          <Button variant="destructive" onClick={() => setDeleteOpen(true)}>
             Hesabımı Sil
           </Button>
         </CardContent>
@@ -202,8 +191,8 @@ function SettingsAccountPage() {
           <AlertDialogHeader>
             <AlertDialogTitle>Hesabı Sil</AlertDialogTitle>
             <AlertDialogDescription>
-              Hesabınızı silmek istediğinize emin misiniz? Bu işlem geri
-              alınamaz. Doğrulamak için şifrenizi girin.
+              Hesabınızı silmek istediğinize emin misiniz? Bu işlem geri alınamaz. Doğrulamak için
+              şifrenizi girin.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <div className="py-2">
@@ -229,9 +218,7 @@ function SettingsAccountPage() {
               onClick={handleDeleteAccount}
               disabled={deleteLoading || !deletePassword}
             >
-              {deleteLoading && (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              )}
+              {deleteLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Hesabı Sil
             </AlertDialogAction>
           </AlertDialogFooter>

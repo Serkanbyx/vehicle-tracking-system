@@ -1,8 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { requireAuth } from "@/components/guards";
-import { StatsRow } from "@/components/common/StatsRow";
 import { RecentAlerts } from "@/components/common/RecentAlerts";
+import { StatsRow } from "@/components/common/StatsRow";
 import { TopViolators } from "@/components/common/TopViolators";
+import { requireAuth } from "@/components/guards";
 import { LiveMap } from "@/components/map";
 
 export const Route = createFileRoute("/")({

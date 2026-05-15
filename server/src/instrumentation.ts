@@ -12,12 +12,7 @@ Sentry.init({
 
     if (event.request?.data && typeof event.request.data === "object") {
       const data = event.request.data as Record<string, unknown>;
-      for (const key of [
-        "password",
-        "currentPassword",
-        "newPassword",
-        "refreshToken",
-      ]) {
+      for (const key of ["password", "currentPassword", "newPassword", "refreshToken"]) {
         if (key in data) data[key] = "[redacted]";
       }
     }

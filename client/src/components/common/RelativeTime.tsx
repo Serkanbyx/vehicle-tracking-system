@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
 import { formatDistanceToNow } from "date-fns";
 import { tr } from "date-fns/locale";
+import { useEffect, useState } from "react";
 
 interface RelativeTimeProps {
   date: Date | string;

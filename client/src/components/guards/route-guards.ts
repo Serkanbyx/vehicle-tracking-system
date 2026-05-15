@@ -14,19 +14,23 @@ export function requireAuth({ context, location }: BeforeLoadArgs): void {
 
 export function requireAdmin({ context, location }: BeforeLoadArgs): void {
   requireAuth({ context, location });
-  if (context.auth.user!.role !== "admin") {
+  const user = context.auth.user;
+  if (!user || user.role !== "admin") {
     throw redirect({ to: "/" });
   }
 }
 
 export function requireManagerOrAdmin({ context, location }: BeforeLoadArgs): void {
   requireAuth({ context, location });
-  if (context.auth.user!.role === "viewer") {
+  const user = context.auth.user;
+  if (!user || user.role === "viewer") {
     throw redirect({ to: "/" });
   }
 }
 
-export function requireGuest({ context }: Pick<BeforeLoadArgs, "context"> & { search: Record<string, unknown> }): void {
+export function requireGuest({
+  context,
+}: Pick<BeforeLoadArgs, "context"> & { search: Record<string, unknown> }): void {
   if (context.auth.user) {
     throw redirect({ to: "/" });
   }

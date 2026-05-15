@@ -1,10 +1,9 @@
 import { useNavigate } from "@tanstack/react-router";
 import { Plus, Search } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Button, Input, Select } from "@/components/ui";
 import { useAuth } from "@/context/auth.context";
 import { useDebounce } from "@/hooks/use-debounce";
-import { Button, Input, Select } from "@/components/ui";
-import { useEffect } from "react";
 
 const VEHICLE_TYPES = ["car", "truck", "van", "motorcycle", "bus", "other"] as const;
 const STATUSES = ["moving", "idle", "offline"] as const;
@@ -25,7 +24,7 @@ interface VehicleFiltersProps {
 }
 
 export function VehicleFilters({ search }: VehicleFiltersProps) {
-  const navigate = useNavigate();
+  const navigate = useNavigate({ from: "/vehicles/" });
   const { hasRole } = useAuth();
   const [query, setQuery] = useState(search.q ?? "");
   const debouncedQuery = useDebounce(query, 300);
@@ -33,14 +32,18 @@ export function VehicleFilters({ search }: VehicleFiltersProps) {
   useEffect(() => {
     if (debouncedQuery !== (search.q ?? "")) {
       void navigate({
-        search: (prev: Record<string, unknown>) => ({ ...prev, q: debouncedQuery || undefined, page: 1 }),
+        search: (prev) => ({
+          ...prev,
+          q: debouncedQuery || undefined,
+          page: 1,
+        }),
       });
     }
   }, [debouncedQuery]);
 
   const updateSearch = (key: string, value: string | undefined) => {
     void navigate({
-      search: (prev: Record<string, unknown>) => ({ ...prev, [key]: value || undefined, page: 1 }),
+      search: (prev) => ({ ...prev, [key]: value || undefined, page: 1 }),
     });
   };
 

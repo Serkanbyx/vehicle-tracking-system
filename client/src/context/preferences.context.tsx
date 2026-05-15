@@ -1,26 +1,44 @@
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
 import type { ReactNode } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import * as authService from "@/api/auth";
-import { useAuth } from "./auth.context";
 import type { UserPreferences } from "@/api/types";
+import { useAuth } from "./auth.context";
 
-const DEFAULT_PREFERENCES: Required<
+const DEFAULT_MAP_DEFAULTS = {
+  center: [35.2, 39.0] as [number, number],
+  zoom: 6,
+};
+
+type ResolvedPreferences = Required<
   Pick<UserPreferences, "theme" | "fontSize" | "contentDensity" | "animations">
-> = {
+> & {
+  mapDefaults: {
+    center: [number, number];
+    zoom: number;
+  };
+};
+
+const DEFAULT_PREFERENCES: ResolvedPreferences = {
   theme: "system",
   fontSize: "md",
   contentDensity: "comfortable",
   animations: true,
+  mapDefaults: DEFAULT_MAP_DEFAULTS,
 };
 
-type ResolvedPreferences = typeof DEFAULT_PREFERENCES;
+function mergeFromUserPrefs(userPrefs: UserPreferences | undefined): ResolvedPreferences {
+  if (!userPrefs) return DEFAULT_PREFERENCES;
+  return {
+    theme: userPrefs.theme ?? DEFAULT_PREFERENCES.theme,
+    fontSize: userPrefs.fontSize ?? DEFAULT_PREFERENCES.fontSize,
+    contentDensity: userPrefs.contentDensity ?? DEFAULT_PREFERENCES.contentDensity,
+    animations: userPrefs.animations ?? DEFAULT_PREFERENCES.animations,
+    mapDefaults: {
+      center: userPrefs.mapDefaults?.center ?? DEFAULT_MAP_DEFAULTS.center,
+      zoom: userPrefs.mapDefaults?.zoom ?? DEFAULT_MAP_DEFAULTS.zoom,
+    },
+  };
+}
 
 interface PreferencesState {
   preferences: ResolvedPreferences;
@@ -35,14 +53,13 @@ const PreferencesContext = createContext<PreferencesState | null>(null);
 export function PreferencesProvider({ children }: { children: ReactNode }) {
   const { user, updateUser } = useAuth();
 
-  const [preferences, setPreferences] = useState<ResolvedPreferences>(() => ({
-    ...DEFAULT_PREFERENCES,
-    ...user?.preferences,
-  }));
+  const [preferences, setPreferences] = useState<ResolvedPreferences>(() =>
+    mergeFromUserPrefs(user?.preferences),
+  );
 
   useEffect(() => {
     if (user?.preferences) {
-      setPreferences((prev) => ({ ...prev, ...user.preferences }));
+      setPreferences(mergeFromUserPrefs(user.preferences));
     }
   }, [user?.preferences]);
 
@@ -63,21 +80,14 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
     body.classList.remove("font-sm", "font-md", "font-lg");
     body.classList.add(`font-${preferences.fontSize}`);
 
-    body.classList.remove(
-      "density-compact",
-      "density-comfortable",
-      "density-spacious",
-    );
+    body.classList.remove("density-compact", "density-comfortable", "density-spacious");
     body.classList.add(`density-${preferences.contentDensity}`);
 
     body.classList.toggle("no-anim", !preferences.animations);
   }, [preferences]);
 
   const updatePreference = useCallback(
-    <K extends keyof ResolvedPreferences>(
-      key: K,
-      value: ResolvedPreferences[K],
-    ) => {
+    <K extends keyof ResolvedPreferences>(key: K, value: ResolvedPreferences[K]) => {
       setPreferences((prev) => {
         const next = { ...prev, [key]: value };
 
@@ -100,11 +110,7 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
     [preferences, updatePreference],
   );
 
-  return (
-    <PreferencesContext.Provider value={contextValue}>
-      {children}
-    </PreferencesContext.Provider>
-  );
+  return <PreferencesContext.Provider value={contextValue}>{children}</PreferencesContext.Provider>;
 }
 
 export function usePreferences(): PreferencesState {

@@ -29,11 +29,21 @@ export function getTrip(id: string): Promise<Trip> {
   return fetcher<Trip>(`/trips/${id}`);
 }
 
-export function getDailySummary(query: { vehicleId?: string; from: string; to: string }): Promise<DailySummary[]> {
-  return fetcher<DailySummary[]>(`/trips/daily-summary${toParams(query as Record<string, unknown>)}`);
+export function getDailySummary(query: {
+  vehicleId?: string;
+  from: string;
+  to: string;
+}): Promise<DailySummary[]> {
+  return fetcher<DailySummary[]>(
+    `/trips/daily-summary${toParams(query as Record<string, unknown>)}`,
+  );
 }
 
-export async function exportTripsCsv(query: { vehicleId?: string; from: string; to: string }): Promise<Blob> {
+export async function exportTripsCsv(query: {
+  vehicleId?: string;
+  from: string;
+  to: string;
+}): Promise<Blob> {
   const params = toParams(query as Record<string, unknown>);
   const res = await fetch(`/trips/export${params}`, { credentials: "include" });
   if (!res.ok) throw new Error("Export failed");

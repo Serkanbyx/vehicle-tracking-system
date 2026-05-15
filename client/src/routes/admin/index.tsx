@@ -1,22 +1,9 @@
-import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import {
-  Activity,
-  AlertTriangle,
-  Car,
-  Route as RouteIcon,
-  Shield,
-  Users,
-} from "lucide-react";
-import { requireAdmin } from "@/components/guards";
+import { createFileRoute } from "@tanstack/react-router";
+import { Activity, AlertTriangle, Car, Route as RouteIcon, Shield, Users } from "lucide-react";
 import { getAdminStats } from "@/api/admin";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  Skeleton,
-} from "@/components/ui";
+import { requireAdmin } from "@/components/guards";
+import { Card, CardContent, CardHeader, CardTitle, Skeleton } from "@/components/ui";
 
 export const Route = createFileRoute("/admin/")({
   beforeLoad: requireAdmin,
@@ -52,9 +39,7 @@ function AdminDashboardPage() {
   const alerts = data?.alerts as
     | { today: number; week: number; unacknowledged: number }
     | undefined;
-  const trips = data?.trips as
-    | { today: number; week: number; totalDistanceKm: number }
-    | undefined;
+  const trips = data?.trips as { today: number; week: number; totalDistanceKm: number } | undefined;
 
   return (
     <div className="space-y-6">
@@ -140,19 +125,15 @@ function AdminDashboardPage() {
           </CardHeader>
           <CardContent>
             <div className="flex flex-wrap gap-3">
-              {(data.topViolators as { plate?: string; count?: number }[]).map(
-                (v, i) => (
-                  <div
-                    key={v.plate ?? i.toString()}
-                    className="rounded-md border border-gray-200 px-3 py-1.5 text-sm dark:border-gray-700"
-                  >
-                    <span className="font-medium">{v.plate ?? "—"}</span>
-                    <span className="ml-2 text-xs text-gray-500">
-                      {v.count ?? 0} ihlal
-                    </span>
-                  </div>
-                ),
-              )}
+              {(data.topViolators as { plate?: string; count?: number }[]).map((v, i) => (
+                <div
+                  key={v.plate ?? i.toString()}
+                  className="rounded-md border border-gray-200 px-3 py-1.5 text-sm dark:border-gray-700"
+                >
+                  <span className="font-medium">{v.plate ?? "—"}</span>
+                  <span className="ml-2 text-xs text-gray-500">{v.count ?? 0} ihlal</span>
+                </div>
+              ))}
             </div>
           </CardContent>
         </Card>
@@ -184,9 +165,7 @@ function StatCard({ icon: Icon, title, value, color, items }: StatCardProps) {
           {items.map((item) => (
             <span key={item.label} className="text-xs text-gray-500">
               {item.label}:{" "}
-              <span className="font-medium text-gray-700 dark:text-gray-300">
-                {item.value}
-              </span>
+              <span className="font-medium text-gray-700 dark:text-gray-300">{item.value}</span>
             </span>
           ))}
         </div>

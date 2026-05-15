@@ -8,10 +8,6 @@ export const dataSource = new DataSource({
   migrations: ["src/migrations/*.ts"],
   migrationsRun: false,
   synchronize: false,
-  logging:
-    process.env.NODE_ENV !== "production" ? ["error", "warn"] : ["error"],
-  ssl:
-    process.env.NODE_ENV === "production"
-      ? { rejectUnauthorized: false }
-      : false,
+  logging: process.env.NODE_ENV !== "production" ? ["error", "warn"] : ["error"],
+  ssl: process.env.NODE_ENV === "production" ? { rejectUnauthorized: false } : false,
 });

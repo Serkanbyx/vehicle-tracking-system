@@ -1,6 +1,6 @@
+import { Readable } from "node:stream";
 import { Inject, Injectable } from "@nestjs/common";
 import type { UploadApiOptions, UploadApiResponse, v2 } from "cloudinary";
-import { Readable } from "node:stream";
 import { CLOUDINARY } from "../../config/cloudinary.js";
 
 interface UploadOptions {
@@ -15,9 +15,7 @@ interface UploadResult {
 
 @Injectable()
 export class UploadsService {
-  constructor(
-    @Inject(CLOUDINARY) private readonly cloudinary: typeof v2,
-  ) {}
+  constructor(@Inject(CLOUDINARY) private readonly cloudinary: typeof v2) {}
 
   async upload(buffer: Buffer, options: UploadOptions): Promise<UploadResult> {
     return new Promise((resolve, reject) => {

@@ -11,7 +11,7 @@ import { FileInterceptor } from "@nestjs/platform-express";
 import { Throttle } from "@nestjs/throttler";
 import { Roles } from "../../common/decorators/roles.decorator.js";
 import { UserRole } from "../../common/enums/user-role.enum.js";
-import { UploadsService } from "./uploads.service.js";
+import type { UploadsService } from "./uploads.service.js";
 
 @Controller("uploads")
 export class UploadsController {
@@ -26,9 +26,7 @@ export class UploadsController {
 
     const result = await this.uploadsService.upload(file.buffer, {
       folder: "vtracker/drivers",
-      transformation: [
-        { width: 400, height: 400, crop: "fill", gravity: "face" },
-      ],
+      transformation: [{ width: 400, height: 400, crop: "fill", gravity: "face" }],
     });
 
     return { success: true, data: result };
@@ -57,9 +55,7 @@ export class UploadsController {
 
     const result = await this.uploadsService.upload(file.buffer, {
       folder: "vtracker/avatars",
-      transformation: [
-        { width: 300, height: 300, crop: "fill", gravity: "face" },
-      ],
+      transformation: [{ width: 300, height: 300, crop: "fill", gravity: "face" }],
     });
 
     return { success: true, data: result };

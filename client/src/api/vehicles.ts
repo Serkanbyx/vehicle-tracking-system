@@ -71,14 +71,17 @@ export interface ExportRouteQuery {
 }
 
 export async function exportRoute(id: string, query: ExportRouteQuery): Promise<Blob> {
-  const params = toParams(query as Record<string, unknown>);
+  const params = toParams(query as unknown as Record<string, unknown>);
   const url = `/vehicles/${id}/export${params}`;
   const res = await fetch(url, { credentials: "include" });
   if (!res.ok) throw new Error("Export failed");
   return res.blob();
 }
 
-export function getHeatmap(id: string, query: { from: string; to: string }): Promise<HeatmapResponse> {
+export function getHeatmap(
+  id: string,
+  query: { from: string; to: string },
+): Promise<HeatmapResponse> {
   const params = toParams(query as Record<string, unknown>);
   return fetcher<HeatmapResponse>(`/vehicles/${id}/heatmap${params}`);
 }

@@ -1,7 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { format, subDays } from "date-fns";
 import { tr } from "date-fns/locale";
-import { formatDistanceToNow } from "date-fns";
 import { MapPin } from "lucide-react";
 import { useState } from "react";
 import { listTrips } from "@/api/trips";
@@ -14,9 +13,7 @@ interface TripsTabProps {
 }
 
 export function TripsTab({ vehicleId }: TripsTabProps) {
-  const [from, setFrom] = useState(
-    format(subDays(new Date(), 7), "yyyy-MM-dd'T'HH:mm"),
-  );
+  const [from, setFrom] = useState(format(subDays(new Date(), 7), "yyyy-MM-dd'T'HH:mm"));
   const [to, setTo] = useState(format(new Date(), "yyyy-MM-dd'T'HH:mm"));
 
   const { data, isLoading } = useQuery({
@@ -87,10 +84,7 @@ export function TripsTab({ vehicleId }: TripsTabProps) {
 
 function TripRow({ trip }: { trip: Trip }) {
   const duration = trip.endedAt
-    ? Math.round(
-        (new Date(trip.endedAt).getTime() - new Date(trip.startedAt).getTime()) /
-          60_000,
-      )
+    ? Math.round((new Date(trip.endedAt).getTime() - new Date(trip.startedAt).getTime()) / 60_000)
     : null;
 
   return (
@@ -107,13 +101,22 @@ function TripRow({ trip }: { trip: Trip }) {
       <td className="px-4 py-3">
         <div className="flex gap-1">
           {trip.speedViolations > 0 && (
-            <span className={cn("inline-block h-2 w-2 rounded-full bg-red-500")} title={`${trip.speedViolations} hız ihlali`} />
+            <span
+              className={cn("inline-block h-2 w-2 rounded-full bg-red-500")}
+              title={`${trip.speedViolations} hız ihlali`}
+            />
           )}
           {trip.idleEvents > 0 && (
-            <span className={cn("inline-block h-2 w-2 rounded-full bg-amber-500")} title={`${trip.idleEvents} boşta kalma`} />
+            <span
+              className={cn("inline-block h-2 w-2 rounded-full bg-amber-500")}
+              title={`${trip.idleEvents} boşta kalma`}
+            />
           )}
           {trip.geofenceEvents > 0 && (
-            <span className={cn("inline-block h-2 w-2 rounded-full bg-blue-500")} title={`${trip.geofenceEvents} bölge olayı`} />
+            <span
+              className={cn("inline-block h-2 w-2 rounded-full bg-blue-500")}
+              title={`${trip.geofenceEvents} bölge olayı`}
+            />
           )}
         </div>
       </td>

@@ -1,4 +1,4 @@
-import type { VehicleStatus, UserRole, AlertSeverity, AlertType } from "@/api/types";
+import type { AlertSeverity, AlertType, UserRole, VehicleStatus } from "@/api/types";
 
 export const STATUS_LABELS: Record<VehicleStatus, string> = {
   moving: "Hareket",

@@ -1,20 +1,19 @@
-import { Injectable, Logger } from "@nestjs/common";
-import { ConfigService } from "@nestjs/config";
+import { Injectable } from "@nestjs/common";
+import type { ConfigService } from "@nestjs/config";
 import { Cron } from "@nestjs/schedule";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
+import type { Repository } from "typeorm";
 import { TripStatus } from "../../common/enums/trip.enum.js";
 import { Trip } from "./trip.entity.js";
 
 @Injectable()
 export class TripAggregatorService {
-  private readonly logger = new Logger(TripAggregatorService.name);
   private readonly tripEndMs: number;
 
   constructor(
     @InjectRepository(Trip)
     private readonly tripsRepo: Repository<Trip>,
-    private readonly configService: ConfigService,
+    configService: ConfigService,
   ) {
     const tripEndMin = configService.get<number>("app.tripEndMin") ?? 5;
     this.tripEndMs = tripEndMin * 60 * 1000;
@@ -74,9 +73,7 @@ export class TripAggregatorService {
     }
   }
 
-  private async getVehicleIdleSince(
-    vehicleId: string,
-  ): Promise<Date | null> {
+  private async getVehicleIdleSince(vehicleId: string): Promise<Date | null> {
     const result = await this.tripsRepo.query(
       `SELECT ("lastLocation"->>'timestamp')::timestamptz AS ts,
               "lastLocation"->>'status' AS status
@@ -92,11 +89,7 @@ export class TripAggregatorService {
     return row.ts ? new Date(row.ts) : null;
   }
 
-  private async closeTrip(
-    tripId: string,
-    vehicleId: string,
-    startedAt: Date,
-  ): Promise<void> {
+  private async closeTrip(tripId: string, _vehicleId: string, _startedAt: Date): Promise<void> {
     await this.tripsRepo.query(
       `WITH closing AS (
         SELECT

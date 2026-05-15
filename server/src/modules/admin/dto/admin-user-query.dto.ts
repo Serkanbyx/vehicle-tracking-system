@@ -1,13 +1,5 @@
 import { Transform } from "class-transformer";
-import {
-  IsBoolean,
-  IsEnum,
-  IsInt,
-  IsOptional,
-  IsString,
-  Max,
-  Min,
-} from "class-validator";
+import { IsBoolean, IsEnum, IsInt, IsOptional, IsString, Max, Min } from "class-validator";
 import { UserRole } from "../../../common/enums/user-role.enum.js";
 
 export class AdminUserQueryDto {

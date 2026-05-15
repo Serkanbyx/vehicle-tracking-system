@@ -1,19 +1,14 @@
-import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { useCallback } from "react";
+import { createFileRoute } from "@tanstack/react-router";
 import { Download } from "lucide-react";
+import { useCallback } from "react";
 import { toast } from "sonner";
-import { requireAuth } from "@/components/guards";
-import { listTrips, exportTripsCsv } from "@/api/trips";
 import type { ListTripsQuery } from "@/api/trips";
-import { Button } from "@/components/ui";
+import { exportTripsCsv, listTrips } from "@/api/trips";
 import { PageNavigator, TableRowSkeleton } from "@/components/common";
-import {
-  ReportFilters,
-  DailySummaryChart,
-  TripTable,
-  HeatmapPanel,
-} from "@/components/reports";
+import { requireAuth } from "@/components/guards";
+import { DailySummaryChart, HeatmapPanel, ReportFilters, TripTable } from "@/components/reports";
+import { Button } from "@/components/ui";
 
 interface ReportsSearch {
   vehicleId?: string;
@@ -26,18 +21,12 @@ interface ReportsSearch {
 export const Route = createFileRoute("/reports")({
   beforeLoad: requireAuth,
   validateSearch: (raw: Record<string, unknown>): ReportsSearch => ({
-    vehicleId:
-      typeof raw.vehicleId === "string" ? raw.vehicleId : undefined,
+    vehicleId: typeof raw.vehicleId === "string" ? raw.vehicleId : undefined,
     from: typeof raw.from === "string" ? raw.from : undefined,
     to: typeof raw.to === "string" ? raw.to : undefined,
     minDistance:
-      typeof raw.minDistance === "number" && raw.minDistance > 0
-        ? raw.minDistance
-        : undefined,
-    page:
-      typeof raw.page === "number" && raw.page >= 1
-        ? Math.floor(raw.page)
-        : 1,
+      typeof raw.minDistance === "number" && raw.minDistance > 0 ? raw.minDistance : undefined,
+    page: typeof raw.page === "number" && raw.page >= 1 ? Math.floor(raw.page) : 1,
   }),
   loaderDeps: ({ search }) => search,
   loader: ({ context, deps }) => {
@@ -72,9 +61,7 @@ function ReportsPage() {
 
   const trips = data?.items ?? [];
   const filtered = search.minDistance
-    ? trips.filter(
-        (t) => t.distanceKm != null && t.distanceKm >= search.minDistance!,
-      )
+    ? trips.filter((t) => t.distanceKm != null && t.distanceKm >= search.minDistance!)
     : trips;
 
   const handlePageChange = useCallback(
@@ -132,11 +119,7 @@ function ReportsPage() {
 
       <div className="grid gap-4 lg:grid-cols-[1fr_24rem]">
         <div className="space-y-4">
-          {isLoading ? (
-            <TableRowSkeleton columns={7} rows={5} />
-          ) : (
-            <TripTable trips={filtered} />
-          )}
+          {isLoading ? <TableRowSkeleton columns={7} rows={5} /> : <TripTable trips={filtered} />}
           <PageNavigator
             page={search.page ?? 1}
             totalPages={data?.totalPages ?? 1}

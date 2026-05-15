@@ -5,42 +5,40 @@
  * parameter bindings without hitting a real database.  A full integration
  * run against PostGIS is planned in STEP 74.
  */
-import { describe, it, expect, vi } from 'vitest';
+import type { ObjectLiteral, SelectQueryBuilder } from "typeorm";
+import { describe, expect, it, vi } from "vitest";
 import {
-  selectPointAsJson,
-  whereDWithin,
-  whereContains,
-  whereCircleContains,
   insertPointSql,
   lineLengthMeters,
-} from '../geo-repo.helper.js';
+  selectPointAsJson,
+  whereCircleContains,
+  whereContains,
+  whereDWithin,
+} from "../geo-repo.helper.js";
 
 /* ------------------------------------------------------------------ */
 /*  Minimal QueryBuilder stub                                          */
 /* ------------------------------------------------------------------ */
 
-const createMockQb = () => {
+const createMockQb = (): SelectQueryBuilder<ObjectLiteral> => {
   const qb: Record<string, ReturnType<typeof vi.fn>> = {
     addSelect: vi.fn().mockReturnThis(),
     andWhere: vi.fn().mockReturnThis(),
     setParameters: vi.fn().mockReturnThis(),
   };
-  return qb as any;
+  return qb as unknown as SelectQueryBuilder<ObjectLiteral>;
 };
 
 /* ------------------------------------------------------------------ */
 /*  selectPointAsJson                                                  */
 /* ------------------------------------------------------------------ */
 
-describe('selectPointAsJson', () => {
-  it('should add ST_AsGeoJSON select expression', () => {
+describe("selectPointAsJson", () => {
+  it("should add ST_AsGeoJSON select expression", () => {
     const qb = createMockQb();
-    selectPointAsJson(qb, 'vehicle.location', 'locationJson');
+    selectPointAsJson(qb, "vehicle.location", "locationJson");
 
-    expect(qb.addSelect).toHaveBeenCalledWith(
-      'ST_AsGeoJSON(vehicle.location)',
-      'locationJson',
-    );
+    expect(qb.addSelect).toHaveBeenCalledWith("ST_AsGeoJSON(vehicle.location)", "locationJson");
   });
 });
 
@@ -48,25 +46,25 @@ describe('selectPointAsJson', () => {
 /*  whereDWithin                                                       */
 /* ------------------------------------------------------------------ */
 
-describe('whereDWithin', () => {
-  it('should add geography distance predicate with default prefix', () => {
+describe("whereDWithin", () => {
+  it("should add geography distance predicate with default prefix", () => {
     const qb = createMockQb();
     const point = { lng: 29.0, lat: 41.0 };
 
-    whereDWithin(qb, 'v.location', point, 5000);
+    whereDWithin(qb, "v.location", point, 5000);
 
     const [sql, params] = qb.andWhere.mock.calls[0];
-    expect(sql).toContain('ST_DWithin');
-    expect(sql).toContain('v.location::geography');
-    expect(sql).toContain(':dw_lng');
-    expect(sql).toContain(':dw_lat');
-    expect(sql).toContain(':dw_meters');
+    expect(sql).toContain("ST_DWithin");
+    expect(sql).toContain("v.location::geography");
+    expect(sql).toContain(":dw_lng");
+    expect(sql).toContain(":dw_lat");
+    expect(sql).toContain(":dw_meters");
     expect(params).toEqual({ dw_lng: 29.0, dw_lat: 41.0, dw_meters: 5000 });
   });
 
-  it('should use custom param prefix to avoid collisions', () => {
+  it("should use custom param prefix to avoid collisions", () => {
     const qb = createMockQb();
-    whereDWithin(qb, 'v.location', { lng: 10, lat: 20 }, 100, 'nearby');
+    whereDWithin(qb, "v.location", { lng: 10, lat: 20 }, 100, "nearby");
 
     const [, params] = qb.andWhere.mock.calls[0];
     expect(params).toEqual({
@@ -81,14 +79,14 @@ describe('whereDWithin', () => {
 /*  whereContains                                                      */
 /* ------------------------------------------------------------------ */
 
-describe('whereContains', () => {
-  it('should add ST_Contains predicate for polygon', () => {
+describe("whereContains", () => {
+  it("should add ST_Contains predicate for polygon", () => {
     const qb = createMockQb();
-    whereContains(qb, 'g.polygon', { lng: 28.97, lat: 41.01 });
+    whereContains(qb, "g.polygon", { lng: 28.97, lat: 41.01 });
 
     const [sql, params] = qb.andWhere.mock.calls[0];
-    expect(sql).toContain('ST_Contains(g.polygon');
-    expect(sql).toContain('ST_SetSRID(ST_MakePoint(:ct_lng, :ct_lat), 4326)');
+    expect(sql).toContain("ST_Contains(g.polygon");
+    expect(sql).toContain("ST_SetSRID(ST_MakePoint(:ct_lng, :ct_lat), 4326)");
     expect(params).toEqual({ ct_lng: 28.97, ct_lat: 41.01 });
   });
 });
@@ -97,19 +95,14 @@ describe('whereContains', () => {
 /*  whereCircleContains                                                */
 /* ------------------------------------------------------------------ */
 
-describe('whereCircleContains', () => {
-  it('should add DWithin predicate with dynamic radius column', () => {
+describe("whereCircleContains", () => {
+  it("should add DWithin predicate with dynamic radius column", () => {
     const qb = createMockQb();
-    whereCircleContains(
-      qb,
-      'g.center',
-      'g.radius_meters',
-      { lng: 29.5, lat: 40.5 },
-    );
+    whereCircleContains(qb, "g.center", "g.radius_meters", { lng: 29.5, lat: 40.5 });
 
     const [sql, params] = qb.andWhere.mock.calls[0];
-    expect(sql).toContain('ST_DWithin(g.center::geography');
-    expect(sql).toContain('g.radius_meters)');
+    expect(sql).toContain("ST_DWithin(g.center::geography");
+    expect(sql).toContain("g.radius_meters)");
     expect(params).toEqual({ cc_lng: 29.5, cc_lat: 40.5 });
   });
 });
@@ -118,21 +111,19 @@ describe('whereCircleContains', () => {
 /*  insertPointSql                                                     */
 /* ------------------------------------------------------------------ */
 
-describe('insertPointSql', () => {
-  it('should return raw SQL expression and params with default prefix', () => {
+describe("insertPointSql", () => {
+  it("should return raw SQL expression and params with default prefix", () => {
     const { sql, params } = insertPointSql(29.0, 41.0);
 
-    expect(sql).toBe(
-      'ST_SetSRID(ST_MakePoint(:ip_lng, :ip_lat), 4326)',
-    );
+    expect(sql).toBe("ST_SetSRID(ST_MakePoint(:ip_lng, :ip_lat), 4326)");
     expect(params).toEqual({ ip_lng: 29.0, ip_lat: 41.0 });
   });
 
-  it('should respect custom param prefix', () => {
-    const { sql, params } = insertPointSql(10, 20, 'loc');
+  it("should respect custom param prefix", () => {
+    const { sql, params } = insertPointSql(10, 20, "loc");
 
-    expect(sql).toContain(':loc_lng');
-    expect(sql).toContain(':loc_lat');
+    expect(sql).toContain(":loc_lng");
+    expect(sql).toContain(":loc_lat");
     expect(params).toEqual({ loc_lng: 10, loc_lat: 20 });
   });
 });
@@ -141,24 +132,24 @@ describe('insertPointSql', () => {
 /*  lineLengthMeters                                                   */
 /* ------------------------------------------------------------------ */
 
-describe('lineLengthMeters', () => {
-  it('should add ST_Length(ST_MakeLine(...)) select with default alias', () => {
+describe("lineLengthMeters", () => {
+  it("should add ST_Length(ST_MakeLine(...)) select with default alias", () => {
     const qb = createMockQb();
-    lineLengthMeters(qb, 'loc');
+    lineLengthMeters(qb, "loc");
 
     expect(qb.addSelect).toHaveBeenCalledWith(
-      'ST_Length(ST_MakeLine(loc.geom ORDER BY loc.timestamp)::geography)',
-      'distance_meters',
+      "ST_Length(ST_MakeLine(loc.geom ORDER BY loc.timestamp)::geography)",
+      "distance_meters",
     );
   });
 
-  it('should accept a custom alias', () => {
+  it("should accept a custom alias", () => {
     const qb = createMockQb();
-    lineLengthMeters(qb, 'l', 'trip_km');
+    lineLengthMeters(qb, "l", "trip_km");
 
     expect(qb.addSelect).toHaveBeenCalledWith(
-      'ST_Length(ST_MakeLine(l.geom ORDER BY l.timestamp)::geography)',
-      'trip_km',
+      "ST_Length(ST_MakeLine(l.geom ORDER BY l.timestamp)::geography)",
+      "trip_km",
     );
   });
 });

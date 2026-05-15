@@ -44,12 +44,21 @@ export const AlertDialogContent = forwardRef<
 ));
 AlertDialogContent.displayName = "AlertDialogContent";
 
-export const AlertDialogHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+export const AlertDialogHeader = ({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) => (
   <div className={cn("flex flex-col gap-2 text-center sm:text-left", className)} {...props} />
 );
 
-export const AlertDialogFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
-  <div className={cn("flex flex-col-reverse sm:flex-row sm:justify-end sm:gap-2", className)} {...props} />
+export const AlertDialogFooter = ({
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) => (
+  <div
+    className={cn("flex flex-col-reverse sm:flex-row sm:justify-end sm:gap-2", className)}
+    {...props}
+  />
 );
 
 export const AlertDialogTitle = forwardRef<

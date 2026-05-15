@@ -1,11 +1,4 @@
-import {
-  IsISO8601,
-  IsInt,
-  IsNumber,
-  IsOptional,
-  Max,
-  Min,
-} from "class-validator";
+import { IsInt, IsISO8601, IsNumber, IsOptional, Max, Min } from "class-validator";
 
 export class LocationIngestDto {
   @IsNumber()

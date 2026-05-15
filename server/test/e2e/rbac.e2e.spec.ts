@@ -1,14 +1,14 @@
-import { describe, it, expect, beforeAll, afterAll, afterEach } from "vitest";
 import type { INestApplication } from "@nestjs/common";
 import request from "supertest";
+import { afterAll, afterEach, beforeAll, describe, expect, it } from "vitest";
 import { UserRole } from "../../src/common/enums/user-role.enum";
 import {
-  createTestApp,
   closeTestApp,
-  truncateAll,
-  loginAsTestUser,
+  createTestApp,
   createTestVehicle,
+  loginAsTestUser,
   TEST_PASSWORD,
+  truncateAll,
 } from "./helpers";
 
 let app: INestApplication;
@@ -41,16 +41,10 @@ describe("RBAC E2E — Role-based access matrix", () => {
   });
 
   it("Viewer cannot PATCH vehicles", async () => {
-    const { accessToken: managerToken } = await loginAsTestUser(
-      app,
-      UserRole.MANAGER,
-    );
+    const { accessToken: managerToken } = await loginAsTestUser(app, UserRole.MANAGER);
     const vehicle = await createTestVehicle(app, managerToken);
 
-    const { accessToken: viewerToken } = await loginAsTestUser(
-      app,
-      UserRole.VIEWER,
-    );
+    const { accessToken: viewerToken } = await loginAsTestUser(app, UserRole.VIEWER);
 
     await request(app.getHttpServer())
       .patch(`/api/vehicles/${vehicle.id}`)
@@ -60,16 +54,10 @@ describe("RBAC E2E — Role-based access matrix", () => {
   });
 
   it("Viewer cannot DELETE vehicles", async () => {
-    const { accessToken: managerToken } = await loginAsTestUser(
-      app,
-      UserRole.MANAGER,
-    );
+    const { accessToken: managerToken } = await loginAsTestUser(app, UserRole.MANAGER);
     const vehicle = await createTestVehicle(app, managerToken);
 
-    const { accessToken: viewerToken } = await loginAsTestUser(
-      app,
-      UserRole.VIEWER,
-    );
+    const { accessToken: viewerToken } = await loginAsTestUser(app, UserRole.VIEWER);
 
     await request(app.getHttpServer())
       .delete(`/api/vehicles/${vehicle.id}`)

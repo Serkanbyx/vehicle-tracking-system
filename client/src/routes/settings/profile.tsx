@@ -1,12 +1,11 @@
-import { createFileRoute } from "@tanstack/react-router";
 import { useForm } from "@tanstack/react-form";
+import { createFileRoute } from "@tanstack/react-router";
 import { Camera, Loader2 } from "lucide-react";
-import { useState, useRef } from "react";
+import { useRef, useState } from "react";
 import { toast } from "sonner";
-import { requireAuth } from "@/components/guards";
-import { useAuth } from "@/context/auth.context";
 import * as authService from "@/api/auth";
 import { uploadAvatar } from "@/api/uploads";
+import { requireAuth } from "@/components/guards";
 import {
   Avatar,
   AvatarFallback,
@@ -19,6 +18,7 @@ import {
   Input,
   Label,
 } from "@/components/ui";
+import { useAuth } from "@/context/auth.context";
 
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"];
 const MAX_SIZE = 5 * 1024 * 1024;
@@ -52,9 +52,7 @@ function SettingsProfilePage() {
     },
   });
 
-  const handleAvatarChange = async (
-    e: React.ChangeEvent<HTMLInputElement>,
-  ) => {
+  const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -170,9 +168,7 @@ function SettingsProfilePage() {
 
             <div>
               <Button type="submit" disabled={form.state.isSubmitting}>
-                {form.state.isSubmitting && (
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                )}
+                {form.state.isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 Kaydet
               </Button>
             </div>

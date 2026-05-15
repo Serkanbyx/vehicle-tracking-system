@@ -1,16 +1,9 @@
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
 import type { ReactNode } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { dashboardSocket, setAccessToken } from "@/api";
 import * as authService from "@/api/auth";
-import { setAccessToken, dashboardSocket } from "@/api";
-import { router } from "@/router";
 import type { User, UserRole } from "@/api/types";
+import { router } from "@/router";
 
 interface AuthState {
   user: User | null;
@@ -61,14 +54,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     dashboardSocket.connect(data.accessToken);
   }, []);
 
-  const register = useCallback(
-    async (name: string, email: string, password: string) => {
-      const data = await authService.register({ name, email, password });
-      setUser(data.user);
-      dashboardSocket.connect(data.accessToken);
-    },
-    [],
-  );
+  const register = useCallback(async (name: string, email: string, password: string) => {
+    const data = await authService.register({ name, email, password });
+    setUser(data.user);
+    dashboardSocket.connect(data.accessToken);
+  }, []);
 
   const logout = useCallback(async () => {
     await authService.logout();

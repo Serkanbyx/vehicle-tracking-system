@@ -5,11 +5,8 @@ import {
   NotFoundException,
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
-import {
-  GeofenceAppliesTo,
-  GeofenceShape,
-} from "../../common/enums/geofence.enum.js";
+import type { Repository } from "typeorm";
+import { GeofenceAppliesTo, GeofenceShape } from "../../common/enums/geofence.enum.js";
 import { UserRole } from "../../common/enums/user-role.enum.js";
 import { escapeRegex } from "../../common/utils/escape-regex.js";
 import type { CreateGeofenceDto } from "./dto/create-geofence.dto.js";
@@ -45,10 +42,7 @@ export class GeofencesService {
       createdById: user.id,
     };
 
-    const qb = this.geofencesRepo
-      .createQueryBuilder()
-      .insert()
-      .into(Geofence);
+    const qb = this.geofencesRepo.createQueryBuilder().insert().into(Geofence);
 
     if (dto.shape === GeofenceShape.POLYGON) {
       const geoJson = JSON.stringify(dto.geometry);
@@ -104,11 +98,7 @@ export class GeofencesService {
     return geofence;
   }
 
-  async update(
-    id: string,
-    dto: UpdateGeofenceDto,
-    user: CurrentUser,
-  ): Promise<Geofence> {
+  async update(id: string, dto: UpdateGeofenceDto, user: CurrentUser): Promise<Geofence> {
     const geofence = await this.findOne(id);
 
     this.assertOwnership(geofence, user);
@@ -126,10 +116,7 @@ export class GeofencesService {
     await this.geofencesRepo.remove(geofence);
   }
 
-  async test(
-    id: string,
-    point: TestPointDto,
-  ): Promise<{ inside: boolean }> {
+  async test(id: string, point: TestPointDto): Promise<{ inside: boolean }> {
     const geofence = await this.findOne(id);
 
     let inside: boolean;
@@ -185,20 +172,14 @@ export class GeofencesService {
   private validateShapeFields(dto: CreateGeofenceDto): void {
     if (dto.shape === GeofenceShape.POLYGON) {
       if (!dto.geometry) {
-        throw new BadRequestException(
-          "geometry is required for polygon shape",
-        );
+        throw new BadRequestException("geometry is required for polygon shape");
       }
     } else {
       if (!dto.circleCenter) {
-        throw new BadRequestException(
-          "circleCenter is required for circle shape",
-        );
+        throw new BadRequestException("circleCenter is required for circle shape");
       }
       if (dto.radiusMeters === undefined) {
-        throw new BadRequestException(
-          "radiusMeters is required for circle shape",
-        );
+        throw new BadRequestException("radiusMeters is required for circle shape");
       }
     }
 
@@ -206,9 +187,7 @@ export class GeofencesService {
       dto.appliesTo === GeofenceAppliesTo.SPECIFIC &&
       (!dto.vehicleIds || dto.vehicleIds.length === 0)
     ) {
-      throw new BadRequestException(
-        "vehicleIds is required when appliesTo is 'specific'",
-      );
+      throw new BadRequestException("vehicleIds is required when appliesTo is 'specific'");
     }
   }
 

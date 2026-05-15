@@ -5,7 +5,10 @@ export const Card = forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<"d
   ({ className, ...props }, ref) => (
     <div
       ref={ref}
-      className={cn("rounded-lg border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-900", className)}
+      className={cn(
+        "rounded-lg border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-900",
+        className,
+      )}
       {...props}
     />
   ),
@@ -21,16 +24,21 @@ CardHeader.displayName = "CardHeader";
 
 export const CardTitle = forwardRef<HTMLHeadingElement, React.ComponentPropsWithoutRef<"h3">>(
   ({ className, ...props }, ref) => (
-    <h3 ref={ref} className={cn("text-lg font-semibold leading-none tracking-tight", className)} {...props} />
+    <h3
+      ref={ref}
+      className={cn("text-lg font-semibold leading-none tracking-tight", className)}
+      {...props}
+    />
   ),
 );
 CardTitle.displayName = "CardTitle";
 
-export const CardDescription = forwardRef<HTMLParagraphElement, React.ComponentPropsWithoutRef<"p">>(
-  ({ className, ...props }, ref) => (
-    <p ref={ref} className={cn("text-sm text-gray-500 dark:text-gray-400", className)} {...props} />
-  ),
-);
+export const CardDescription = forwardRef<
+  HTMLParagraphElement,
+  React.ComponentPropsWithoutRef<"p">
+>(({ className, ...props }, ref) => (
+  <p ref={ref} className={cn("text-sm text-gray-500 dark:text-gray-400", className)} {...props} />
+));
 CardDescription.displayName = "CardDescription";
 
 export const CardContent = forwardRef<HTMLDivElement, React.ComponentPropsWithoutRef<"div">>(

@@ -21,11 +21,7 @@ export function StatCard({ label, value, icon, color = "brand" }: StatCardProps)
   return (
     <Card>
       <CardContent className="flex items-center gap-3 p-4">
-        {icon && (
-          <div className={cn("shrink-0", colorMap[color])}>
-            {icon}
-          </div>
-        )}
+        {icon && <div className={cn("shrink-0", colorMap[color])}>{icon}</div>}
         <div className="min-w-0">
           <p className="text-sm text-gray-500 dark:text-gray-400">{label}</p>
           <p className={cn("text-2xl font-bold", colorMap[color])}>{value}</p>

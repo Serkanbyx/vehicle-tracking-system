@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
+import type { Repository } from "typeorm";
 import type { TripExportQueryDto } from "./dto/trip-export-query.dto.js";
 import type { TripQueryDto } from "./dto/trip-query.dto.js";
 import type { TripSummaryQueryDto } from "./dto/trip-summary-query.dto.js";
@@ -94,9 +94,7 @@ export class TripsService {
   }
 
   async exportCsv(query: TripExportQueryDto): Promise<string> {
-    const qb = this.tripsRepo
-      .createQueryBuilder("t")
-      .leftJoinAndSelect("t.vehicle", "v");
+    const qb = this.tripsRepo.createQueryBuilder("t").leftJoinAndSelect("t.vehicle", "v");
 
     if (query.vehicleId) {
       qb.andWhere("t.vehicleId = :vehicleId", {

@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { AlertSeverity, AlertType } from "../../../common/enums/alert.enum.js";
 import { GeofenceDirection } from "../../../common/enums/geofence.enum.js";
 import { AlertEngineService } from "../alert-engine.service.js";
@@ -40,22 +40,18 @@ let engine: AlertEngineService;
 beforeEach(() => {
   vi.clearAllMocks();
 
-  mockAlertsRepo.createQueryBuilder.mockImplementation(() =>
-    createMockQueryBuilder(),
-  );
-  mockAlertsRepo.query.mockImplementation(
-    async (_sql: string, params: any[]) => [
-      {
-        id: "alert-1",
-        vehicleId: params[0],
-        type: params[1],
-        severity: params[2],
-        message: params[3],
-        speed: params[6],
-        geofenceId: params[7],
-      },
-    ],
-  );
+  mockAlertsRepo.createQueryBuilder.mockImplementation(() => createMockQueryBuilder());
+  mockAlertsRepo.query.mockImplementation(async (_sql: string, params: unknown[]) => [
+    {
+      id: "alert-1",
+      vehicleId: params[0],
+      type: params[1],
+      severity: params[2],
+      message: params[3],
+      speed: params[6],
+      geofenceId: params[7],
+    },
+  ]);
   mockGeofencesService.findContaining.mockResolvedValue([]);
 
   engine = new AlertEngineService(

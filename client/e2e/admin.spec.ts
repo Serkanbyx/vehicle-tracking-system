@@ -1,5 +1,5 @@
-import { test, expect } from "@playwright/test";
-import { seedTestData, login, ADMIN, VIEWER, uniqueId } from "./helpers";
+import { expect, test } from "@playwright/test";
+import { ADMIN, login, seedTestData, VIEWER } from "./helpers";
 
 test.beforeAll(() => {
   seedTestData();
@@ -22,16 +22,16 @@ test.describe("Admin E2E — Role promotion", () => {
     await expect(viewerRow).toBeVisible({ timeout: 10_000 });
 
     /* ── 4. Click role change action ── */
-    const roleBtn = viewerRow.getByRole("button", { name: /rol|role/i }).or(
-      viewerRow.locator('[data-testid="change-role"]'),
-    );
+    const roleBtn = viewerRow
+      .getByRole("button", { name: /rol|role/i })
+      .or(viewerRow.locator('[data-testid="change-role"]'));
 
     if (await roleBtn.isVisible()) {
       await roleBtn.click();
 
-      const managerOption = page.getByRole("option", { name: /manager/i }).or(
-        page.locator("text=Manager").first(),
-      );
+      const managerOption = page
+        .getByRole("option", { name: /manager/i })
+        .or(page.locator("text=Manager").first());
       await managerOption.click();
 
       const confirmBtn = page.getByRole("button", { name: /onayla|kaydet|confirm|save/i });

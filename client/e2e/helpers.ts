@@ -1,6 +1,6 @@
-import { type Page, expect } from "@playwright/test";
 import { execSync } from "node:child_process";
 import path from "node:path";
+import { expect, type Page } from "@playwright/test";
 
 /* ── Test credentials (matching seed-test.ts) ── */
 
@@ -35,10 +35,7 @@ export function seedTestData(): void {
 
 /* ── Auth helpers ── */
 
-export async function login(
-  page: Page,
-  user: { email: string; password: string },
-): Promise<void> {
+export async function login(page: Page, user: { email: string; password: string }): Promise<void> {
   await page.goto("/login");
   await page.getByLabel("E-posta").fill(user.email);
   await page.getByLabel("Şifre").fill(user.password);
@@ -54,10 +51,7 @@ export async function logout(page: Page): Promise<void> {
 
 /* ── Navigation helpers ── */
 
-export async function navigateTo(
-  page: Page,
-  path: string,
-): Promise<void> {
+export async function navigateTo(page: Page, path: string): Promise<void> {
   await page.goto(path);
   await page.waitForLoadState("networkidle");
 }

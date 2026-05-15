@@ -1,15 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useCallback, useRef, useState } from "react";
 import { Crosshair, List } from "lucide-react";
-import { requireAuth } from "@/components/guards";
+import { useCallback, useRef, useState } from "react";
 import type { Geofence, GeofenceShape } from "@/api/types";
+import { requireAuth } from "@/components/guards";
+import { GeofenceDrawerForm } from "@/components/map/GeofenceDrawerForm";
+import { GeofenceList } from "@/components/map/GeofenceList";
 import {
-  GeofenceMap,
   type GeofenceGeometry,
+  GeofenceMap,
   type GeofenceMapHandle,
 } from "@/components/map/GeofenceMap";
-import { GeofenceList } from "@/components/map/GeofenceList";
-import { GeofenceDrawerForm } from "@/components/map/GeofenceDrawerForm";
 import {
   Button,
   Sheet,
@@ -29,9 +29,7 @@ export const Route = createFileRoute("/geofences")({
 function GeofencesPage() {
   const mapHandleRef = useRef<GeofenceMapHandle>(null);
 
-  const [selectedGeofence, setSelectedGeofence] = useState<Geofence | null>(
-    null,
-  );
+  const [selectedGeofence, setSelectedGeofence] = useState<Geofence | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [shapeMode, setShapeMode] = useState<GeofenceShape>("polygon");
   const [geometry, setGeometry] = useState<GeofenceGeometry | null>(null);
@@ -70,12 +68,9 @@ function GeofencesPage() {
     mapHandleRef.current?.cancelDrawing();
   }, []);
 
-  const handleGeometryChange = useCallback(
-    (geom: GeofenceGeometry | null) => {
-      setGeometry(geom);
-    },
-    [],
-  );
+  const handleGeometryChange = useCallback((geom: GeofenceGeometry | null) => {
+    setGeometry(geom);
+  }, []);
 
   const handleDrawerClose = useCallback((open: boolean) => {
     setDrawerOpen(open);
@@ -145,9 +140,7 @@ function GeofencesPage() {
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent side="left">
-                  {testPointActive
-                    ? "Test modu aktif — haritaya tıklayın"
-                    : "Test noktası modu"}
+                  {testPointActive ? "Test modu aktif — haritaya tıklayın" : "Test noktası modu"}
                 </TooltipContent>
               </Tooltip>
             </div>

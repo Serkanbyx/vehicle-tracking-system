@@ -1,13 +1,15 @@
 import path from "node:path";
-import { TanStackRouterVite } from "@tanstack/router-vite-plugin";
-import tailwindcss from "@tailwindcss/vite";
-import react from "@vitejs/plugin-react";
 import { sentryVitePlugin } from "@sentry/vite-plugin";
+import tailwindcss from "@tailwindcss/vite";
+import { TanStackRouterVite } from "@tanstack/router-vite-plugin";
+import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 
 export default defineConfig({
   plugins: [
-    TanStackRouterVite(),
+    TanStackRouterVite({
+      routeFileIgnorePattern: "\\.test\\.tsx?$",
+    }),
     react(),
     tailwindcss(),
     process.env.SENTRY_AUTH_TOKEN

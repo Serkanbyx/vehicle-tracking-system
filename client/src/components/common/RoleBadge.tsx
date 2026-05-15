@@ -1,6 +1,6 @@
 import { Shield } from "lucide-react";
-import { Badge } from "@/components/ui";
 import type { UserRole } from "@/api/types";
+import { Badge } from "@/components/ui";
 import { ROLE_LABELS } from "@/utils/constants";
 
 const ROLE_VARIANTS: Record<UserRole, "danger" | "default" | "secondary"> = {

@@ -1,19 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useCallback } from "react";
 import { toast } from "sonner";
-import { requireAuth } from "@/components/guards";
-import { useAuth } from "@/context/auth.context";
 import * as authService from "@/api/auth";
 import type { UserPreferences } from "@/api/types";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  Label,
-  Select,
-  Switch,
-} from "@/components/ui";
+import { requireAuth } from "@/components/guards";
+import { Card, CardContent, CardHeader, CardTitle, Label, Select, Switch } from "@/components/ui";
+import { useAuth } from "@/context/auth.context";
 
 export const Route = createFileRoute("/settings/notifications")({
   beforeLoad: requireAuth,
@@ -56,33 +48,29 @@ function SettingsNotificationsPage() {
           <CardTitle className="text-base">E-posta Bildirimleri</CardTitle>
         </CardHeader>
         <CardContent>
-          <label className="flex items-center gap-3">
+          <label htmlFor="notify-email" className="flex items-center gap-3">
             <Switch
+              id="notify-email"
               checked={notifications.email ?? true}
               onCheckedChange={(v) => saveNotifications({ email: v })}
             />
-            <span className="text-sm">
-              Uyarılar için e-posta bildirimi al
-            </span>
+            <span className="text-sm">Uyarılar için e-posta bildirimi al</span>
           </label>
         </CardContent>
       </Card>
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">
-            Uygulama İçi Bildirimler
-          </CardTitle>
+          <CardTitle className="text-base">Uygulama İçi Bildirimler</CardTitle>
         </CardHeader>
         <CardContent>
-          <label className="flex items-center gap-3">
+          <label htmlFor="notify-inapp" className="flex items-center gap-3">
             <Switch
+              id="notify-inapp"
               checked={notifications.inApp ?? true}
               onCheckedChange={(v) => saveNotifications({ inApp: v })}
             />
-            <span className="text-sm">
-              Uygulama içi anlık bildirim göster
-            </span>
+            <span className="text-sm">Uygulama içi anlık bildirim göster</span>
           </label>
         </CardContent>
       </Card>
@@ -92,18 +80,13 @@ function SettingsNotificationsPage() {
           <CardTitle className="text-base">Önem Eşiği</CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-2">
-          <Label htmlFor="severity-threshold">
-            Yalnızca bu düzey ve üzeri bildirimler gelsin
-          </Label>
+          <Label htmlFor="severity-threshold">Yalnızca bu düzey ve üzeri bildirimler gelsin</Label>
           <Select
             id="severity-threshold"
             value={notifications.severityThreshold ?? "info"}
             onChange={(e) =>
               saveNotifications({
-                severityThreshold: e.target.value as
-                  | "info"
-                  | "warning"
-                  | "critical",
+                severityThreshold: e.target.value as "info" | "warning" | "critical",
               })
             }
             className="max-w-xs"

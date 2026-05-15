@@ -1,15 +1,11 @@
-import {
-  ConflictException,
-  Injectable,
-  UnauthorizedException,
-} from "@nestjs/common";
-import { ConfigService } from "@nestjs/config";
+import { randomUUID } from "node:crypto";
+import { ConflictException, Injectable, UnauthorizedException } from "@nestjs/common";
+import type { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
 import { InjectRepository } from "@nestjs/typeorm";
 import * as bcrypt from "bcrypt";
-import { randomUUID } from "node:crypto";
 import type { Response } from "express";
-import { Repository } from "typeorm";
+import type { Repository } from "typeorm";
 import { UserRole } from "../../common/enums/user-role.enum.js";
 import { User } from "../users/user.entity.js";
 import type { RegisterDto } from "./dto/register.dto.js";
@@ -52,7 +48,7 @@ export class AuthService {
     @InjectRepository(User)
     private readonly usersRepo: Repository<User>,
     private readonly jwtAccess: JwtService,
-    private readonly configService: ConfigService,
+    configService: ConfigService,
   ) {
     this.jwtRefresh = new JwtService({
       secret: configService.get<string>("JWT_REFRESH_SECRET"),
@@ -61,8 +57,7 @@ export class AuthService {
       },
     });
 
-    this.isProduction =
-      configService.get<string>("NODE_ENV") === "production";
+    this.isProduction = configService.get<string>("NODE_ENV") === "production";
   }
 
   /* ───── Password helpers ───── */
@@ -137,7 +132,7 @@ export class AuthService {
       select: ["id", "role", "email", "isActive", "refreshTokenHash"],
     });
 
-    if (!user || !user.isActive || !user.refreshTokenHash) {
+    if (!user?.isActive || !user.refreshTokenHash) {
       throw new UnauthorizedException();
     }
 
@@ -203,7 +198,7 @@ export class AuthService {
       select: ["id", "name", "email", "password", "role", "isActive"],
     });
 
-    if (!user || !user.isActive) {
+    if (!user?.isActive) {
       return null;
     }
 
@@ -218,10 +213,7 @@ export class AuthService {
 
   /* ───── Registration ───── */
 
-  async register(
-    dto: RegisterDto,
-    res: Response,
-  ): Promise<AuthResponse> {
+  async register(dto: RegisterDto, res: Response): Promise<AuthResponse> {
     const existingUser = await this.usersRepo.findOne({
       where: { email: dto.email.toLowerCase() },
     });
@@ -258,10 +250,7 @@ export class AuthService {
 
   /* ───── Login ───── */
 
-  async login(
-    user: Omit<User, "password">,
-    res: Response,
-  ): Promise<AuthResponse> {
+  async login(user: Omit<User, "password">, res: Response): Promise<AuthResponse> {
     const accessToken = this.signAccessToken(user as TokenUser);
     const { token: refreshToken, jti } = this.signRefreshToken(user);
 
@@ -292,10 +281,7 @@ export class AuthService {
     return this.sanitizeUser(user);
   }
 
-  async updateMe(
-    userId: string,
-    dto: UpdateMeDto,
-  ): Promise<SanitizedUser> {
+  async updateMe(userId: string, dto: UpdateMeDto): Promise<SanitizedUser> {
     await this.usersRepo.update(userId, dto);
 
     return this.getMe(userId);

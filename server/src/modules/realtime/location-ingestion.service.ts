@@ -1,13 +1,13 @@
 import { Injectable, Logger } from "@nestjs/common";
-import { ConfigService } from "@nestjs/config";
+import type { ConfigService } from "@nestjs/config";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
-import { AlertEngineService } from "../alerts/alert-engine.service.js";
-import { TripAggregatorService } from "../trips/trip-aggregator.service.js";
-import { Vehicle } from "../vehicles/vehicle.entity.js";
+import type { Repository } from "typeorm";
+import type { AlertEngineService } from "../alerts/alert-engine.service.js";
+import type { LocationsService } from "../locations/locations.service.js";
+import type { TripAggregatorService } from "../trips/trip-aggregator.service.js";
 import type { VehicleLastLocation } from "../vehicles/vehicle.entity.js";
-import { LocationsService } from "../locations/locations.service.js";
-import { RoomManager } from "./room-manager.service.js";
+import { Vehicle } from "../vehicles/vehicle.entity.js";
+import type { RoomManager } from "./room-manager.service.js";
 
 const MOVING_SPEED_THRESHOLD = 5;
 
@@ -34,7 +34,7 @@ export class LocationIngestionService {
     @InjectRepository(Vehicle)
     private readonly vehiclesRepo: Repository<Vehicle>,
     private readonly roomManager: RoomManager,
-    private readonly configService: ConfigService,
+    configService: ConfigService,
     private readonly alertEngine: AlertEngineService,
     private readonly tripAggregator: TripAggregatorService,
   ) {
@@ -68,10 +68,7 @@ export class LocationIngestionService {
       timestamp: now,
     });
 
-    const status = this.computeStatus(
-      payload.speed,
-      vehicle.lastLocation,
-    );
+    const status = this.computeStatus(payload.speed, vehicle.lastLocation);
 
     const newLocation: VehicleLastLocation = {
       lng: payload.lng,
@@ -87,7 +84,11 @@ export class LocationIngestionService {
     });
 
     const prevPoint = vehicle.lastLocation
-      ? { lng: vehicle.lastLocation.lng, lat: vehicle.lastLocation.lat, speed: vehicle.lastLocation.speed }
+      ? {
+          lng: vehicle.lastLocation.lng,
+          lat: vehicle.lastLocation.lat,
+          speed: vehicle.lastLocation.speed,
+        }
       : null;
     const nextPoint = { lng: payload.lng, lat: payload.lat, speed: payload.speed };
 
@@ -111,19 +112,13 @@ export class LocationIngestionService {
     };
 
     this.roomManager.broadcastToMany(
-      [
-        `vehicle:${vehicleId}`,
-        "role:viewer",
-        "role:manager",
-        "role:admin",
-      ],
+      [`vehicle:${vehicleId}`, "role:viewer", "role:manager", "role:admin"],
       broadcastPayload,
     );
   }
 
   async resolveVehicleId(plateOrId: string): Promise<string | null> {
-    const uuidRegex =
-      /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
     if (uuidRegex.test(plateOrId)) {
       return plateOrId;

@@ -1,22 +1,22 @@
+import type { IncomingMessage } from "node:http";
 import { Logger } from "@nestjs/common";
-import { ConfigService } from "@nestjs/config";
+import type { ConfigService } from "@nestjs/config";
 import {
-  OnGatewayConnection,
-  OnGatewayDisconnect,
+  type OnGatewayConnection,
+  type OnGatewayDisconnect,
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
 } from "@nestjs/websockets";
 import { plainToInstance } from "class-transformer";
 import { validateSync } from "class-validator";
-import type { IncomingMessage } from "node:http";
-import { Server } from "ws";
-import WebSocket from "ws";
+import type WebSocket from "ws";
+import type { Server } from "ws";
 import { timingSafeEqual } from "../../common/utils/timing-safe-equal.js";
 import { LocationUpdatePayloadDto } from "./dto/location-update.dto.js";
-import { HeartbeatService } from "./heartbeat.service.js";
-import { LocationIngestionService } from "./location-ingestion.service.js";
-import { RoomManager } from "./room-manager.service.js";
+import type { HeartbeatService } from "./heartbeat.service.js";
+import type { LocationIngestionService } from "./location-ingestion.service.js";
+import type { RoomManager } from "./room-manager.service.js";
 
 const MAX_EVENTS_PER_SECOND = 5;
 
@@ -30,9 +30,7 @@ interface DeviceSocket extends WebSocket {
 }
 
 @WebSocketGateway({ path: "/ws/vehicles" })
-export class VehiclesGateway
-  implements OnGatewayConnection, OnGatewayDisconnect
-{
+export class VehiclesGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer() server: Server;
 
   private readonly logger = new Logger(VehiclesGateway.name);
@@ -42,15 +40,13 @@ export class VehiclesGateway
   private readonly clientUrl: string;
 
   constructor(
-    private readonly configService: ConfigService,
+    configService: ConfigService,
     private readonly roomManager: RoomManager,
     private readonly heartbeatService: HeartbeatService,
     private readonly ingestionService: LocationIngestionService,
   ) {
-    this.simulatorKey =
-      configService.get<string>("SIMULATOR_API_KEY") ?? "";
-    this.clientUrl =
-      configService.get<string>("CLIENT_URL") ?? "http://localhost:3000";
+    this.simulatorKey = configService.get<string>("SIMULATOR_API_KEY") ?? "";
+    this.clientUrl = configService.get<string>("CLIENT_URL") ?? "http://localhost:3000";
   }
 
   handleConnection(socket: WebSocket, req: IncomingMessage): void {
@@ -68,8 +64,7 @@ export class VehiclesGateway
     }
 
     const deviceSocket = socket as DeviceSocket;
-    deviceSocket.deviceId =
-      (req.headers["x-device-id"] as string) || "unknown";
+    deviceSocket.deviceId = (req.headers["x-device-id"] as string) || "unknown";
 
     this.heartbeatService.register(socket);
   }
@@ -80,10 +75,7 @@ export class VehiclesGateway
   }
 
   @SubscribeMessage("location_update")
-  async handleLocationUpdate(
-    client: WebSocket,
-    data: unknown,
-  ): Promise<void> {
+  async handleLocationUpdate(client: WebSocket, data: unknown): Promise<void> {
     if (!this.allowEvent(client)) {
       this.logger.warn("Rate limit exceeded for device socket");
       return;

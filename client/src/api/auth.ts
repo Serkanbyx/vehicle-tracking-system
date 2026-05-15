@@ -36,14 +36,19 @@ export function getMe(): Promise<User> {
   return fetcher<User>("/auth/me");
 }
 
-export function updateMe(dto: Partial<Pick<User, "name" | "phone"> & { preferences: UserPreferences }>): Promise<User> {
+export function updateMe(
+  dto: Partial<Pick<User, "name" | "phone"> & { preferences: UserPreferences }>,
+): Promise<User> {
   return fetcher<User>("/auth/me", {
     method: "PATCH",
     body: JSON.stringify(dto),
   });
 }
 
-export function changePassword(dto: { currentPassword: string; newPassword: string }): Promise<void> {
+export function changePassword(dto: {
+  currentPassword: string;
+  newPassword: string;
+}): Promise<void> {
   return fetcher("/auth/me/password", {
     method: "PATCH",
     body: JSON.stringify(dto),

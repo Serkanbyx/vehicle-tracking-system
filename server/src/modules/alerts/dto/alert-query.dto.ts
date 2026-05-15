@@ -1,18 +1,6 @@
 import { Transform } from "class-transformer";
-import {
-  IsBoolean,
-  IsEnum,
-  IsISO8601,
-  IsInt,
-  IsOptional,
-  IsUUID,
-  Max,
-  Min,
-} from "class-validator";
-import {
-  AlertSeverity,
-  AlertType,
-} from "../../../common/enums/alert.enum.js";
+import { IsBoolean, IsEnum, IsInt, IsISO8601, IsOptional, IsUUID, Max, Min } from "class-validator";
+import { AlertSeverity, AlertType } from "../../../common/enums/alert.enum.js";
 
 export class AlertQueryDto {
   @IsOptional()

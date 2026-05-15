@@ -18,17 +18,16 @@ export class ExportService {
         r.altitude ?? "",
         r.accuracy ?? "",
         this.escapeCell(r.source),
-        this.escapeCell(r.timestamp instanceof Date ? r.timestamp.toISOString() : String(r.timestamp)),
+        this.escapeCell(
+          r.timestamp instanceof Date ? r.timestamp.toISOString() : String(r.timestamp),
+        ),
       ].join(","),
     );
 
     return [header, ...csvRows].join("\n");
   }
 
-  locationsToGeoJson(
-    rows: LocationPoint[],
-    vehicle: { id: string; plate: string },
-  ): object {
+  locationsToGeoJson(rows: LocationPoint[], vehicle: { id: string; plate: string }): object {
     const coordinates = rows.map((r) => [r.lng, r.lat]);
 
     const lineFeature = {

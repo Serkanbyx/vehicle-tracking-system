@@ -1,14 +1,5 @@
 import { Type } from "class-transformer";
-import {
-  IsEnum,
-  IsIn,
-  IsInt,
-  IsOptional,
-  IsString,
-  Max,
-  MaxLength,
-  Min,
-} from "class-validator";
+import { IsEnum, IsIn, IsInt, IsOptional, IsString, Max, MaxLength, Min } from "class-validator";
 import { VehicleType } from "../../../common/enums/vehicle-type.enum.js";
 
 export class VehicleQueryDto {

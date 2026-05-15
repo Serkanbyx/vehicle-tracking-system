@@ -12,14 +12,14 @@ import {
 } from "@nestjs/common";
 import { Public } from "../../common/decorators/public.decorator.js";
 import { SimulatorKeyGuard } from "../../common/guards/simulator-key.guard.js";
-import {
+import type { LocationIngestionService } from "../realtime/location-ingestion.service.js";
+import type {
   HistoryQueryDto,
   LatestQueryDto,
   LocationIngestDto,
   StatsQueryDto,
 } from "./dto/index.js";
-import { LocationIngestionService } from "../realtime/location-ingestion.service.js";
-import { LocationsService } from "./locations.service.js";
+import type { LocationsService } from "./locations.service.js";
 
 @Controller("vehicles/:vehicleId")
 export class LocationsController {
@@ -49,10 +49,7 @@ export class LocationsController {
     @Param("vehicleId", ParseUUIDPipe) vehicleId: string,
     @Query() query: LatestQueryDto,
   ) {
-    const points = await this.locationsService.getLatest(
-      vehicleId,
-      query.count,
-    );
+    const points = await this.locationsService.getLatest(vehicleId, query.count);
 
     return { success: true, data: points };
   }

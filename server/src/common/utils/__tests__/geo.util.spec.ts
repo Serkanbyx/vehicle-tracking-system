@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 import { isValidLngLat } from "../../../common/utils/coords.js";
 import { escapeRegex } from "../../../common/utils/escape-regex.js";
 
@@ -66,7 +66,7 @@ describe("escapeRegex", () => {
   });
 
   it("should escape all metacharacters", () => {
-    const input = ".*+?^${}()|[]\\";
+    const input = [".", "*", "+", "?", "^", "$", "{", "}", "(", ")", "|", "[", "]", "\\"].join("");
     const escaped = escapeRegex(input);
 
     for (const char of [".", "*", "+", "?", "^", "$", "{", "}", "(", ")", "|", "[", "]", "\\"]) {
@@ -89,7 +89,7 @@ describe("escapeRegex", () => {
   });
 
   it("should handle super-long strings", () => {
-    const longInput = "a".repeat(10_000) + ".*" + "b".repeat(10_000);
+    const longInput = `${"a".repeat(10_000)}.*${"b".repeat(10_000)}`;
     const result = escapeRegex(longInput);
 
     expect(result).toContain("\\.\\*");

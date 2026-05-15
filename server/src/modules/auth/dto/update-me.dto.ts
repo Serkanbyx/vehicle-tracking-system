@@ -1,12 +1,5 @@
 import { Type } from "class-transformer";
-import {
-  IsOptional,
-  IsString,
-  IsUrl,
-  Length,
-  Matches,
-  ValidateNested,
-} from "class-validator";
+import { IsOptional, IsString, IsUrl, Length, Matches, ValidateNested } from "class-validator";
 import { UserPreferencesDto } from "../../users/dto/user-preferences.dto.js";
 
 export class UpdateMeDto {

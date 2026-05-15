@@ -1,7 +1,7 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import React from "react";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { ApiError } from "@/api/client";
 
 const mockLogin = vi.fn();
@@ -22,8 +22,7 @@ vi.mock("@tanstack/react-router", () => ({
     useSearch: () => ({ redirect: undefined }),
   }),
   useNavigate: () => mockNavigate,
-  Link: ({ children, to }: any) =>
-    React.createElement("a", { href: to }, children),
+  Link: ({ children, to }: any) => React.createElement("a", { href: to }, children),
   redirect: vi.fn(),
 }));
 
@@ -52,9 +51,7 @@ describe("LoginPage", () => {
 
     expect(screen.getByLabelText("E-posta")).toBeInTheDocument();
     expect(screen.getByLabelText("Şifre")).toBeInTheDocument();
-    expect(
-      screen.getByRole("button", { name: /giriş yap/i }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /giriş yap/i })).toBeInTheDocument();
   });
 
   it("should show validation error for invalid email", async () => {
@@ -108,9 +105,7 @@ describe("LoginPage", () => {
     await user.click(screen.getByRole("button", { name: /giriş yap/i }));
 
     await waitFor(() => {
-      expect(
-        screen.getByText("Geçersiz e-posta veya şifre"),
-      ).toBeInTheDocument();
+      expect(screen.getByText("Geçersiz e-posta veya şifre")).toBeInTheDocument();
     });
   });
 
@@ -124,9 +119,7 @@ describe("LoginPage", () => {
     await user.click(screen.getByRole("button", { name: /giriş yap/i }));
 
     await waitFor(() => {
-      expect(
-        screen.getByText("Bir hata oluştu. Lütfen tekrar deneyin."),
-      ).toBeInTheDocument();
+      expect(screen.getByText("Bir hata oluştu. Lütfen tekrar deneyin.")).toBeInTheDocument();
     });
   });
 

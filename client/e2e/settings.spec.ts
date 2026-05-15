@@ -1,14 +1,12 @@
-import { test, expect } from "@playwright/test";
-import { seedTestData, login, ADMIN } from "./helpers";
+import { expect, test } from "@playwright/test";
+import { ADMIN, login, seedTestData } from "./helpers";
 
 test.beforeAll(() => {
   seedTestData();
 });
 
 test.describe("Settings E2E — Theme + Animations", () => {
-  test("Toggle dark theme → applies → persists after reload", async ({
-    page,
-  }) => {
+  test("Toggle dark theme → applies → persists after reload", async ({ page }) => {
     await login(page, ADMIN);
 
     /* ── Navigate to appearance settings ── */
@@ -16,11 +14,9 @@ test.describe("Settings E2E — Theme + Animations", () => {
     await page.waitForLoadState("networkidle");
 
     /* ── Find and click the dark theme option ── */
-    const darkOption = page.getByLabel(/karanlık|dark/i).or(
-      page.locator('button[value="dark"]').or(
-        page.locator("text=Karanlık").first(),
-      ),
-    );
+    const darkOption = page
+      .getByLabel(/karanlık|dark/i)
+      .or(page.locator('button[value="dark"]').or(page.locator("text=Karanlık").first()));
 
     if (await darkOption.isVisible()) {
       await darkOption.click();
@@ -34,9 +30,7 @@ test.describe("Settings E2E — Theme + Animations", () => {
       const isDark =
         hasDark?.includes("dark") ||
         hasDarkData === "dark" ||
-        (await page.evaluate(() =>
-          document.documentElement.classList.contains("dark"),
-        ));
+        (await page.evaluate(() => document.documentElement.classList.contains("dark")));
 
       expect(isDark).toBeTruthy();
 
@@ -59,9 +53,9 @@ test.describe("Settings E2E — Theme + Animations", () => {
     await page.waitForLoadState("networkidle");
 
     /* ── Find animations toggle (Switch) ── */
-    const animSwitch = page.getByLabel(/animasyon|animation/i).or(
-      page.getByRole("switch", { name: /animasyon|animation/i }),
-    );
+    const animSwitch = page
+      .getByLabel(/animasyon|animation/i)
+      .or(page.getByRole("switch", { name: /animasyon|animation/i }));
 
     if (await animSwitch.isVisible()) {
       const isChecked = await animSwitch.isChecked();
@@ -71,9 +65,7 @@ test.describe("Settings E2E — Theme + Animations", () => {
         await page.waitForTimeout(500);
       }
 
-      const hasNoAnim = await page.evaluate(() =>
-        document.body.classList.contains("no-anim"),
-      );
+      const hasNoAnim = await page.evaluate(() => document.body.classList.contains("no-anim"));
 
       expect(hasNoAnim).toBeTruthy();
     }
@@ -86,14 +78,10 @@ test.describe("Settings E2E — Theme + Animations", () => {
     await page.waitForLoadState("networkidle");
 
     /* ── Verify sections exist ── */
-    const themeSection = page.locator("text=Tema").or(
-      page.locator("text=Theme"),
-    );
+    const themeSection = page.locator("text=Tema").or(page.locator("text=Theme"));
     await expect(themeSection).toBeVisible({ timeout: 5_000 });
 
-    const fontSection = page.locator("text=Yazı Boyutu").or(
-      page.locator("text=Font"),
-    );
+    const fontSection = page.locator("text=Yazı Boyutu").or(page.locator("text=Font"));
     const fontVisible = await fontSection.isVisible();
     expect(fontVisible).toBeTruthy();
   });

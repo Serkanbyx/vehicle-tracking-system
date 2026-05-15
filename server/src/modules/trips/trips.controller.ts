@@ -1,20 +1,8 @@
-import {
-  Controller,
-  Get,
-  Header,
-  Param,
-  ParseUUIDPipe,
-  Query,
-  Res,
-} from "@nestjs/common";
+import { Controller, Get, Header, Param, ParseUUIDPipe, Query, Res } from "@nestjs/common";
 import { Throttle } from "@nestjs/throttler";
 import type { Response } from "express";
-import {
-  TripExportQueryDto,
-  TripQueryDto,
-  TripSummaryQueryDto,
-} from "./dto/index.js";
-import { TripsService } from "./trips.service.js";
+import type { TripExportQueryDto, TripQueryDto, TripSummaryQueryDto } from "./dto/index.js";
+import type { TripsService } from "./trips.service.js";
 
 @Controller("trips")
 export class TripsController {
@@ -38,10 +26,7 @@ export class TripsController {
   @Get("export")
   @Header("Content-Type", "text/csv")
   @Header("Content-Disposition", 'attachment; filename="trips.csv"')
-  async exportCsv(
-    @Query() query: TripExportQueryDto,
-    @Res() res: Response,
-  ) {
+  async exportCsv(@Query() query: TripExportQueryDto, @Res() res: Response) {
     const csv = await this.tripsService.exportCsv(query);
 
     res.send(csv);

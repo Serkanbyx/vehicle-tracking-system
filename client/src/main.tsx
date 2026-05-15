@@ -4,18 +4,17 @@ import { RouterProvider } from "@tanstack/react-router";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { Toaster } from "sonner";
+import type { ApiError } from "./api/client";
 import { AuthProvider, useAuth } from "./context/auth.context";
 import { PreferencesProvider } from "./context/preferences.context";
 import { router } from "./router";
-import type { ApiError } from "./api/client";
 import "./styles/globals.css";
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 30_000,
-      retry: (count, error) =>
-        (error as ApiError)?.status !== 401 && count < 2,
+      retry: (count, error) => (error as ApiError)?.status !== 401 && count < 2,
       refetchOnWindowFocus: false,
     },
     mutations: { retry: 0 },

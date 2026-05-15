@@ -1,11 +1,10 @@
-import maplibregl from "maplibre-gl";
-import { useEffect, useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Eye, EyeOff, Flame } from "lucide-react";
+import maplibregl from "maplibre-gl";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
-import { env } from "@/env";
-import { listVehicles, getHeatmap } from "@/api/vehicles";
 import type { HeatmapResponse } from "@/api/types";
+import { getHeatmap, listVehicles } from "@/api/vehicles";
 import {
   Button,
   Card,
@@ -17,6 +16,7 @@ import {
   Select,
   Skeleton,
 } from "@/components/ui";
+import { env } from "@/env";
 
 const MAX_RANGE_DAYS = 30;
 
@@ -51,8 +51,7 @@ export function HeatmapPanel() {
       toast.error("Araç, başlangıç ve bitiş tarihi gereklidir.");
       return;
     }
-    const diffDays =
-      (new Date(to).getTime() - new Date(from).getTime()) / 86_400_000;
+    const diffDays = (new Date(to).getTime() - new Date(from).getTime()) / 86_400_000;
     if (diffDays > MAX_RANGE_DAYS) {
       toast.error(`Maksimum ${MAX_RANGE_DAYS} günlük aralık seçilebilir.`);
       return;
@@ -75,9 +74,7 @@ export function HeatmapPanel() {
     }
 
     const firstPt = heatmapData.points[0];
-    const center: [number, number] = firstPt
-      ? [firstPt.lng, firstPt.lat]
-      : [35.2, 39.0];
+    const center: [number, number] = firstPt ? [firstPt.lng, firstPt.lat] : [35.2, 39.0];
 
     const map = new maplibregl.Map({
       container: containerRef.current,
@@ -101,13 +98,9 @@ export function HeatmapPanel() {
 
   useEffect(() => {
     const map = mapRef.current;
-    if (!map || !map.isStyleLoaded()) return;
+    if (!map?.isStyleLoaded()) return;
     if (map.getLayer("heatmap-layer")) {
-      map.setLayoutProperty(
-        "heatmap-layer",
-        "visibility",
-        visible ? "visible" : "none",
-      );
+      map.setLayoutProperty("heatmap-layer", "visibility", visible ? "visible" : "none");
     }
   }, [visible]);
 
@@ -125,22 +118,14 @@ export function HeatmapPanel() {
             className="h-7 w-7"
             onClick={() => setVisible((v) => !v)}
           >
-            {visible ? (
-              <EyeOff className="h-4 w-4" />
-            ) : (
-              <Eye className="h-4 w-4" />
-            )}
+            {visible ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
           </Button>
         )}
       </CardHeader>
       <CardContent className="flex flex-col gap-3">
         <div className="flex flex-col gap-2">
           <Label htmlFor="hm-vehicle">Araç</Label>
-          <Select
-            id="hm-vehicle"
-            value={vehicleId}
-            onChange={(e) => setVehicleId(e.target.value)}
-          >
+          <Select id="hm-vehicle" value={vehicleId} onChange={(e) => setVehicleId(e.target.value)}>
             <option value="">Seçiniz</option>
             {vehiclesData?.items.map((v) => (
               <option key={v.id} value={v.id}>
@@ -162,20 +147,11 @@ export function HeatmapPanel() {
           </div>
           <div className="flex flex-col gap-1">
             <Label htmlFor="hm-to">Bitiş</Label>
-            <Input
-              id="hm-to"
-              type="date"
-              value={to}
-              onChange={(e) => setTo(e.target.value)}
-            />
+            <Input id="hm-to" type="date" value={to} onChange={(e) => setTo(e.target.value)} />
           </div>
         </div>
 
-        <Button
-          size="sm"
-          onClick={handleGenerate}
-          disabled={isLoading || !vehicleId}
-        >
+        <Button size="sm" onClick={handleGenerate} disabled={isLoading || !vehicleId}>
           {isLoading ? "Yükleniyor…" : "Oluştur"}
         </Button>
 
@@ -201,11 +177,7 @@ export function HeatmapPanel() {
   );
 }
 
-function renderHeatmap(
-  map: maplibregl.Map,
-  data: HeatmapResponse,
-  visible: boolean,
-) {
+function renderHeatmap(map: maplibregl.Map, data: HeatmapResponse, visible: boolean) {
   if (map.getLayer("heatmap-layer")) map.removeLayer("heatmap-layer");
   if (map.getSource("heatmap-src")) map.removeSource("heatmap-src");
 

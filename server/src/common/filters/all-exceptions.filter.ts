@@ -17,21 +17,20 @@ interface PostgresError {
   detail?: string;
 }
 
-const POSTGRES_ERROR_MAP: Record<string, { status: number; message: string }> =
-  {
-    "23505": {
-      status: HttpStatus.CONFLICT,
-      message: "Resource already exists",
-    },
-    "23503": {
-      status: HttpStatus.BAD_REQUEST,
-      message: "Referenced resource does not exist",
-    },
-    "23502": {
-      status: HttpStatus.BAD_REQUEST,
-      message: "Required field is missing",
-    },
-  };
+const POSTGRES_ERROR_MAP: Record<string, { status: number; message: string }> = {
+  "23505": {
+    status: HttpStatus.CONFLICT,
+    message: "Resource already exists",
+  },
+  "23503": {
+    status: HttpStatus.BAD_REQUEST,
+    message: "Referenced resource does not exist",
+  },
+  "23502": {
+    status: HttpStatus.BAD_REQUEST,
+    message: "Required field is missing",
+  },
+};
 
 const isProduction = () => process.env.NODE_ENV === "production";
 
@@ -51,10 +50,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const request = ctx.getRequest<PinoRequest>();
     const requestId = request.id ?? String(Date.now());
 
-    const { status, message, errors } = this.resolveException(
-      exception,
-      requestId,
-    );
+    const { status, message, errors } = this.resolveException(exception, requestId);
 
     const body: Record<string, unknown> = {
       success: false,
@@ -115,7 +111,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
       status: HttpStatus.INTERNAL_SERVER_ERROR,
       message: isProduction()
         ? "Internal server error"
-        : (exception as Error)?.message ?? "Internal server error",
+        : ((exception as Error)?.message ?? "Internal server error"),
     };
   }
 
@@ -161,19 +157,13 @@ export class AllExceptionsFilter implements ExceptionFilter {
 
     return {
       status: HttpStatus.INTERNAL_SERVER_ERROR,
-      message: isProduction()
-        ? "Internal server error"
-        : `Database error: ${error.code}`,
+      message: isProduction() ? "Internal server error" : `Database error: ${error.code}`,
     };
   }
 
   private isJwtError(error: unknown): boolean {
     if (!(error instanceof Error)) return false;
-    const jwtErrorNames = [
-      "JsonWebTokenError",
-      "TokenExpiredError",
-      "NotBeforeError",
-    ];
+    const jwtErrorNames = ["JsonWebTokenError", "TokenExpiredError", "NotBeforeError"];
     return jwtErrorNames.includes(error.name);
   }
 }

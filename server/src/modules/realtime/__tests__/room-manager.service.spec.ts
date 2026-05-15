@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import WebSocket from "ws";
 import { RoomManager } from "../room-manager.service.js";
 
@@ -6,9 +6,7 @@ import { RoomManager } from "../room-manager.service.js";
 /*  Mock WebSocket factory                                             */
 /* ------------------------------------------------------------------ */
 
-const createMockSocket = (
-  readyState: number = WebSocket.OPEN,
-): WebSocket => {
+const createMockSocket = (readyState: number = WebSocket.OPEN): WebSocket => {
   const socket = {
     readyState,
     send: vi.fn(),
@@ -140,8 +138,8 @@ describe("RoomManager — broadcast", () => {
     manager.broadcast("room:x", payload);
 
     const expected = JSON.stringify(payload);
-    expect((ws1.send as any)).toHaveBeenCalledWith(expected);
-    expect((ws2.send as any)).toHaveBeenCalledWith(expected);
+    expect(ws1.send as any).toHaveBeenCalledWith(expected);
+    expect(ws2.send as any).toHaveBeenCalledWith(expected);
   });
 
   it("should skip closed sockets and remove them", () => {
@@ -153,8 +151,8 @@ describe("RoomManager — broadcast", () => {
 
     manager.broadcast("room:x", { msg: "hi" });
 
-    expect((wsOpen.send as any)).toHaveBeenCalled();
-    expect((wsClosed.send as any)).not.toHaveBeenCalled();
+    expect(wsOpen.send as any).toHaveBeenCalled();
+    expect(wsClosed.send as any).not.toHaveBeenCalled();
   });
 
   it("should not throw for empty or non-existent room", () => {
@@ -172,8 +170,8 @@ describe("RoomManager — broadcastToMany", () => {
 
     manager.broadcastToMany(["room:a", "room:b"], { x: 1 });
 
-    expect((ws1.send as any)).toHaveBeenCalled();
-    expect((ws2.send as any)).toHaveBeenCalled();
+    expect(ws1.send as any).toHaveBeenCalled();
+    expect(ws2.send as any).toHaveBeenCalled();
   });
 
   it("should deduplicate — socket in multiple rooms receives message once", () => {
@@ -184,18 +182,16 @@ describe("RoomManager — broadcastToMany", () => {
 
     manager.broadcastToMany(["room:a", "room:b"], { msg: "once" });
 
-    expect((ws.send as any)).toHaveBeenCalledTimes(1);
+    expect(ws.send as any).toHaveBeenCalledTimes(1);
   });
 
   it("should handle mix of existing and non-existing rooms", () => {
     const ws = createMockSocket();
     manager.join(ws, "room:real");
 
-    expect(() =>
-      manager.broadcastToMany(["room:real", "room:fake"], { data: true }),
-    ).not.toThrow();
+    expect(() => manager.broadcastToMany(["room:real", "room:fake"], { data: true })).not.toThrow();
 
-    expect((ws.send as any)).toHaveBeenCalledTimes(1);
+    expect(ws.send as any).toHaveBeenCalledTimes(1);
   });
 });
 

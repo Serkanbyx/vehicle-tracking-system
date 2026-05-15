@@ -1,20 +1,18 @@
 import { Link } from "@tanstack/react-router";
 import {
   Bell,
+  FileText,
   Gauge,
+  Hexagon,
   LogOut,
-  Map,
+  Map as MapNavIcon,
   Menu,
   Settings,
   Shield,
   Truck,
-  FileText,
-  Hexagon,
   User,
 } from "lucide-react";
 import { useState } from "react";
-import { useAuth } from "@/context/auth.context";
-import { useWsConnection } from "@/hooks/use-ws-connection";
 import {
   Avatar,
   AvatarFallback,
@@ -34,6 +32,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui";
+import { useAuth } from "@/context/auth.context";
+import { useWsConnection } from "@/hooks/use-ws-connection";
 import { cn } from "@/lib/cn";
 
 const NAV_LINKS = [
@@ -129,7 +129,7 @@ export function Navbar() {
       <nav className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4">
         <div className="flex items-center gap-6">
           <Link to="/" className="flex items-center gap-2 font-bold text-brand-600">
-            <Map className="h-5 w-5" />
+            <MapNavIcon className="h-5 w-5" />
             <span className="hidden sm:inline">VTS</span>
           </Link>
 
@@ -167,7 +167,7 @@ export function Navbar() {
         <SheetContent side="left" className="w-64">
           <SheetHeader>
             <SheetTitle className="flex items-center gap-2 text-brand-600">
-              <Map className="h-5 w-5" />
+              <MapNavIcon className="h-5 w-5" />
               VTS
             </SheetTitle>
           </SheetHeader>

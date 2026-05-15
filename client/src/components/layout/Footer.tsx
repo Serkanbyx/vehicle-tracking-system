@@ -14,10 +14,7 @@ export function Footer() {
           >
             GitHub
           </a>
-          <a
-            href="/docs"
-            className="hover:text-brand-600"
-          >
+          <a href="/docs" className="hover:text-brand-600">
             Dokümantasyon
           </a>
         </div>

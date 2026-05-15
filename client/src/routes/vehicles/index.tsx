@@ -1,12 +1,12 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { requireAuth } from "@/components/guards";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { Car } from "lucide-react";
 import { listVehicles } from "@/api/vehicles";
+import { EmptyState, PageNavigator } from "@/components/common";
+import { requireAuth } from "@/components/guards";
 import { VehicleCard } from "@/components/vehicles/VehicleCard";
 import { VehicleCardSkeleton } from "@/components/vehicles/VehicleCardSkeleton";
 import { VehicleFilters } from "@/components/vehicles/VehicleFilters";
-import { EmptyState, PageNavigator } from "@/components/common";
-import { Car } from "lucide-react";
 
 const VEHICLE_TYPES = ["car", "truck", "van", "motorcycle", "bus", "other"] as const;
 
@@ -27,9 +27,7 @@ export const Route = createFileRoute("/vehicles/")({
     status: ["moving", "idle", "offline"].includes(s.status as string)
       ? (s.status as string)
       : undefined,
-    sort: ["recent", "plate", "speed"].includes(s.sort as string)
-      ? (s.sort as string)
-      : "recent",
+    sort: ["recent", "plate", "speed"].includes(s.sort as string) ? (s.sort as string) : "recent",
     page: Math.max(1, Number(s.page) || 1),
   }),
   beforeLoad: requireAuth,
@@ -45,7 +43,7 @@ export const Route = createFileRoute("/vehicles/")({
 function VehicleListPage() {
   const data = Route.useLoaderData();
   const search = Route.useSearch();
-  const navigate = useNavigate();
+  const navigate = useNavigate({ from: "/vehicles/" });
 
   const { isLoading } = useQuery({
     queryKey: ["vehicles", search],
@@ -83,7 +81,7 @@ function VehicleListPage() {
         totalPages={data.totalPages}
         onPageChange={(p) =>
           void navigate({
-            search: (prev: Record<string, unknown>) => ({ ...prev, page: p }),
+            search: (prev) => ({ ...prev, page: p }),
           })
         }
       />

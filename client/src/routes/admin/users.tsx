@@ -1,21 +1,15 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useState, useCallback } from "react";
-import { Search, Trash2 } from "lucide-react";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { formatDistanceToNow } from "date-fns";
 import { tr } from "date-fns/locale";
+import { Search, Trash2 } from "lucide-react";
+import { useCallback, useState } from "react";
 import { toast } from "sonner";
-import { requireAdmin } from "@/components/guards";
-import {
-  listAdminUsers,
-  setUserRole,
-  setUserActive,
-  removeUser,
-} from "@/api/admin";
 import type { ListAdminUsersQuery } from "@/api/admin";
+import { listAdminUsers, removeUser, setUserActive, setUserRole } from "@/api/admin";
 import type { User, UserRole } from "@/api/types";
-import { useAuth } from "@/context/auth.context";
-import { useDebounce } from "@/hooks/use-debounce";
+import { PageNavigator } from "@/components/common";
+import { requireAdmin } from "@/components/guards";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -43,7 +37,8 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui";
-import { PageNavigator } from "@/components/common";
+import { useAuth } from "@/context/auth.context";
+import { useDebounce } from "@/hooks/use-debounce";
 
 interface UsersSearch {
   q?: string;
@@ -58,10 +53,7 @@ export const Route = createFileRoute("/admin/users")({
     q: typeof raw.q === "string" ? raw.q : undefined,
     role: typeof raw.role === "string" ? raw.role : undefined,
     isActive: typeof raw.isActive === "string" ? raw.isActive : undefined,
-    page:
-      typeof raw.page === "number" && raw.page >= 1
-        ? Math.floor(raw.page)
-        : 1,
+    page: typeof raw.page === "number" && raw.page >= 1 ? Math.floor(raw.page) : 1,
   }),
   loaderDeps: ({ search }) => search,
   loader: ({ context, deps }) => {
@@ -80,12 +72,7 @@ function buildQuery(search: UsersSearch): ListAdminUsersQuery {
     limit: 20,
     q: search.q || undefined,
     role: search.role || undefined,
-    isActive:
-      search.isActive === "true"
-        ? true
-        : search.isActive === "false"
-          ? false
-          : undefined,
+    isActive: search.isActive === "true" ? true : search.isActive === "false" ? false : undefined,
   };
 }
 
@@ -95,7 +82,10 @@ const ROLE_LABELS: Record<UserRole, string> = {
   viewer: "Viewer",
 };
 
-const ROLE_COLORS: Record<UserRole, "default" | "secondary" | "destructive" | "outline" | "warning"> = {
+const ROLE_COLORS: Record<
+  UserRole,
+  "default" | "secondary" | "destructive" | "outline" | "warning"
+> = {
   admin: "destructive",
   manager: "default",
   viewer: "secondary",
@@ -122,12 +112,9 @@ function AdminUsersPage() {
 
   const isSelf = (u: User) => u.id === currentUser?.id;
 
-  const handleSearchChange = useCallback(
-    (value: string) => {
-      setSearchLocal(value);
-    },
-    [],
-  );
+  const handleSearchChange = useCallback((value: string) => {
+    setSearchLocal(value);
+  }, []);
 
   const setFilter = (key: string, value: string) => {
     void navigate({ search: (prev) => ({ ...prev, [key]: value || undefined, page: 1 }) });
@@ -251,9 +238,7 @@ function AdminUsersPage() {
                 </td>
                 <td className="px-3 py-2 text-gray-500">{user.email}</td>
                 <td className="px-3 py-2">
-                  <Badge variant={ROLE_COLORS[user.role]}>
-                    {ROLE_LABELS[user.role]}
-                  </Badge>
+                  <Badge variant={ROLE_COLORS[user.role]}>{ROLE_LABELS[user.role]}</Badge>
                 </td>
                 <td className="px-3 py-2">
                   <Tooltip>
@@ -261,17 +246,13 @@ function AdminUsersPage() {
                       <span>
                         <Switch
                           checked={user.isActive}
-                          onCheckedChange={(v) =>
-                            handleToggleActive(user, v)
-                          }
+                          onCheckedChange={(v) => handleToggleActive(user, v)}
                           disabled={isSelf(user)}
                         />
                       </span>
                     </TooltipTrigger>
                     {isSelf(user) && (
-                      <TooltipContent>
-                        Kendi hesabınızı pasifleştiremezsiniz
-                      </TooltipContent>
+                      <TooltipContent>Kendi hesabınızı pasifleştiremezsiniz</TooltipContent>
                     )}
                   </Tooltip>
                 </td>
@@ -307,9 +288,7 @@ function AdminUsersPage() {
                         </Button>
                       </TooltipTrigger>
                       {isSelf(user) && (
-                        <TooltipContent>
-                          Kendi rolünüzü değiştiremezsiniz
-                        </TooltipContent>
+                        <TooltipContent>Kendi rolünüzü değiştiremezsiniz</TooltipContent>
                       )}
                     </Tooltip>
 
@@ -326,9 +305,7 @@ function AdminUsersPage() {
                         </Button>
                       </TooltipTrigger>
                       {isSelf(user) && (
-                        <TooltipContent>
-                          Kendi hesabınızı silemezsiniz
-                        </TooltipContent>
+                        <TooltipContent>Kendi hesabınızı silemezsiniz</TooltipContent>
                       )}
                     </Tooltip>
                   </div>
@@ -353,18 +330,15 @@ function AdminUsersPage() {
       />
 
       {/* Role Change Dialog */}
-      <Dialog
-        open={!!roleDialogUser}
-        onOpenChange={(open) => !open && setRoleDialogUser(null)}
-      >
+      <Dialog open={!!roleDialogUser} onOpenChange={(open) => !open && setRoleDialogUser(null)}>
         <DialogContent className="max-w-sm">
           <DialogHeader>
             <DialogTitle>Rol Değiştir</DialogTitle>
           </DialogHeader>
           <div className="flex flex-col gap-3 py-3">
             <p className="text-sm text-gray-500">
-              <span className="font-medium">{roleDialogUser?.name}</span>{" "}
-              kullanıcısının rolünü değiştirin.
+              <span className="font-medium">{roleDialogUser?.name}</span> kullanıcısının rolünü
+              değiştirin.
             </p>
             <Label htmlFor="role-select">Yeni Rol</Label>
             <Select
@@ -387,17 +361,13 @@ function AdminUsersPage() {
       </Dialog>
 
       {/* Delete Confirmation */}
-      <AlertDialog
-        open={!!deleteUser}
-        onOpenChange={(open) => !open && setDeleteUser(null)}
-      >
+      <AlertDialog open={!!deleteUser} onOpenChange={(open) => !open && setDeleteUser(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Kullanıcıyı Sil</AlertDialogTitle>
             <AlertDialogDescription>
-              <span className="font-medium">{deleteUser?.name}</span>{" "}
-              kullanıcısını silmek istediğinize emin misiniz? Bu işlem geri
-              alınamaz.
+              <span className="font-medium">{deleteUser?.name}</span> kullanıcısını silmek
+              istediğinize emin misiniz? Bu işlem geri alınamaz.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

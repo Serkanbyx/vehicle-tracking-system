@@ -2,8 +2,8 @@ import "reflect-metadata";
 import * as bcrypt from "bcrypt";
 import { config } from "dotenv";
 import { DataSource } from "typeorm";
-import { User } from "../modules/users/user.entity.js";
 import { UserRole } from "../common/enums/user-role.enum.js";
+import { User } from "../modules/users/user.entity.js";
 
 config({ path: ".env" });
 
@@ -15,9 +15,7 @@ async function seed(): Promise<void> {
   const name = process.env.ADMIN_NAME || "Admin";
 
   if (!email || !password) {
-    console.error(
-      "ADMIN_EMAIL and ADMIN_PASSWORD environment variables are required.",
-    );
+    console.error("ADMIN_EMAIL and ADMIN_PASSWORD environment variables are required.");
     process.exit(1);
   }
 

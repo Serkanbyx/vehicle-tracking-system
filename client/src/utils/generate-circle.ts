@@ -30,27 +30,19 @@ export function generateCircleCoords(
         Math.sin(bearing) * Math.sin(distRad) * Math.cos(latRad),
         Math.cos(distRad) - Math.sin(latRad) * Math.sin(destLat),
       );
-    coords.push([
-      (destLng * 180) / Math.PI,
-      (destLat * 180) / Math.PI,
-    ]);
+    coords.push([(destLng * 180) / Math.PI, (destLat * 180) / Math.PI]);
   }
 
   return coords;
 }
 
 /** Haversine distance between two [lng, lat] points in meters */
-export function haversineDistance(
-  a: [number, number],
-  b: [number, number],
-): number {
+export function haversineDistance(a: [number, number], b: [number, number]): number {
   const toRad = (deg: number) => (deg * Math.PI) / 180;
   const dLat = toRad(b[1] - a[1]);
   const dLng = toRad(b[0] - a[0]);
   const sinLat = Math.sin(dLat / 2);
   const sinLng = Math.sin(dLng / 2);
-  const h =
-    sinLat * sinLat +
-    Math.cos(toRad(a[1])) * Math.cos(toRad(b[1])) * sinLng * sinLng;
+  const h = sinLat * sinLat + Math.cos(toRad(a[1])) * Math.cos(toRad(b[1])) * sinLng * sinLng;
   return 2 * EARTH_RADIUS_M * Math.asin(Math.sqrt(h));
 }

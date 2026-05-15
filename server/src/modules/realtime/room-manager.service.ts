@@ -7,15 +7,19 @@ export class RoomManager {
   private socketRooms = new WeakMap<WebSocket, Set<string>>();
 
   join(socket: WebSocket, room: string): void {
-    if (!this.rooms.has(room)) {
-      this.rooms.set(room, new Set());
+    let roomSet = this.rooms.get(room);
+    if (!roomSet) {
+      roomSet = new Set();
+      this.rooms.set(room, roomSet);
     }
-    this.rooms.get(room)!.add(socket);
+    roomSet.add(socket);
 
-    if (!this.socketRooms.has(socket)) {
-      this.socketRooms.set(socket, new Set());
+    let socketSet = this.socketRooms.get(socket);
+    if (!socketSet) {
+      socketSet = new Set();
+      this.socketRooms.set(socket, socketSet);
     }
-    this.socketRooms.get(socket)!.add(room);
+    socketSet.add(room);
   }
 
   leave(socket: WebSocket, room: string): void {

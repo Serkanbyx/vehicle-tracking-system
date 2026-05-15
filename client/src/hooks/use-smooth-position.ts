@@ -8,10 +8,7 @@ function prefersReducedMotion(): boolean {
   );
 }
 
-export function useSmoothPosition(
-  target: [number, number],
-  durationMs = 1500,
-): [number, number] {
+export function useSmoothPosition(target: [number, number], durationMs = 1500): [number, number] {
   const [pos, setPos] = useState(target);
   const startRef = useRef<{
     from: [number, number];

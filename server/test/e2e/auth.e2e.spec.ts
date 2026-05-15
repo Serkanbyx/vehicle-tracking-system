@@ -1,12 +1,7 @@
-import { describe, it, expect, beforeAll, afterAll, afterEach } from "vitest";
 import type { INestApplication } from "@nestjs/common";
 import request from "supertest";
-import {
-  createTestApp,
-  closeTestApp,
-  truncateAll,
-  TEST_PASSWORD,
-} from "./helpers";
+import { afterAll, afterEach, beforeAll, describe, expect, it } from "vitest";
+import { closeTestApp, createTestApp, TEST_PASSWORD, truncateAll } from "./helpers";
 
 let app: INestApplication;
 
@@ -33,10 +28,7 @@ describe("Auth E2E — Full auth flow", () => {
     const server = app.getHttpServer();
 
     /* ── 1. Register ── */
-    const registerRes = await request(server)
-      .post("/api/auth/register")
-      .send(newUser)
-      .expect(201);
+    const registerRes = await request(server).post("/api/auth/register").send(newUser).expect(201);
 
     expect(registerRes.body.success).toBe(true);
     expect(registerRes.body.data.accessToken).toBeDefined();
@@ -56,9 +48,7 @@ describe("Auth E2E — Full auth flow", () => {
     expect(accessToken).toBeDefined();
     expect(setCookies.length).toBeGreaterThan(0);
 
-    const refreshCookie = setCookies.find((c: string) =>
-      c.startsWith("refresh_token="),
-    );
+    const refreshCookie = setCookies.find((c: string) => c.startsWith("refresh_token="));
     expect(refreshCookie).toBeDefined();
 
     /* ── 3. GET /me ── */
@@ -78,9 +68,7 @@ describe("Auth E2E — Full auth flow", () => {
     expect(refreshRes.body.data.accessToken).toBeDefined();
 
     const newCookies: string[] = refreshRes.headers["set-cookie"] ?? [];
-    const newRefreshCookie = newCookies.find((c: string) =>
-      c.startsWith("refresh_token="),
-    );
+    const newRefreshCookie = newCookies.find((c: string) => c.startsWith("refresh_token="));
     expect(newRefreshCookie).toBeDefined();
 
     /* ── 5. Reuse old refresh — session revoked ── */

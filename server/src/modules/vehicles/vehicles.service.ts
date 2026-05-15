@@ -1,10 +1,6 @@
-import {
-  ForbiddenException,
-  Injectable,
-  NotFoundException,
-} from "@nestjs/common";
+import { ForbiddenException, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { In, Repository } from "typeorm";
+import { In, type Repository } from "typeorm";
 import { UserRole } from "../../common/enums/user-role.enum.js";
 import { escapeRegex } from "../../common/utils/escape-regex.js";
 import type { BulkActivateDto } from "./dto/bulk-activate.dto.js";
@@ -42,10 +38,9 @@ export class VehiclesService {
 
     if (query.q) {
       const escaped = escapeRegex(query.q);
-      qb.andWhere(
-        `(v.plate ILIKE :q OR v.model ILIKE :q OR v.driver->>'name' ILIKE :q)`,
-        { q: `%${escaped}%` },
-      );
+      qb.andWhere(`(v.plate ILIKE :q OR v.model ILIKE :q OR v.driver->>'name' ILIKE :q)`, {
+        q: `%${escaped}%`,
+      });
     }
 
     if (query.vehicleType) {
@@ -71,7 +66,6 @@ export class VehiclesService {
       case "speed":
         qb.orderBy("(v.lastLocation->>'speed')::float", "DESC", "NULLS LAST");
         break;
-      case "recent":
       default:
         qb.orderBy("v.updatedAt", "DESC");
         break;
@@ -102,11 +96,7 @@ export class VehiclesService {
     return vehicle;
   }
 
-  async update(
-    id: string,
-    dto: UpdateVehicleDto,
-    currentUser: CurrentUser,
-  ): Promise<Vehicle> {
+  async update(id: string, dto: UpdateVehicleDto, currentUser: CurrentUser): Promise<Vehicle> {
     const vehicle = await this.findOne(id);
 
     this.assertOwnership(vehicle, currentUser);
@@ -147,10 +137,7 @@ export class VehiclesService {
   }
 
   async bulkActivate(dto: BulkActivateDto): Promise<{ affected: number }> {
-    const result = await this.vehiclesRepo.update(
-      { id: In(dto.ids) },
-      { isActive: dto.isActive },
-    );
+    const result = await this.vehiclesRepo.update({ id: In(dto.ids) }, { isActive: dto.isActive });
 
     return { affected: result.affected ?? 0 };
   }

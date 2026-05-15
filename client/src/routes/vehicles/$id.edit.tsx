@@ -1,12 +1,12 @@
+import { useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { format } from "date-fns";
 import { tr } from "date-fns/locale";
 import { Trash2 } from "lucide-react";
 import { useState } from "react";
-import { requireManagerOrAdmin } from "@/components/guards";
-import { getVehicle, removeVehicle } from "@/api/vehicles";
-import { useQueryClient } from "@tanstack/react-query";
 import type { Vehicle } from "@/api/types";
+import { getVehicle, removeVehicle } from "@/api/vehicles";
+import { requireManagerOrAdmin } from "@/components/guards";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -75,20 +75,15 @@ function EditVehiclePage() {
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
-                  <AlertDialogTitle>
-                    {vehicle.plate} aracını sil?
-                  </AlertDialogTitle>
+                  <AlertDialogTitle>{vehicle.plate} aracını sil?</AlertDialogTitle>
                   <AlertDialogDescription>
-                    Bu işlem araçla ilişkili tüm konum verilerini, seferleri ve
-                    uyarıları kalıcı olarak silecektir. Bu işlem geri alınamaz.
+                    Bu işlem araçla ilişkili tüm konum verilerini, seferleri ve uyarıları kalıcı
+                    olarak silecektir. Bu işlem geri alınamaz.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                   <AlertDialogCancel>İptal</AlertDialogCancel>
-                  <AlertDialogAction
-                    onClick={() => void handleDelete()}
-                    disabled={deleting}
-                  >
+                  <AlertDialogAction onClick={() => void handleDelete()} disabled={deleting}>
                     {deleting ? "Siliniyor…" : "Sil"}
                   </AlertDialogAction>
                 </AlertDialogFooter>

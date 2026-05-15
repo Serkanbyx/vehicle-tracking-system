@@ -1,4 +1,11 @@
-import { IsEnum, IsISO8601, Validate, ValidatorConstraint, ValidatorConstraintInterface, ValidationArguments } from "class-validator";
+import {
+  IsEnum,
+  IsISO8601,
+  Validate,
+  type ValidationArguments,
+  ValidatorConstraint,
+  type ValidatorConstraintInterface,
+} from "class-validator";
 
 export enum ExportFormat {
   CSV = "csv",
@@ -13,8 +20,7 @@ class MaxDateRangeConstraint implements ValidatorConstraintInterface {
     const obj = args.object as RouteExportQueryDto;
     if (!obj.from || !obj.to) return true;
 
-    const diffMs =
-      new Date(obj.to).getTime() - new Date(obj.from).getTime();
+    const diffMs = new Date(obj.to).getTime() - new Date(obj.from).getTime();
 
     return diffMs <= MAX_RANGE_DAYS * 24 * 60 * 60 * 1000;
   }

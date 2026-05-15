@@ -1,7 +1,7 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import React from "react";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const mockRegister = vi.fn();
 const mockNavigate = vi.fn();
@@ -21,8 +21,7 @@ vi.mock("@tanstack/react-router", () => ({
     useSearch: () => ({}),
   }),
   useNavigate: () => mockNavigate,
-  Link: ({ children, to }: any) =>
-    React.createElement("a", { href: to }, children),
+  Link: ({ children, to }: any) => React.createElement("a", { href: to }, children),
   redirect: vi.fn(),
 }));
 
@@ -53,9 +52,7 @@ describe("RegisterPage", () => {
     expect(screen.getByLabelText("E-posta")).toBeInTheDocument();
     expect(screen.getByLabelText("Şifre")).toBeInTheDocument();
     expect(screen.getByLabelText("Şifre Tekrarı")).toBeInTheDocument();
-    expect(
-      screen.getByRole("button", { name: /kayıt ol/i }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /kayıt ol/i })).toBeInTheDocument();
   });
 
   it("should show error when passwords do not match", async () => {
@@ -80,9 +77,7 @@ describe("RegisterPage", () => {
     await user.tab();
 
     await waitFor(() => {
-      expect(
-        screen.getByText("Şifre en az 8 karakter olmalı"),
-      ).toBeInTheDocument();
+      expect(screen.getByText("Şifre en az 8 karakter olmalı")).toBeInTheDocument();
     });
   });
 
@@ -95,9 +90,7 @@ describe("RegisterPage", () => {
     await user.tab();
 
     await waitFor(() => {
-      expect(
-        screen.getByText("Şifre en az bir harf içermeli"),
-      ).toBeInTheDocument();
+      expect(screen.getByText("Şifre en az bir harf içermeli")).toBeInTheDocument();
     });
   });
 
@@ -113,11 +106,7 @@ describe("RegisterPage", () => {
     await user.click(screen.getByRole("button", { name: /kayıt ol/i }));
 
     await waitFor(() => {
-      expect(mockRegister).toHaveBeenCalledWith(
-        "Test User",
-        "new@test.com",
-        "Password123",
-      );
+      expect(mockRegister).toHaveBeenCalledWith("Test User", "new@test.com", "Password123");
     });
   });
 

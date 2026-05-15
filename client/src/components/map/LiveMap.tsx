@@ -1,21 +1,19 @@
+import { useQuery } from "@tanstack/react-query";
 import maplibregl from "maplibre-gl";
 import { useEffect, useRef } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { env } from "@/env";
-import { usePreferences } from "@/context/preferences.context";
-import { listVehicles } from "@/api/vehicles";
-import { useLiveStore } from "@/stores/live-vehicles.store";
-import type { LiveVehicle } from "@/stores/live-vehicles.store";
 import type { Vehicle } from "@/api/types";
+import { listVehicles } from "@/api/vehicles";
+import { usePreferences } from "@/context/preferences.context";
+import { env } from "@/env";
 import { cn } from "@/lib/cn";
+import type { LiveVehicle } from "@/stores/live-vehicles.store";
+import { useLiveStore } from "@/stores/live-vehicles.store";
 
 function toLiveVehicle(v: Vehicle): LiveVehicle {
   return {
     id: v.id,
     plate: v.plate,
-    coordinates: v.lastLocation
-      ? [v.lastLocation.lng, v.lastLocation.lat]
-      : [0, 0],
+    coordinates: v.lastLocation ? [v.lastLocation.lng, v.lastLocation.lat] : [0, 0],
     speed: v.lastLocation?.speed ?? 0,
     heading: v.lastLocation?.heading ?? 0,
     status: v.lastLocation?.status ?? "offline",
@@ -66,16 +64,15 @@ export function LiveMap({ className }: LiveMapProps) {
       attributionControl: false,
     });
 
-    map.addControl(
-      new maplibregl.AttributionControl({ compact: true }),
-      "bottom-left",
-    );
+    map.addControl(new maplibregl.AttributionControl({ compact: true }), "bottom-left");
     map.addControl(new maplibregl.NavigationControl(), "top-right");
 
     mapRef.current = map;
 
     return () => {
-      markersRef.current.forEach((m) => m.remove());
+      markersRef.current.forEach((m) => {
+        m.remove();
+      });
       markersRef.current.clear();
       map.remove();
       mapRef.current = null;
@@ -107,9 +104,7 @@ export function LiveMap({ className }: LiveMapProps) {
           el.style.cursor = "pointer";
           el.title = vehicle.plate;
 
-          marker = new maplibregl.Marker({ element: el })
-            .setLngLat([lng, lat])
-            .addTo(map);
+          marker = new maplibregl.Marker({ element: el }).setLngLat([lng, lat]).addTo(map);
 
           markersRef.current.set(vehicle.id, marker);
         } else {
@@ -132,10 +127,5 @@ export function LiveMap({ className }: LiveMapProps) {
     return () => unsub();
   }, []);
 
-  return (
-    <div
-      ref={containerRef}
-      className={cn("h-full w-full", className)}
-    />
-  );
+  return <div ref={containerRef} className={cn("h-full w-full", className)} />;
 }

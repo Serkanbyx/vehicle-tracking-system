@@ -1,8 +1,7 @@
 import { useForm } from "@tanstack/react-form";
-import { Link, createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, redirect, useNavigate } from "@tanstack/react-router";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { useState } from "react";
-import { useAuth } from "@/context/auth.context";
 import { ApiError } from "@/api/client";
 import {
   Button,
@@ -15,6 +14,7 @@ import {
   Input,
   Label,
 } from "@/components/ui";
+import { useAuth } from "@/context/auth.context";
 
 interface LoginSearch {
   redirect?: string;
@@ -84,8 +84,7 @@ function LoginPage() {
               validators={{
                 onChange: ({ value }) => {
                   if (!value) return "E-posta gerekli";
-                  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value))
-                    return "Geçerli bir e-posta girin";
+                  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return "Geçerli bir e-posta girin";
                   return undefined;
                 },
               }}
@@ -102,12 +101,9 @@ function LoginPage() {
                     onBlur={field.handleBlur}
                     onChange={(e) => field.handleChange(e.target.value)}
                   />
-                  {field.state.meta.isTouched &&
-                    field.state.meta.errors.length > 0 && (
-                      <p className="text-xs text-danger">
-                        {field.state.meta.errors[0]}
-                      </p>
-                    )}
+                  {field.state.meta.isTouched && field.state.meta.errors.length > 0 && (
+                    <p className="text-xs text-danger">{field.state.meta.errors[0]}</p>
+                  )}
                 </div>
               )}
             </form.Field>
@@ -141,31 +137,18 @@ function LoginPage() {
                       className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
                       aria-label={showPassword ? "Şifreyi gizle" : "Şifreyi göster"}
                     >
-                      {showPassword ? (
-                        <EyeOff className="h-4 w-4" />
-                      ) : (
-                        <Eye className="h-4 w-4" />
-                      )}
+                      {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                     </button>
                   </div>
-                  {field.state.meta.isTouched &&
-                    field.state.meta.errors.length > 0 && (
-                      <p className="text-xs text-danger">
-                        {field.state.meta.errors[0]}
-                      </p>
-                    )}
+                  {field.state.meta.isTouched && field.state.meta.errors.length > 0 && (
+                    <p className="text-xs text-danger">{field.state.meta.errors[0]}</p>
+                  )}
                 </div>
               )}
             </form.Field>
 
-            <Button
-              type="submit"
-              disabled={form.state.isSubmitting}
-              className="w-full"
-            >
-              {form.state.isSubmitting && (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              )}
+            <Button type="submit" disabled={form.state.isSubmitting} className="w-full">
+              {form.state.isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Giriş Yap
             </Button>
           </form>

@@ -1,22 +1,13 @@
-import maplibregl from "maplibre-gl";
-import {
-  useEffect,
-  useRef,
-  useCallback,
-  useImperativeHandle,
-  forwardRef,
-} from "react";
 import { useQuery } from "@tanstack/react-query";
+import maplibregl from "maplibre-gl";
+import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef } from "react";
 import { toast } from "sonner";
-import { env } from "@/env";
-import { usePreferences } from "@/context/preferences.context";
 import { listGeofences, testGeofence } from "@/api/geofences";
 import type { Geofence, GeofenceShape } from "@/api/types";
+import { usePreferences } from "@/context/preferences.context";
+import { env } from "@/env";
 import { cn } from "@/lib/cn";
-import {
-  generateCircleCoords,
-  haversineDistance,
-} from "@/utils/generate-circle";
+import { generateCircleCoords, haversineDistance } from "@/utils/generate-circle";
 
 const MAX_VERTICES = 256;
 const MAX_RADIUS_M = 50_000;
@@ -49,444 +40,400 @@ interface GeofenceMapProps {
   testGeofenceId?: string | null;
 }
 
-export const GeofenceMap = forwardRef<GeofenceMapHandle, GeofenceMapProps>(
-  function GeofenceMap(
-    { className, onGeometryChange, selectedGeofenceId, testGeofenceId },
-    ref,
-  ) {
-    const mapRef = useRef<maplibregl.Map | null>(null);
-    const containerRef = useRef<HTMLDivElement>(null);
-    const { preferences } = usePreferences();
+export const GeofenceMap = forwardRef<GeofenceMapHandle, GeofenceMapProps>(function GeofenceMap(
+  { className, onGeometryChange, selectedGeofenceId, testGeofenceId },
+  ref,
+) {
+  const mapRef = useRef<maplibregl.Map | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { preferences } = usePreferences();
 
-    const modeRef = useRef<DrawingMode>("idle");
-    const polygonVerticesRef = useRef<[number, number][]>([]);
-    const circleCenterRef = useRef<[number, number] | null>(null);
-    const previewMarkerRef = useRef<maplibregl.Marker | null>(null);
-    const vertexMarkersRef = useRef<maplibregl.Marker[]>([]);
+  const modeRef = useRef<DrawingMode>("idle");
+  const polygonVerticesRef = useRef<[number, number][]>([]);
+  const circleCenterRef = useRef<[number, number] | null>(null);
+  const previewMarkerRef = useRef<maplibregl.Marker | null>(null);
+  const vertexMarkersRef = useRef<maplibregl.Marker[]>([]);
 
-    const mapDefaults = preferences.mapDefaults ?? {
-      center: [35.2, 39.0] as [number, number],
-      zoom: 6,
+  const mapDefaults = preferences.mapDefaults ?? {
+    center: [35.2, 39.0] as [number, number],
+    zoom: 6,
+  };
+
+  const { data: geofencesData } = useQuery({
+    queryKey: ["geofences"],
+    queryFn: () => listGeofences({ limit: 200 }),
+  });
+
+  const cleanupDrawing = useCallback(() => {
+    const map = mapRef.current;
+    if (!map) return;
+
+    for (const m of vertexMarkersRef.current) m.remove();
+    vertexMarkersRef.current = [];
+    previewMarkerRef.current?.remove();
+    previewMarkerRef.current = null;
+    polygonVerticesRef.current = [];
+    circleCenterRef.current = null;
+
+    if (map.getLayer("drawing-fill")) map.removeLayer("drawing-fill");
+    if (map.getLayer("drawing-line")) map.removeLayer("drawing-line");
+    if (map.getSource("drawing")) map.removeSource("drawing");
+    if (map.getLayer("circle-preview-fill")) map.removeLayer("circle-preview-fill");
+    if (map.getLayer("circle-preview-line")) map.removeLayer("circle-preview-line");
+    if (map.getSource("circle-preview")) map.removeSource("circle-preview");
+  }, []);
+
+  const updateDrawingPreview = useCallback(() => {
+    const map = mapRef.current;
+    if (!map) return;
+    const verts = polygonVerticesRef.current;
+    if (verts.length < 2) return;
+
+    const coords = [...verts, verts[0]!];
+    const geojson: GeoJSON.Feature = {
+      type: "Feature",
+      properties: {},
+      geometry: {
+        type: "Polygon",
+        coordinates: [coords],
+      },
     };
 
-    const { data: geofencesData } = useQuery({
-      queryKey: ["geofences"],
-      queryFn: () => listGeofences({ limit: 200 }),
-    });
-
-    const cleanupDrawing = useCallback(() => {
-      const map = mapRef.current;
-      if (!map) return;
-
-      for (const m of vertexMarkersRef.current) m.remove();
-      vertexMarkersRef.current = [];
-      previewMarkerRef.current?.remove();
-      previewMarkerRef.current = null;
-      polygonVerticesRef.current = [];
-      circleCenterRef.current = null;
-
-      if (map.getLayer("drawing-fill")) map.removeLayer("drawing-fill");
-      if (map.getLayer("drawing-line")) map.removeLayer("drawing-line");
-      if (map.getSource("drawing")) map.removeSource("drawing");
-      if (map.getLayer("circle-preview-fill"))
-        map.removeLayer("circle-preview-fill");
-      if (map.getLayer("circle-preview-line"))
-        map.removeLayer("circle-preview-line");
-      if (map.getSource("circle-preview"))
-        map.removeSource("circle-preview");
-    }, []);
-
-    const updateDrawingPreview = useCallback(() => {
-      const map = mapRef.current;
-      if (!map) return;
-      const verts = polygonVerticesRef.current;
-      if (verts.length < 2) return;
-
-      const coords = [...verts, verts[0]!];
-      const geojson: GeoJSON.Feature = {
-        type: "Feature",
-        properties: {},
-        geometry: {
-          type: "Polygon",
-          coordinates: [coords],
+    const src = map.getSource("drawing") as maplibregl.GeoJSONSource | undefined;
+    if (src) {
+      src.setData(geojson);
+    } else {
+      map.addSource("drawing", { type: "geojson", data: geojson });
+      map.addLayer({
+        id: "drawing-fill",
+        type: "fill",
+        source: "drawing",
+        paint: { "fill-color": "#3b82f6", "fill-opacity": 0.2 },
+      });
+      map.addLayer({
+        id: "drawing-line",
+        type: "line",
+        source: "drawing",
+        paint: {
+          "line-color": "#3b82f6",
+          "line-width": 2,
+          "line-dasharray": [2, 2],
         },
-      };
+      });
+    }
+  }, []);
 
-      const src = map.getSource("drawing") as maplibregl.GeoJSONSource | undefined;
-      if (src) {
-        src.setData(geojson);
-      } else {
-        map.addSource("drawing", { type: "geojson", data: geojson });
-        map.addLayer({
-          id: "drawing-fill",
-          type: "fill",
-          source: "drawing",
-          paint: { "fill-color": "#3b82f6", "fill-opacity": 0.2 },
-        });
-        map.addLayer({
-          id: "drawing-line",
-          type: "line",
-          source: "drawing",
-          paint: {
-            "line-color": "#3b82f6",
-            "line-width": 2,
-            "line-dasharray": [2, 2],
-          },
-        });
-      }
-    }, []);
+  const updateCirclePreview = useCallback((center: [number, number], radiusM: number) => {
+    const map = mapRef.current;
+    if (!map) return;
 
-    const updateCirclePreview = useCallback(
-      (center: [number, number], radiusM: number) => {
-        const map = mapRef.current;
-        if (!map) return;
+    const clampedRadius = Math.min(radiusM, MAX_RADIUS_M);
+    const ring = generateCircleCoords(center, clampedRadius);
+    const geojson: GeoJSON.Feature = {
+      type: "Feature",
+      properties: {},
+      geometry: { type: "Polygon", coordinates: [ring] },
+    };
 
-        const clampedRadius = Math.min(radiusM, MAX_RADIUS_M);
-        const ring = generateCircleCoords(center, clampedRadius);
-        const geojson: GeoJSON.Feature = {
-          type: "Feature",
-          properties: {},
-          geometry: { type: "Polygon", coordinates: [ring] },
-        };
+    const src = map.getSource("circle-preview") as maplibregl.GeoJSONSource | undefined;
+    if (src) {
+      src.setData(geojson);
+    } else {
+      map.addSource("circle-preview", { type: "geojson", data: geojson });
+      map.addLayer({
+        id: "circle-preview-fill",
+        type: "fill",
+        source: "circle-preview",
+        paint: { "fill-color": "#3b82f6", "fill-opacity": 0.2 },
+      });
+      map.addLayer({
+        id: "circle-preview-line",
+        type: "line",
+        source: "circle-preview",
+        paint: { "line-color": "#3b82f6", "line-width": 2 },
+      });
+    }
+  }, []);
 
-        const src = map.getSource("circle-preview") as
-          | maplibregl.GeoJSONSource
-          | undefined;
-        if (src) {
-          src.setData(geojson);
-        } else {
-          map.addSource("circle-preview", { type: "geojson", data: geojson });
-          map.addLayer({
-            id: "circle-preview-fill",
-            type: "fill",
-            source: "circle-preview",
-            paint: { "fill-color": "#3b82f6", "fill-opacity": 0.2 },
-          });
-          map.addLayer({
-            id: "circle-preview-line",
-            type: "line",
-            source: "circle-preview",
-            paint: { "line-color": "#3b82f6", "line-width": 2 },
-          });
+  const addVertexMarker = useCallback((lngLat: [number, number]) => {
+    const map = mapRef.current;
+    if (!map) return;
+    const el = document.createElement("div");
+    el.className = "geofence-vertex";
+    const marker = new maplibregl.Marker({ element: el }).setLngLat(lngLat).addTo(map);
+    vertexMarkersRef.current.push(marker);
+  }, []);
+
+  const handleMapClick = useCallback(
+    (e: maplibregl.MapMouseEvent) => {
+      const lngLat: [number, number] = [e.lngLat.lng, e.lngLat.lat];
+      const mode = modeRef.current;
+
+      if (mode === "draw_polygon") {
+        const verts = polygonVerticesRef.current;
+        if (verts.length >= MAX_VERTICES) {
+          toast.error(`Maksimum ${MAX_VERTICES} köşe noktası eklenebilir.`);
+          return;
         }
-      },
-      [],
-    );
-
-    const addVertexMarker = useCallback(
-      (lngLat: [number, number]) => {
-        const map = mapRef.current;
-        if (!map) return;
-        const el = document.createElement("div");
-        el.className = "geofence-vertex";
-        const marker = new maplibregl.Marker({ element: el })
-          .setLngLat(lngLat)
-          .addTo(map);
-        vertexMarkersRef.current.push(marker);
-      },
-      [],
-    );
-
-    const handleMapClick = useCallback(
-      (e: maplibregl.MapMouseEvent) => {
-        const lngLat: [number, number] = [e.lngLat.lng, e.lngLat.lat];
-        const mode = modeRef.current;
-
-        if (mode === "draw_polygon") {
-          const verts = polygonVerticesRef.current;
-          if (verts.length >= MAX_VERTICES) {
-            toast.error(`Maksimum ${MAX_VERTICES} köşe noktası eklenebilir.`);
-            return;
-          }
-          verts.push(lngLat);
-          addVertexMarker(lngLat);
-          updateDrawingPreview();
-        } else if (mode === "draw_circle") {
-          if (!circleCenterRef.current) {
-            circleCenterRef.current = lngLat;
-            const el = document.createElement("div");
-            el.className = "geofence-vertex geofence-vertex--center";
-            previewMarkerRef.current = new maplibregl.Marker({ element: el })
-              .setLngLat(lngLat)
-              .addTo(mapRef.current!);
-            toast.info("Yarıçapı belirlemek için ikinci noktayı tıklayın.");
-          } else {
-            const center = circleCenterRef.current;
-            const radiusM = Math.min(
-              haversineDistance(center, lngLat),
-              MAX_RADIUS_M,
-            );
-            const circleGeom: GeofenceGeometry = {
-              type: "circle",
-              circle: { center, radiusMeters: Math.round(radiusM) },
-            };
-            onGeometryChange?.(circleGeom);
-            modeRef.current = "idle";
-            updateCanvasCursor();
-            toast.success(`Daire çizildi (${Math.round(radiusM)} m)`);
-          }
-        } else if (mode === "test_point" && testGeofenceId) {
-          testGeofence(testGeofenceId, {
-            lng: lngLat[0],
-            lat: lngLat[1],
-          }).then((res) => {
+        verts.push(lngLat);
+        addVertexMarker(lngLat);
+        updateDrawingPreview();
+      } else if (mode === "draw_circle") {
+        if (!circleCenterRef.current) {
+          circleCenterRef.current = lngLat;
+          const el = document.createElement("div");
+          el.className = "geofence-vertex geofence-vertex--center";
+          previewMarkerRef.current = new maplibregl.Marker({ element: el })
+            .setLngLat(lngLat)
+            .addTo(mapRef.current!);
+          toast.info("Yarıçapı belirlemek için ikinci noktayı tıklayın.");
+        } else {
+          const center = circleCenterRef.current;
+          const radiusM = Math.min(haversineDistance(center, lngLat), MAX_RADIUS_M);
+          const circleGeom: GeofenceGeometry = {
+            type: "circle",
+            circle: { center, radiusMeters: Math.round(radiusM) },
+          };
+          onGeometryChange?.(circleGeom);
+          modeRef.current = "idle";
+          updateCanvasCursor();
+          toast.success(`Daire çizildi (${Math.round(radiusM)} m)`);
+        }
+      } else if (mode === "test_point" && testGeofenceId) {
+        testGeofence(testGeofenceId, {
+          lng: lngLat[0],
+          lat: lngLat[1],
+        })
+          .then((res) => {
             toast(res.inside ? "İçinde: Evet ✓" : "İçinde: Hayır ✗", {
               duration: 3000,
             });
-          }).catch(() => {
+          })
+          .catch(() => {
             toast.error("Test noktası sorgulanamadı.");
           });
-        }
+      }
+    },
+    [onGeometryChange, testGeofenceId, addVertexMarker, updateDrawingPreview],
+  );
+
+  const handleMouseMove = useCallback(
+    (e: maplibregl.MapMouseEvent) => {
+      if (modeRef.current !== "draw_circle") return;
+      const center = circleCenterRef.current;
+      if (!center) return;
+      const lngLat: [number, number] = [e.lngLat.lng, e.lngLat.lat];
+      const radiusM = haversineDistance(center, lngLat);
+      updateCirclePreview(center, radiusM);
+    },
+    [updateCirclePreview],
+  );
+
+  const handleDblClick = useCallback(
+    (e: maplibregl.MapMouseEvent) => {
+      if (modeRef.current !== "draw_polygon") return;
+      e.preventDefault();
+
+      const verts = polygonVerticesRef.current;
+      if (verts.length < 3) {
+        toast.error("En az 3 köşe noktası gereklidir.");
+        return;
+      }
+
+      if (verts.length > MAX_VERTICES) {
+        toast.error(`Maksimum ${MAX_VERTICES} köşe noktası aşıldı.`);
+        return;
+      }
+
+      const ring = [...verts, verts[0]!];
+      const polygon: GeoJSON.Polygon = {
+        type: "Polygon",
+        coordinates: [ring],
+      };
+
+      onGeometryChange?.({ type: "polygon", polygon });
+      modeRef.current = "idle";
+      updateCanvasCursor();
+      toast.success(`Poligon çizildi (${verts.length} köşe)`);
+    },
+    [onGeometryChange],
+  );
+
+  const updateCanvasCursor = useCallback(() => {
+    const canvas = mapRef.current?.getCanvas();
+    if (!canvas) return;
+    const mode = modeRef.current;
+    if (mode === "draw_polygon" || mode === "draw_circle") {
+      canvas.style.cursor = "crosshair";
+    } else if (mode === "test_point") {
+      canvas.style.cursor = "help";
+    } else {
+      canvas.style.cursor = "";
+    }
+  }, []);
+
+  useImperativeHandle(
+    ref,
+    () => ({
+      startDrawing(shape: GeofenceShape) {
+        cleanupDrawing();
+        modeRef.current = shape === "polygon" ? "draw_polygon" : "draw_circle";
+        updateCanvasCursor();
+        toast.info(
+          shape === "polygon"
+            ? "Köşe noktalarını tıklayın, bitirmek için çift tıklayın."
+            : "Merkez noktayı tıklayın.",
+        );
       },
-      [
-        onGeometryChange,
-        testGeofenceId,
-        addVertexMarker,
-        updateDrawingPreview,
-      ],
-    );
-
-    const handleMouseMove = useCallback(
-      (e: maplibregl.MapMouseEvent) => {
-        if (modeRef.current !== "draw_circle") return;
-        const center = circleCenterRef.current;
-        if (!center) return;
-        const lngLat: [number, number] = [e.lngLat.lng, e.lngLat.lat];
-        const radiusM = haversineDistance(center, lngLat);
-        updateCirclePreview(center, radiusM);
-      },
-      [updateCirclePreview],
-    );
-
-    const handleDblClick = useCallback(
-      (e: maplibregl.MapMouseEvent) => {
-        if (modeRef.current !== "draw_polygon") return;
-        e.preventDefault();
-
-        const verts = polygonVerticesRef.current;
-        if (verts.length < 3) {
-          toast.error("En az 3 köşe noktası gereklidir.");
-          return;
-        }
-
-        if (verts.length > MAX_VERTICES) {
-          toast.error(`Maksimum ${MAX_VERTICES} köşe noktası aşıldı.`);
-          return;
-        }
-
-        const ring = [...verts, verts[0]!];
-        const polygon: GeoJSON.Polygon = {
-          type: "Polygon",
-          coordinates: [ring],
-        };
-
-        onGeometryChange?.({ type: "polygon", polygon });
+      cancelDrawing() {
+        cleanupDrawing();
         modeRef.current = "idle";
         updateCanvasCursor();
-        toast.success(`Poligon çizildi (${verts.length} köşe)`);
+        onGeometryChange?.(null);
       },
-      [onGeometryChange],
-    );
+      setTestPointMode(enabled: boolean) {
+        cleanupDrawing();
+        modeRef.current = enabled ? "test_point" : "idle";
+        updateCanvasCursor();
+      },
+      loadGeometry(geofence: Geofence) {
+        cleanupDrawing();
+        const map = mapRef.current;
+        if (!map) return;
 
-    const updateCanvasCursor = useCallback(() => {
-      const canvas = mapRef.current?.getCanvas();
-      if (!canvas) return;
-      const mode = modeRef.current;
-      if (mode === "draw_polygon" || mode === "draw_circle") {
-        canvas.style.cursor = "crosshair";
-      } else if (mode === "test_point") {
-        canvas.style.cursor = "help";
-      } else {
-        canvas.style.cursor = "";
-      }
-    }, []);
+        if (
+          geofence.shape === "polygon" &&
+          geofence.geometry &&
+          typeof geofence.geometry === "object"
+        ) {
+          const geom = geofence.geometry as GeoJSON.Polygon;
+          if (geom.coordinates?.[0]) {
+            const coords = geom.coordinates[0] as [number, number][];
+            polygonVerticesRef.current = coords.slice(0, -1);
+            for (const c of polygonVerticesRef.current) addVertexMarker(c);
+            updateDrawingPreview();
 
-    useImperativeHandle(
-      ref,
-      () => ({
-        startDrawing(shape: GeofenceShape) {
-          cleanupDrawing();
-          modeRef.current =
-            shape === "polygon" ? "draw_polygon" : "draw_circle";
-          updateCanvasCursor();
-          toast.info(
-            shape === "polygon"
-              ? "Köşe noktalarını tıklayın, bitirmek için çift tıklayın."
-              : "Merkez noktayı tıklayın.",
-          );
-        },
-        cancelDrawing() {
-          cleanupDrawing();
-          modeRef.current = "idle";
-          updateCanvasCursor();
-          onGeometryChange?.(null);
-        },
-        setTestPointMode(enabled: boolean) {
-          cleanupDrawing();
-          modeRef.current = enabled ? "test_point" : "idle";
-          updateCanvasCursor();
-        },
-        loadGeometry(geofence: Geofence) {
-          cleanupDrawing();
-          const map = mapRef.current;
-          if (!map) return;
-
-          if (
-            geofence.shape === "polygon" &&
-            geofence.geometry &&
-            typeof geofence.geometry === "object"
-          ) {
-            const geom = geofence.geometry as GeoJSON.Polygon;
-            if (geom.coordinates?.[0]) {
-              const coords = geom.coordinates[0] as [number, number][];
-              polygonVerticesRef.current = coords.slice(0, -1);
-              for (const c of polygonVerticesRef.current) addVertexMarker(c);
-              updateDrawingPreview();
-
-              const bounds = coords.reduce(
-                (b, c) => b.extend(c as [number, number]),
-                new maplibregl.LngLatBounds(coords[0]!, coords[0]!),
-              );
-              map.fitBounds(bounds, { padding: 80, maxZoom: 16 });
-
-              onGeometryChange?.({
-                type: "polygon",
-                polygon: geom,
-              });
-            }
-          } else if (
-            geofence.shape === "circle" &&
-            geofence.circleCenter &&
-            geofence.radiusMeters
-          ) {
-            const raw = geofence.circleCenter as
-              | { coordinates: [number, number] }
-              | { lng: number; lat: number };
-            const center: [number, number] =
-              "coordinates" in raw
-                ? raw.coordinates
-                : [raw.lng, raw.lat];
-            const radiusM = geofence.radiusMeters;
-
-            circleCenterRef.current = center;
-            updateCirclePreview(center, radiusM);
-
-            const el = document.createElement("div");
-            el.className = "geofence-vertex geofence-vertex--center";
-            previewMarkerRef.current = new maplibregl.Marker({ element: el })
-              .setLngLat(center)
-              .addTo(map);
-
-            const ring = generateCircleCoords(center, radiusM);
-            const bounds = ring.reduce(
-              (b, c) =>
-                b.extend([c[0]!, c[1]!] as [number, number]),
-              new maplibregl.LngLatBounds(
-                [ring[0]![0]!, ring[0]![1]!],
-                [ring[0]![0]!, ring[0]![1]!],
-              ),
+            const bounds = coords.reduce(
+              (b, c) => b.extend(c as [number, number]),
+              new maplibregl.LngLatBounds(coords[0]!, coords[0]!),
             );
             map.fitBounds(bounds, { padding: 80, maxZoom: 16 });
 
             onGeometryChange?.({
-              type: "circle",
-              circle: { center, radiusMeters: radiusM },
+              type: "polygon",
+              polygon: geom,
             });
           }
-        },
-        clearDrawing() {
-          cleanupDrawing();
-          modeRef.current = "idle";
-          updateCanvasCursor();
-        },
-      }),
-      [
-        cleanupDrawing,
-        updateCanvasCursor,
-        addVertexMarker,
-        updateDrawingPreview,
-        updateCirclePreview,
-        onGeometryChange,
-      ],
-    );
+        } else if (geofence.shape === "circle" && geofence.circleCenter && geofence.radiusMeters) {
+          const raw = geofence.circleCenter as
+            | { coordinates: [number, number] }
+            | { lng: number; lat: number };
+          const center: [number, number] =
+            "coordinates" in raw ? raw.coordinates : [raw.lng, raw.lat];
+          const radiusM = geofence.radiusMeters;
 
-    useEffect(() => {
-      if (!containerRef.current) return;
+          circleCenterRef.current = center;
+          updateCirclePreview(center, radiusM);
 
-      const map = new maplibregl.Map({
-        container: containerRef.current,
-        style: env.MAP_STYLE_URL,
-        center: mapDefaults.center as [number, number],
-        zoom: mapDefaults.zoom ?? 6,
-        attributionControl: false,
-        doubleClickZoom: false,
-      });
+          const el = document.createElement("div");
+          el.className = "geofence-vertex geofence-vertex--center";
+          previewMarkerRef.current = new maplibregl.Marker({ element: el })
+            .setLngLat(center)
+            .addTo(map);
 
-      map.addControl(
-        new maplibregl.AttributionControl({ compact: true }),
-        "bottom-left",
-      );
-      map.addControl(new maplibregl.NavigationControl(), "top-right");
+          const ring = generateCircleCoords(center, radiusM);
+          const bounds = ring.reduce(
+            (b, c) => b.extend([c[0]!, c[1]!] as [number, number]),
+            new maplibregl.LngLatBounds([ring[0]![0]!, ring[0]![1]!], [ring[0]![0]!, ring[0]![1]!]),
+          );
+          map.fitBounds(bounds, { padding: 80, maxZoom: 16 });
 
-      mapRef.current = map;
-
-      return () => {
+          onGeometryChange?.({
+            type: "circle",
+            circle: { center, radiusMeters: radiusM },
+          });
+        }
+      },
+      clearDrawing() {
         cleanupDrawing();
-        map.remove();
-        mapRef.current = null;
-      };
-    }, []);
+        modeRef.current = "idle";
+        updateCanvasCursor();
+      },
+    }),
+    [
+      cleanupDrawing,
+      updateCanvasCursor,
+      addVertexMarker,
+      updateDrawingPreview,
+      updateCirclePreview,
+      onGeometryChange,
+    ],
+  );
 
-    useEffect(() => {
-      const map = mapRef.current;
-      if (!map) return;
+  useEffect(() => {
+    if (!containerRef.current) return;
 
-      const onClick = (e: maplibregl.MapMouseEvent) => handleMapClick(e);
-      const onDblClick = (e: maplibregl.MapMouseEvent) => handleDblClick(e);
-      const onMove = (e: maplibregl.MapMouseEvent) => handleMouseMove(e);
+    const map = new maplibregl.Map({
+      container: containerRef.current,
+      style: env.MAP_STYLE_URL,
+      center: mapDefaults.center as [number, number],
+      zoom: mapDefaults.zoom ?? 6,
+      attributionControl: false,
+      doubleClickZoom: false,
+    });
 
-      map.on("click", onClick);
-      map.on("dblclick", onDblClick);
-      map.on("mousemove", onMove);
+    map.addControl(new maplibregl.AttributionControl({ compact: true }), "bottom-left");
+    map.addControl(new maplibregl.NavigationControl(), "top-right");
 
-      return () => {
-        map.off("click", onClick);
-        map.off("dblclick", onDblClick);
-        map.off("mousemove", onMove);
-      };
-    }, [handleMapClick, handleDblClick, handleMouseMove]);
+    mapRef.current = map;
 
-    useEffect(() => {
-      const map = mapRef.current;
-      if (!map || !geofencesData) return;
+    return () => {
+      cleanupDrawing();
+      map.remove();
+      mapRef.current = null;
+    };
+  }, []);
 
-      const onLoad = () => renderGeofences(map, geofencesData.items, selectedGeofenceId ?? null);
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
 
-      if (map.isStyleLoaded()) {
-        onLoad();
-      } else {
-        map.on("load", onLoad);
-      }
+    const onClick = (e: maplibregl.MapMouseEvent) => handleMapClick(e);
+    const onDblClick = (e: maplibregl.MapMouseEvent) => handleDblClick(e);
+    const onMove = (e: maplibregl.MapMouseEvent) => handleMouseMove(e);
 
-      return () => {
-        map.off("load", onLoad);
-      };
-    }, [geofencesData, selectedGeofenceId]);
+    map.on("click", onClick);
+    map.on("dblclick", onDblClick);
+    map.on("mousemove", onMove);
 
-    return (
-      <div
-        ref={containerRef}
-        className={cn("h-full w-full", className)}
-      />
-    );
-  },
-);
+    return () => {
+      map.off("click", onClick);
+      map.off("dblclick", onDblClick);
+      map.off("mousemove", onMove);
+    };
+  }, [handleMapClick, handleDblClick, handleMouseMove]);
 
-function renderGeofences(
-  map: maplibregl.Map,
-  geofences: Geofence[],
-  selectedId: string | null,
-) {
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !geofencesData) return;
+
+    const onLoad = () => renderGeofences(map, geofencesData.items, selectedGeofenceId ?? null);
+
+    if (map.isStyleLoaded()) {
+      onLoad();
+    } else {
+      map.on("load", onLoad);
+    }
+
+    return () => {
+      map.off("load", onLoad);
+    };
+  }, [geofencesData, selectedGeofenceId]);
+
+  return <div ref={containerRef} className={cn("h-full w-full", className)} />;
+});
+
+function renderGeofences(map: maplibregl.Map, geofences: Geofence[], selectedId: string | null) {
   for (const gf of geofences) {
     const srcId = `gf-${gf.id}`;
     const fillId = `gf-fill-${gf.id}`;
@@ -508,8 +455,7 @@ function renderGeofences(
       const raw = gf.circleCenter as
         | { coordinates: [number, number] }
         | { lng: number; lat: number };
-      const center: [number, number] =
-        "coordinates" in raw ? raw.coordinates : [raw.lng, raw.lat];
+      const center: [number, number] = "coordinates" in raw ? raw.coordinates : [raw.lng, raw.lat];
       const ring = generateCircleCoords(center, gf.radiusMeters);
       geojson = {
         type: "Feature",

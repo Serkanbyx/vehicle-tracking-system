@@ -15,9 +15,6 @@ export const databaseModule = TypeOrmModule.forRootAsync({
       cfg.get<string>("NODE_ENV") !== "production"
         ? (["error", "warn"] as const)
         : (["error"] as const),
-    ssl:
-      cfg.get<string>("NODE_ENV") === "production"
-        ? { rejectUnauthorized: false }
-        : false,
+    ssl: cfg.get<string>("NODE_ENV") === "production" ? { rejectUnauthorized: false } : false,
   }),
 });

@@ -1,4 +1,4 @@
-import type { ColumnOptions, ValueTransformer } from 'typeorm';
+import type { ColumnOptions, ValueTransformer } from "typeorm";
 
 /**
  * Lightweight {longitude, latitude} representation used across the app.
@@ -21,17 +21,17 @@ export type LngLat = { lng: number; lat: number };
 const parsePoint = (raw: unknown): LngLat | null => {
   if (raw === null || raw === undefined) return null;
 
-  if (typeof raw === 'object' && raw !== null && 'lng' in raw && 'lat' in raw) {
+  if (typeof raw === "object" && raw !== null && "lng" in raw && "lat" in raw) {
     return raw as LngLat;
   }
 
-  if (typeof raw !== 'string') return null;
+  if (typeof raw !== "string") return null;
 
   // GeoJSON string (from ST_AsGeoJSON)
-  if (raw.startsWith('{')) {
+  if (raw.startsWith("{")) {
     try {
       const geo = JSON.parse(raw);
-      if (geo?.type === 'Point' && Array.isArray(geo.coordinates)) {
+      if (geo?.type === "Point" && Array.isArray(geo.coordinates)) {
         const [lng, lat] = geo.coordinates;
         return { lng, lat };
       }
@@ -43,7 +43,7 @@ const parsePoint = (raw: unknown): LngLat | null => {
   // Hex EWKB — 2D Point with SRID flag is 50 hex chars
   if (/^[0-9a-fA-F]{50}$/.test(raw)) {
     try {
-      const buf = Buffer.from(raw, 'hex');
+      const buf = Buffer.from(raw, "hex");
       const littleEndian = buf.readUInt8(0) === 1;
 
       const readDouble = (offset: number) =>
@@ -85,8 +85,8 @@ const pointTransformer: ValueTransformer = {
  * Writes should go through repository helpers with parametrized ST_* functions.
  */
 export const pointColumn = (nullable = true): ColumnOptions => ({
-  type: 'geometry',
-  spatialFeatureType: 'Point',
+  type: "geometry",
+  spatialFeatureType: "Point",
   srid: 4326,
   nullable,
   transformer: pointTransformer,

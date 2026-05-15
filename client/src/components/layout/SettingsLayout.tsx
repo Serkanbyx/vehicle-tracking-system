@@ -1,12 +1,12 @@
 import { Link, Outlet, useLocation } from "@tanstack/react-router";
 import { Bell, Palette, Settings, User } from "lucide-react";
-import { cn } from "@/lib/cn";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui";
+import { cn } from "@/lib/cn";
 
 const SETTINGS_LINKS = [
   { to: "/settings/profile", label: "Profil", icon: User },
@@ -22,7 +22,9 @@ function SidebarNav() {
         <Link
           key={to}
           to={to}
-          activeProps={{ className: "text-brand-600 font-semibold bg-brand-50 dark:bg-brand-700/10" }}
+          activeProps={{
+            className: "text-brand-600 font-semibold bg-brand-50 dark:bg-brand-700/10",
+          }}
           className={cn(
             "flex items-center gap-2 rounded-md px-3 py-2 text-sm text-gray-600",
             "hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800",

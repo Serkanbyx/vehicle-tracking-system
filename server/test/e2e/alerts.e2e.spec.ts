@@ -1,14 +1,14 @@
-import { describe, it, expect, beforeAll, afterAll, afterEach } from "vitest";
 import type { INestApplication } from "@nestjs/common";
 import request from "supertest";
+import { afterAll, afterEach, beforeAll, describe, expect, it } from "vitest";
 import { UserRole } from "../../src/common/enums/user-role.enum";
 import {
-  createTestApp,
   closeTestApp,
-  truncateAll,
-  loginAsTestUser,
+  createTestApp,
   createTestVehicle,
+  loginAsTestUser,
   simulatorKey,
+  truncateAll,
 } from "./helpers";
 
 let app: INestApplication;
@@ -47,9 +47,7 @@ describe("Alerts E2E — Speed trigger + ack + debounce", () => {
 
     expect(listRes.body.data.items.length).toBeGreaterThanOrEqual(1);
 
-    const speedAlert = listRes.body.data.items.find(
-      (a: any) => a.type === "speed",
-    );
+    const speedAlert = listRes.body.data.items.find((a: any) => a.type === "speed");
     expect(speedAlert).toBeDefined();
     expect(speedAlert.acknowledged).toBe(false);
 
@@ -93,10 +91,7 @@ describe("Alerts E2E — Speed trigger + ack + debounce", () => {
   });
 
   it("Viewer cannot acknowledge alerts", async () => {
-    const { accessToken: managerToken } = await loginAsTestUser(
-      app,
-      UserRole.MANAGER,
-    );
+    const { accessToken: managerToken } = await loginAsTestUser(app, UserRole.MANAGER);
     const vehicle = await createTestVehicle(app, managerToken);
     const server = app.getHttpServer();
 
@@ -114,10 +109,7 @@ describe("Alerts E2E — Speed trigger + ack + debounce", () => {
 
     const alert = listRes.body.data.items[0];
 
-    const { accessToken: viewerToken } = await loginAsTestUser(
-      app,
-      UserRole.VIEWER,
-    );
+    const { accessToken: viewerToken } = await loginAsTestUser(app, UserRole.VIEWER);
 
     await request(server)
       .post(`/api/alerts/${alert.id}/ack`)

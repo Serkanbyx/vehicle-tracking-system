@@ -3,9 +3,9 @@ import { formatDistanceToNow } from "date-fns";
 import { tr } from "date-fns/locale";
 import { Check } from "lucide-react";
 import { useEffect, useState } from "react";
-import { acknowledgeAlert, listAlerts } from "@/api/alerts";
 import { dashboardSocket } from "@/api";
-import type { Alert, AlertSeverity, AlertType } from "@/api/types";
+import { acknowledgeAlert, listAlerts } from "@/api/alerts";
+import type { Alert, AlertSeverity } from "@/api/types";
 import { Badge, Button, Select } from "@/components/ui";
 import { cn } from "@/lib/cn";
 
@@ -60,11 +60,7 @@ export function AlertsTab({ vehicleId }: AlertsTabProps) {
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center gap-3">
-        <Select
-          value={typeFilter}
-          onChange={(e) => setTypeFilter(e.target.value)}
-          className="w-40"
-        >
+        <Select value={typeFilter} onChange={(e) => setTypeFilter(e.target.value)} className="w-40">
           <option value="">Tüm Türler</option>
           <option value="speed">Hız</option>
           <option value="idle">Boşta</option>
@@ -83,11 +79,7 @@ export function AlertsTab({ vehicleId }: AlertsTabProps) {
           <option value="critical">Kritik</option>
         </Select>
 
-        <Select
-          value={ackFilter}
-          onChange={(e) => setAckFilter(e.target.value)}
-          className="w-40"
-        >
+        <Select value={ackFilter} onChange={(e) => setAckFilter(e.target.value)} className="w-40">
           <option value="">Tümü</option>
           <option value="false">Onaylanmamış</option>
           <option value="true">Onaylanmış</option>
@@ -117,7 +109,9 @@ export function AlertsTab({ vehicleId }: AlertsTabProps) {
                     {alert.type.replace("_", " ")}
                   </Badge>
                   {alert.acknowledged && (
-                    <Badge variant="success" className="text-xs">Onaylandı</Badge>
+                    <Badge variant="success" className="text-xs">
+                      Onaylandı
+                    </Badge>
                   )}
                 </div>
                 <p className="mt-1 text-sm">{alert.message}</p>

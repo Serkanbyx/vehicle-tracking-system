@@ -1,4 +1,4 @@
-import { MigrationInterface, QueryRunner } from "typeorm";
+import type { MigrationInterface, QueryRunner } from "typeorm";
 
 export class CreateGeofence1700000000005 implements MigrationInterface {
   public async up(q: QueryRunner): Promise<void> {

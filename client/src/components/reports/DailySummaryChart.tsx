@@ -1,7 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { getDailySummary } from "@/api/trips";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui";
-import { Skeleton } from "@/components/ui";
+import { Card, CardContent, CardHeader, CardTitle, Skeleton } from "@/components/ui";
 
 interface DailySummaryChartProps {
   vehicleId?: string;
@@ -9,11 +8,7 @@ interface DailySummaryChartProps {
   to: string;
 }
 
-export function DailySummaryChart({
-  vehicleId,
-  from,
-  to,
-}: DailySummaryChartProps) {
+export function DailySummaryChart({ vehicleId, from, to }: DailySummaryChartProps) {
   const { data, isLoading } = useQuery({
     queryKey: ["daily-summary", vehicleId, from, to],
     queryFn: () => getDailySummary({ vehicleId, from, to }),
@@ -68,21 +63,19 @@ export function DailySummaryChart({
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-base">
-          Günlük Özet ({data.length} gün)
-        </CardTitle>
+        <CardTitle className="text-base">Günlük Özet ({data.length} gün)</CardTitle>
       </CardHeader>
       <CardContent className="overflow-x-auto">
         <svg
           viewBox={`0 0 ${chartW} ${chartH + 30}`}
           className="w-full"
           style={{ minWidth: `${Math.min(chartW, 400)}px`, maxHeight: "260px" }}
+          role="img"
+          aria-labelledby="daily-summary-chart-title"
         >
+          <title id="daily-summary-chart-title">Günlük mesafe ve ihlal özeti</title>
           {data.map((day, i) => {
-            const barH = Math.max(
-              (day.totalDistanceKm / maxDistance) * chartH,
-              2,
-            );
+            const barH = Math.max((day.totalDistanceKm / maxDistance) * chartH, 2);
             const x = 36 + i * (barWidth + barGap);
             const y = chartH - barH;
             const hasViolations = day.totalViolations > 0;
@@ -120,14 +113,7 @@ export function DailySummaryChart({
             );
           })}
 
-          <line
-            x1={34}
-            y1={0}
-            x2={34}
-            y2={chartH}
-            stroke="currentColor"
-            strokeOpacity={0.15}
-          />
+          <line x1={34} y1={0} x2={34} y2={chartH} stroke="currentColor" strokeOpacity={0.15} />
           <line
             x1={34}
             y1={chartH}
@@ -137,24 +123,10 @@ export function DailySummaryChart({
             strokeOpacity={0.15}
           />
 
-          <text
-            x={30}
-            y={8}
-            textAnchor="end"
-            fontSize={8}
-            fill="currentColor"
-            opacity={0.5}
-          >
+          <text x={30} y={8} textAnchor="end" fontSize={8} fill="currentColor" opacity={0.5}>
             {maxDistance.toFixed(0)}
           </text>
-          <text
-            x={30}
-            y={chartH}
-            textAnchor="end"
-            fontSize={8}
-            fill="currentColor"
-            opacity={0.5}
-          >
+          <text x={30} y={chartH} textAnchor="end" fontSize={8} fill="currentColor" opacity={0.5}>
             0
           </text>
           <text

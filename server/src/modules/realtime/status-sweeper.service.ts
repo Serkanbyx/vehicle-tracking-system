@@ -1,15 +1,14 @@
-import { Injectable, Logger } from "@nestjs/common";
-import { ConfigService } from "@nestjs/config";
+import { Injectable } from "@nestjs/common";
+import type { ConfigService } from "@nestjs/config";
 import { Cron } from "@nestjs/schedule";
 import { InjectRepository } from "@nestjs/typeorm";
-import { IsNull, Not, Repository } from "typeorm";
-import { AlertEngineService } from "../alerts/alert-engine.service.js";
+import { IsNull, Not, type Repository } from "typeorm";
+import type { AlertEngineService } from "../alerts/alert-engine.service.js";
 import { Vehicle } from "../vehicles/vehicle.entity.js";
-import { RoomManager } from "./room-manager.service.js";
+import type { RoomManager } from "./room-manager.service.js";
 
 @Injectable()
 export class StatusSweeperService {
-  private readonly logger = new Logger(StatusSweeperService.name);
   private readonly idleThresholdMs: number;
   private readonly offlineThresholdMs: number;
   private readonly idleAlertedSet = new Set<string>();
@@ -19,7 +18,7 @@ export class StatusSweeperService {
     private readonly vehiclesRepo: Repository<Vehicle>,
     private readonly roomManager: RoomManager,
     private readonly alertEngine: AlertEngineService,
-    private readonly configService: ConfigService,
+    configService: ConfigService,
   ) {
     const idleMin = configService.get<number>("app.idleThresholdMin") ?? 10;
     this.idleThresholdMs = idleMin * 60 * 1000;
@@ -46,19 +45,13 @@ export class StatusSweeperService {
           .createQueryBuilder()
           .update(Vehicle)
           .set({
-            lastLocation: () =>
-              `jsonb_set("lastLocation", '{status}', '"offline"')`,
+            lastLocation: () => `jsonb_set("lastLocation", '{status}', '"offline"')`,
           })
           .where("id = :id", { id: vehicle.id })
           .execute();
 
         this.roomManager.broadcastToMany(
-          [
-            `vehicle:${vehicle.id}`,
-            "role:viewer",
-            "role:manager",
-            "role:admin",
-          ],
+          [`vehicle:${vehicle.id}`, "role:viewer", "role:manager", "role:admin"],
           { type: "vehicle:status", vehicleId: vehicle.id, status: "offline" },
         );
       }

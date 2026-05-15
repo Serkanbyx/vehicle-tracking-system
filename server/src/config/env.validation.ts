@@ -106,9 +106,7 @@ export class EnvironmentVariables {
   LOG_LEVEL: string = "info";
 }
 
-export function validate(
-  config: Record<string, unknown>,
-): EnvironmentVariables {
+export function validate(config: Record<string, unknown>): EnvironmentVariables {
   const validated = plainToInstance(EnvironmentVariables, config, {
     enableImplicitConversion: true,
   });
@@ -137,9 +135,7 @@ export function validate(
       prodErrors.push("JWT_REFRESH_SECRET must be at least 32 characters");
     }
     if (validated.JWT_ACCESS_SECRET === validated.JWT_REFRESH_SECRET) {
-      prodErrors.push(
-        "JWT_ACCESS_SECRET and JWT_REFRESH_SECRET must be different",
-      );
+      prodErrors.push("JWT_ACCESS_SECRET and JWT_REFRESH_SECRET must be different");
     }
     if (!validated.CLOUDINARY_CLOUD_NAME) {
       prodErrors.push("CLOUDINARY_CLOUD_NAME is required in production");
@@ -153,9 +149,7 @@ export function validate(
 
     if (prodErrors.length > 0) {
       const joined = prodErrors.join("\n  • ");
-      throw new Error(
-        `\nProduction environment validation failed:\n  • ${joined}\n`,
-      );
+      throw new Error(`\nProduction environment validation failed:\n  • ${joined}\n`);
     }
   }
 

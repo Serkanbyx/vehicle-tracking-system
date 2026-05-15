@@ -1,5 +1,5 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { renderHook, act } from "@testing-library/react";
+import { act, renderHook } from "@testing-library/react";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { useSmoothPosition } from "@/hooks/use-smooth-position";
 
 let rafCallbacks: Array<(time: number) => void> = [];
@@ -37,9 +37,7 @@ function flushRaf(time: number) {
 
 describe("useSmoothPosition", () => {
   it("should return the initial target on first render", () => {
-    const { result } = renderHook(() =>
-      useSmoothPosition([29.0, 41.0], 1000),
-    );
+    const { result } = renderHook(() => useSmoothPosition([29.0, 41.0], 1000));
 
     expect(result.current[0]).toBe(29.0);
     expect(result.current[1]).toBe(41.0);
@@ -85,8 +83,7 @@ describe("useSmoothPosition", () => {
     document.body.classList.add("no-anim");
 
     const { result, rerender } = renderHook(
-      ({ target }: { target: [number, number] }) =>
-        useSmoothPosition(target, 1000),
+      ({ target }: { target: [number, number] }) => useSmoothPosition(target, 1000),
       { initialProps: { target: [0, 0] as [number, number] } },
     );
 

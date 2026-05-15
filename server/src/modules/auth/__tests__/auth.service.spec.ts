@@ -1,6 +1,6 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
 import { UnauthorizedException } from "@nestjs/common";
 import * as bcrypt from "bcrypt";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { UserRole } from "../../../common/enums/user-role.enum.js";
 import { AuthService } from "../auth.service.js";
 
@@ -38,11 +38,7 @@ let service: AuthService;
 beforeEach(() => {
   vi.clearAllMocks();
 
-  service = new AuthService(
-    mockUsersRepo as any,
-    mockJwtAccess as any,
-    mockConfigService as any,
-  );
+  service = new AuthService(mockUsersRepo as any, mockJwtAccess as any, mockConfigService as any);
 });
 
 /* ------------------------------------------------------------------ */
@@ -98,9 +94,7 @@ describe("AuthService — Token signing", () => {
     const { token, jti } = service.signRefreshToken({ id: "u1" });
 
     expect(token).toBeDefined();
-    expect(jti).toMatch(
-      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/,
-    );
+    expect(jti).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/);
   });
 
   it("hashJti should produce a bcrypt hash of the jti", async () => {
@@ -160,9 +154,9 @@ describe("AuthService — verifyAndRotateRefresh", () => {
       refreshTokenHash: await bcrypt.hash("correct-jti", 10),
     });
 
-    await expect(
-      service.verifyAndRotateRefresh("stolen-token"),
-    ).rejects.toThrow(UnauthorizedException);
+    await expect(service.verifyAndRotateRefresh("stolen-token")).rejects.toThrow(
+      UnauthorizedException,
+    );
 
     expect(mockUsersRepo.update).toHaveBeenCalledWith(userId, {
       refreshTokenHash: null,
@@ -177,9 +171,9 @@ describe("AuthService — verifyAndRotateRefresh", () => {
 
     mockUsersRepo.findOne.mockResolvedValue(null);
 
-    await expect(
-      service.verifyAndRotateRefresh("bad-token"),
-    ).rejects.toThrow(UnauthorizedException);
+    await expect(service.verifyAndRotateRefresh("bad-token")).rejects.toThrow(
+      UnauthorizedException,
+    );
   });
 
   it("inactive user — throws UnauthorizedException", async () => {
@@ -196,9 +190,9 @@ describe("AuthService — verifyAndRotateRefresh", () => {
       refreshTokenHash: "some-hash",
     });
 
-    await expect(
-      service.verifyAndRotateRefresh("inactive-token"),
-    ).rejects.toThrow(UnauthorizedException);
+    await expect(service.verifyAndRotateRefresh("inactive-token")).rejects.toThrow(
+      UnauthorizedException,
+    );
   });
 
   it("expired / invalid JWT — throws UnauthorizedException", async () => {
@@ -207,9 +201,9 @@ describe("AuthService — verifyAndRotateRefresh", () => {
       sign: vi.fn(),
     };
 
-    await expect(
-      service.verifyAndRotateRefresh("expired-token"),
-    ).rejects.toThrow(UnauthorizedException);
+    await expect(service.verifyAndRotateRefresh("expired-token")).rejects.toThrow(
+      UnauthorizedException,
+    );
   });
 });
 
@@ -222,14 +216,10 @@ describe("AuthService — Security", () => {
     const hash = await service.hashPassword("RealPassword");
     const malicious = { $ne: "" } as any;
 
-    await expect(
-      service.comparePassword(malicious, hash),
-    ).rejects.toThrow();
+    await expect(service.comparePassword(malicious, hash)).rejects.toThrow();
   });
 
   it("should handle null/undefined gracefully", async () => {
-    await expect(
-      service.comparePassword(null as any, "hash"),
-    ).rejects.toThrow();
+    await expect(service.comparePassword(null as any, "hash")).rejects.toThrow();
   });
 });

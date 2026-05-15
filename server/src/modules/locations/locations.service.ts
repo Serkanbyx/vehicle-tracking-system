@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
+import type { Repository } from "typeorm";
 import { Location } from "./location.entity.js";
 
 const DEFAULT_HISTORY_LIMIT = 5000;
@@ -78,10 +78,7 @@ export class LocationsService {
     );
   }
 
-  async getHistory(
-    vehicleId: string,
-    query: HistoryQuery = {},
-  ): Promise<LocationPoint[]> {
+  async getHistory(vehicleId: string, query: HistoryQuery = {}): Promise<LocationPoint[]> {
     const now = new Date();
     const from = query.from ?? new Date(now.getTime() - 24 * 60 * 60 * 1000);
     const to = query.to ?? now;
@@ -113,10 +110,7 @@ export class LocationsService {
     return rows;
   }
 
-  async getLatest(
-    vehicleId: string,
-    count: number = 10,
-  ): Promise<LocationPoint[]> {
+  async getLatest(vehicleId: string, count: number = 10): Promise<LocationPoint[]> {
     const clampedCount = Math.min(count, MAX_LATEST_COUNT);
 
     const rows = await this.locationsRepo.query(
@@ -141,10 +135,7 @@ export class LocationsService {
     return rows;
   }
 
-  async getStats(
-    vehicleId: string,
-    query: StatsQuery = {},
-  ): Promise<LocationStats> {
+  async getStats(vehicleId: string, query: StatsQuery = {}): Promise<LocationStats> {
     const now = new Date();
     const from = query.from ?? new Date(now.getTime() - 24 * 60 * 60 * 1000);
     const to = query.to ?? now;
@@ -199,8 +190,9 @@ export class LocationsService {
         [vehicleId, from, to, HEATMAP_MAX_POINTS],
       );
 
-      const points = rows.map((r: { lng: number; lat: number; intensity: number }) =>
-        [r.lng, r.lat, r.intensity] as [number, number, number],
+      const points = rows.map(
+        (r: { lng: number; lat: number; intensity: number }) =>
+          [r.lng, r.lat, r.intensity] as [number, number, number],
       );
 
       return { points, total, downsampled: true };
@@ -216,8 +208,8 @@ export class LocationsService {
       [vehicleId, from, to],
     );
 
-    const points = rows.map((r: { lng: number; lat: number }) =>
-      [r.lng, r.lat, 1] as [number, number, number],
+    const points = rows.map(
+      (r: { lng: number; lat: number }) => [r.lng, r.lat, 1] as [number, number, number],
     );
 
     return { points, total, downsampled: false };

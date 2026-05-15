@@ -1,11 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Moon, Monitor, Sun } from "lucide-react";
+import { Monitor, Moon, Sun } from "lucide-react";
 import { useCallback } from "react";
 import { toast } from "sonner";
-import { requireAuth } from "@/components/guards";
-import { useAuth } from "@/context/auth.context";
-import { usePreferences } from "@/context/preferences.context";
 import * as authService from "@/api/auth";
+import { requireAuth } from "@/components/guards";
 import {
   Card,
   CardContent,
@@ -16,6 +14,8 @@ import {
   Slider,
   Switch,
 } from "@/components/ui";
+import { useAuth } from "@/context/auth.context";
+import { usePreferences } from "@/context/preferences.context";
 
 export const Route = createFileRoute("/settings/appearance")({
   beforeLoad: requireAuth,
@@ -124,11 +124,7 @@ function SettingsAppearancePage() {
                     : "border-gray-200 hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-gray-800"
                 }`}
               >
-                {d === "compact"
-                  ? "Sıkışık"
-                  : d === "comfortable"
-                    ? "Rahat"
-                    : "Geniş"}
+                {d === "compact" ? "Sıkışık" : d === "comfortable" ? "Rahat" : "Geniş"}
               </button>
             ))}
           </div>
@@ -140,8 +136,9 @@ function SettingsAppearancePage() {
           <CardTitle className="text-base">Animasyonlar</CardTitle>
         </CardHeader>
         <CardContent>
-          <label className="flex items-center gap-3">
+          <label htmlFor="pref-animations" className="flex items-center gap-3">
             <Switch
+              id="pref-animations"
               checked={preferences.animations}
               onCheckedChange={(v) => updatePreference("animations", v)}
             />
@@ -152,9 +149,7 @@ function SettingsAppearancePage() {
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">
-            Harita Varsayılan Merkez
-          </CardTitle>
+          <CardTitle className="text-base">Harita Varsayılan Merkez</CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
           <div className="grid gap-4 sm:grid-cols-2">
@@ -214,12 +209,7 @@ interface ThemeOptionProps {
   onClick: () => void;
 }
 
-function ThemeOption({
-  icon: Icon,
-  label,
-  active,
-  onClick,
-}: ThemeOptionProps) {
+function ThemeOption({ icon: Icon, label, active, onClick }: ThemeOptionProps) {
   return (
     <button
       type="button"

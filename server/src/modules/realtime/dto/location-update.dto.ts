@@ -1,12 +1,4 @@
-import {
-  IsISO8601,
-  IsInt,
-  IsNumber,
-  IsOptional,
-  IsUUID,
-  Max,
-  Min,
-} from "class-validator";
+import { IsInt, IsISO8601, IsNumber, IsOptional, IsUUID, Max, Min } from "class-validator";
 
 export class LocationUpdatePayloadDto {
   @IsUUID("4")

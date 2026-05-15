@@ -1,6 +1,6 @@
-import maplibregl from "maplibre-gl";
-import { useEffect, useRef } from "react";
 import type { GeoJSON } from "geojson";
+import type maplibregl from "maplibre-gl";
+import { useEffect, useRef } from "react";
 
 interface RouteLineProps {
   map: maplibregl.Map | null;

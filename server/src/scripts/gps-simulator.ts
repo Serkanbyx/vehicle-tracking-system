@@ -13,9 +13,12 @@ function getArg(name: string, fallback: string): string {
 const VEHICLE_COUNT = parseInt(getArg("vehicles", "5"), 10);
 const TICK_MS = parseInt(getArg("tick", "2000"), 10);
 const SPEED_SPIKE_CHANCE = parseFloat(getArg("speedSpikeChance", "0.08"));
-const BBOX = getArg("bbox", "28.8,40.9,29.2,41.15")
-  .split(",")
-  .map(Number) as [number, number, number, number];
+const BBOX = getArg("bbox", "28.8,40.9,29.2,41.15").split(",").map(Number) as [
+  number,
+  number,
+  number,
+  number,
+];
 
 const SOCKET_URL = process.env.SOCKET_URL || "ws://localhost:5000";
 const SIMULATOR_API_KEY = process.env.SIMULATOR_API_KEY || "";
@@ -60,9 +63,7 @@ async function fetchVehicles(): Promise<{ id: string; plate: string }[]> {
   return body.data.items;
 }
 
-async function createVehicle(
-  plate: string,
-): Promise<{ id: string; plate: string } | null> {
+async function createVehicle(plate: string): Promise<{ id: string; plate: string } | null> {
   const res = await fetch(`${API_URL}/vehicles`, {
     method: "POST",
     headers: {
@@ -92,7 +93,6 @@ async function createVehicle(
 
 async function ensureVehicles(): Promise<void> {
   const existing = await fetchVehicles();
-  const existingPlates = new Set(existing.map((v) => v.plate));
 
   for (let i = 0; i < VEHICLE_COUNT; i++) {
     const plate = generatePlate(i);
@@ -134,13 +134,10 @@ function tick(ws: WebSocket): void {
 
     v.lng = Math.max(BBOX[0], Math.min(BBOX[2], v.lng + dLng));
     v.lat = Math.max(BBOX[1], Math.min(BBOX[3], v.lat + dLat));
-    v.heading =
-      (Math.round((Math.atan2(dLng, dLat) * 180) / Math.PI) + 360) % 360;
+    v.heading = (Math.round((Math.atan2(dLng, dLat) * 180) / Math.PI) + 360) % 360;
 
     const isSpike = Math.random() < SPEED_SPIKE_CHANCE;
-    const speed = isSpike
-      ? randomInRange(100, 130)
-      : randomInRange(30, 60);
+    const speed = isSpike ? randomInRange(100, 130) : randomInRange(30, 60);
 
     const message = JSON.stringify({
       event: "location_update",

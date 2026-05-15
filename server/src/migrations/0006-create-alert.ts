@@ -1,4 +1,4 @@
-import { MigrationInterface, QueryRunner } from "typeorm";
+import type { MigrationInterface, QueryRunner } from "typeorm";
 
 export class CreateAlert1700000000006 implements MigrationInterface {
   public async up(q: QueryRunner): Promise<void> {

@@ -1,9 +1,9 @@
-import { ValidationPipe, type INestApplication } from "@nestjs/common";
-import { Test } from "@nestjs/testing";
-import { DataSource } from "typeorm";
-import request from "supertest";
-import * as bcrypt from "bcrypt";
 import { randomUUID } from "node:crypto";
+import { type INestApplication, ValidationPipe } from "@nestjs/common";
+import { Test } from "@nestjs/testing";
+import * as bcrypt from "bcrypt";
+import request from "supertest";
+import { DataSource } from "typeorm";
 import { AppModule } from "../../src/app.module";
 import { UserRole } from "../../src/common/enums/user-role.enum";
 import { AllExceptionsFilter } from "../../src/common/filters/all-exceptions.filter";
@@ -54,9 +54,7 @@ export async function truncateAll(): Promise<void> {
 
   for (const entity of entities) {
     const repo = ds.getRepository(entity.name);
-    await repo.query(
-      `TRUNCATE TABLE "${entity.tableName}" RESTART IDENTITY CASCADE`,
-    );
+    await repo.query(`TRUNCATE TABLE "${entity.tableName}" RESTART IDENTITY CASCADE`);
   }
 }
 
@@ -82,9 +80,7 @@ export interface TestUserInfo {
   role: UserRole;
 }
 
-export async function createTestUser(
-  role: UserRole = UserRole.VIEWER,
-): Promise<TestUserInfo> {
+export async function createTestUser(role: UserRole = UserRole.VIEWER): Promise<TestUserInfo> {
   const ds = getDataSource();
   userCounter++;
   const email = `test-${role}-${userCounter}-${randomUUID().slice(0, 8)}@test.com`;
@@ -138,7 +134,11 @@ export async function createTestVehicle(
 }
 
 export function simulatorKey(): string {
-  return process.env.SIMULATOR_API_KEY!;
+  const key = process.env.SIMULATOR_API_KEY;
+  if (!key) {
+    throw new Error("SIMULATOR_API_KEY is required for E2E tests");
+  }
+  return key;
 }
 
 export { TEST_PASSWORD };

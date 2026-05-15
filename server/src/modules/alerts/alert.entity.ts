@@ -7,10 +7,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import {
-  AlertSeverity,
-  AlertType,
-} from "../../common/enums/alert.enum.js";
+import { AlertSeverity, AlertType } from "../../common/enums/alert.enum.js";
 import { Geofence } from "../geofences/geofence.entity.js";
 import { User } from "../users/user.entity.js";
 import { Vehicle } from "../vehicles/vehicle.entity.js";

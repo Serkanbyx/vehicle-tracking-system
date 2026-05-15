@@ -1,6 +1,6 @@
-import { describe, it, expect, beforeEach } from "vitest";
-import { useLiveStore, useLiveVehicle, useVehicleStatusCounts } from "@/stores/live-vehicles.store";
+import { beforeEach, describe, expect, it } from "vitest";
 import type { LiveVehicle } from "@/stores/live-vehicles.store";
+import { useLiveStore } from "@/stores/live-vehicles.store";
 
 const makeVehicle = (overrides: Partial<LiveVehicle> = {}): LiveVehicle => ({
   id: "v1",
@@ -58,9 +58,7 @@ describe("useLiveStore — upsert", () => {
 
 describe("useLiveStore — setStatus", () => {
   it("should update the status of an existing vehicle", () => {
-    useLiveStore
-      .getState()
-      .upsert(makeVehicle({ id: "v1", status: "moving" }));
+    useLiveStore.getState().upsert(makeVehicle({ id: "v1", status: "moving" }));
     useLiveStore.getState().setStatus("v1", "idle");
 
     expect(useLiveStore.getState().vehicles.get("v1")?.status).toBe("idle");
@@ -98,12 +96,14 @@ describe("useLiveStore — selectors", () => {
   });
 
   it("useVehicleStatusCounts should correctly tally statuses", () => {
-    useLiveStore.getState().hydrate([
-      makeVehicle({ id: "v1", status: "moving" }),
-      makeVehicle({ id: "v2", status: "moving" }),
-      makeVehicle({ id: "v3", status: "idle" }),
-      makeVehicle({ id: "v4", status: "offline" }),
-    ]);
+    useLiveStore
+      .getState()
+      .hydrate([
+        makeVehicle({ id: "v1", status: "moving" }),
+        makeVehicle({ id: "v2", status: "moving" }),
+        makeVehicle({ id: "v3", status: "idle" }),
+        makeVehicle({ id: "v4", status: "offline" }),
+      ]);
 
     const state = useLiveStore.getState();
     let moving = 0;
@@ -126,9 +126,7 @@ describe("useLiveStore — no PII leaks to localStorage", () => {
     useLiveStore.getState().upsert(makeVehicle({ id: "v1" }));
 
     const keys = Object.keys(localStorage);
-    const leaked = keys.some(
-      (k) => k.includes("live") || k.includes("vehicle"),
-    );
+    const leaked = keys.some((k) => k.includes("live") || k.includes("vehicle"));
     expect(leaked).toBe(false);
   });
 });

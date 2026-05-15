@@ -1,8 +1,8 @@
 import { Link, Outlet } from "@tanstack/react-router";
 import { Gauge, Menu, Ship, Users } from "lucide-react";
 import { useState } from "react";
-import { cn } from "@/lib/cn";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui";
+import { cn } from "@/lib/cn";
 
 const ADMIN_LINKS = [
   { to: "/admin", label: "Dashboard", icon: Gauge },
@@ -10,15 +10,18 @@ const ADMIN_LINKS = [
   { to: "/admin/fleet", label: "Filo", icon: Ship },
 ] as const;
 
-function SidebarNav() {
+function SidebarNav({ onNavigate }: { onNavigate?: () => void }) {
   return (
     <nav className="flex flex-col gap-1">
       {ADMIN_LINKS.map(({ to, label, icon: Icon }) => (
         <Link
           key={to}
           to={to}
+          onClick={() => onNavigate?.()}
           activeOptions={{ exact: to === "/admin" }}
-          activeProps={{ className: "text-brand-600 font-semibold bg-brand-50 dark:bg-brand-700/10" }}
+          activeProps={{
+            className: "text-brand-600 font-semibold bg-brand-50 dark:bg-brand-700/10",
+          }}
           className={cn(
             "flex items-center gap-2 rounded-md px-3 py-2 text-sm text-gray-600",
             "hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800",
@@ -54,8 +57,8 @@ export function AdminLayout() {
             <SheetHeader>
               <SheetTitle>Yönetim</SheetTitle>
             </SheetHeader>
-            <div className="mt-4" onClick={() => setDrawerOpen(false)}>
-              <SidebarNav />
+            <div className="mt-4">
+              <SidebarNav onNavigate={() => setDrawerOpen(false)} />
             </div>
           </SheetContent>
         </Sheet>

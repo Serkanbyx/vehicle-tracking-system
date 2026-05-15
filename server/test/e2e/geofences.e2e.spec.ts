@@ -1,13 +1,8 @@
-import { describe, it, expect, beforeAll, afterAll, afterEach } from "vitest";
 import type { INestApplication } from "@nestjs/common";
 import request from "supertest";
+import { afterAll, afterEach, beforeAll, describe, expect, it } from "vitest";
 import { UserRole } from "../../src/common/enums/user-role.enum";
-import {
-  createTestApp,
-  closeTestApp,
-  truncateAll,
-  loginAsTestUser,
-} from "./helpers";
+import { closeTestApp, createTestApp, loginAsTestUser, truncateAll } from "./helpers";
 
 let app: INestApplication;
 

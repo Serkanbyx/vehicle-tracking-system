@@ -1,4 +1,4 @@
-import { MigrationInterface, QueryRunner } from "typeorm";
+import type { MigrationInterface, QueryRunner } from "typeorm";
 
 export class CreateVehicle1700000000003 implements MigrationInterface {
   public async up(q: QueryRunner): Promise<void> {

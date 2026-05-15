@@ -1,13 +1,5 @@
 import { Transform } from "class-transformer";
-import {
-  IsEnum,
-  IsISO8601,
-  IsInt,
-  IsOptional,
-  IsUUID,
-  Max,
-  Min,
-} from "class-validator";
+import { IsEnum, IsInt, IsISO8601, IsOptional, IsUUID, Max, Min } from "class-validator";
 import { TripStatus } from "../../../common/enums/trip.enum.js";
 
 export class TripQueryDto {

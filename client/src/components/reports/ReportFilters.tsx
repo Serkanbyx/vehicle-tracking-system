@@ -38,12 +38,7 @@ export function ReportFilters({ filters }: ReportFiltersProps) {
     void navigate({ search: { page: 1 } });
   };
 
-  const hasFilters = !!(
-    filters.vehicleId ||
-    filters.from ||
-    filters.to ||
-    filters.minDistance
-  );
+  const hasFilters = !!(filters.vehicleId || filters.from || filters.to || filters.minDistance);
 
   return (
     <div className="flex flex-wrap items-end gap-3">

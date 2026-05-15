@@ -2,8 +2,8 @@ import "reflect-metadata";
 import * as bcrypt from "bcrypt";
 import { config } from "dotenv";
 import { DataSource } from "typeorm";
-import { User } from "../modules/users/user.entity.js";
 import { UserRole } from "../common/enums/user-role.enum.js";
+import { User } from "../modules/users/user.entity.js";
 
 config({ path: ".env" });
 

@@ -3,12 +3,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { Loader2, Pencil, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { createGeofence, updateGeofence } from "@/api/geofences";
-import type {
-  Geofence,
-  GeofenceAppliesTo,
-  GeofenceDirection,
-  GeofenceShape,
-} from "@/api/types";
+import type { Geofence, GeofenceAppliesTo, GeofenceDirection, GeofenceShape } from "@/api/types";
 import type { GeofenceGeometry } from "@/components/map/GeofenceMap";
 import {
   Button,
@@ -31,8 +26,16 @@ const DIRECTION_OPTIONS: { value: GeofenceDirection; label: string }[] = [
 ];
 
 const COLOR_SWATCHES = [
-  "#3b82f6", "#ef4444", "#10b981", "#f59e0b", "#8b5cf6",
-  "#ec4899", "#06b6d4", "#84cc16", "#f97316", "#6366f1",
+  "#3b82f6",
+  "#ef4444",
+  "#10b981",
+  "#f59e0b",
+  "#8b5cf6",
+  "#ec4899",
+  "#06b6d4",
+  "#84cc16",
+  "#f97316",
+  "#6366f1",
 ];
 
 interface GeofenceDrawerFormProps {
@@ -199,12 +202,7 @@ export function GeofenceDrawerForm({
                 {hasGeometry ? "Yeniden Çiz" : "Haritada Çiz"}
               </Button>
               {hasGeometry && (
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  onClick={onCancelDraw}
-                >
+                <Button type="button" variant="ghost" size="sm" onClick={onCancelDraw}>
                   <Trash2 className="h-3.5 w-3.5" />
                 </Button>
               )}
@@ -245,9 +243,7 @@ export function GeofenceDrawerForm({
                 <Select
                   id="gf-direction"
                   value={field.state.value}
-                  onChange={(e) =>
-                    field.handleChange(e.target.value as GeofenceDirection)
-                  }
+                  onChange={(e) => field.handleChange(e.target.value as GeofenceDirection)}
                 >
                   {DIRECTION_OPTIONS.map((opt) => (
                     <option key={opt.value} value={opt.value}>
@@ -319,8 +315,9 @@ export function GeofenceDrawerForm({
 
           <form.Field name="isActive">
             {(field) => (
-              <label className="flex items-center gap-2">
+              <label htmlFor="geofence-drawer-active" className="flex items-center gap-2">
                 <Switch
+                  id="geofence-drawer-active"
                   checked={field.state.value}
                   onCheckedChange={(v) => field.handleChange(v)}
                 />
@@ -338,14 +335,8 @@ export function GeofenceDrawerForm({
             >
               İptal
             </Button>
-            <Button
-              type="submit"
-              className="flex-1"
-              disabled={form.state.isSubmitting}
-            >
-              {form.state.isSubmitting && (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              )}
+            <Button type="submit" className="flex-1" disabled={form.state.isSubmitting}>
+              {form.state.isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {editing ? "Güncelle" : "Oluştur"}
             </Button>
           </div>

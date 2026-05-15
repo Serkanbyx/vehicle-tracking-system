@@ -1,5 +1,5 @@
-import type { SelectQueryBuilder, ObjectLiteral } from 'typeorm';
-import type { LngLat } from './postgis-point';
+import type { ObjectLiteral, SelectQueryBuilder } from "typeorm";
+import type { LngLat } from "./postgis-point";
 
 /* ------------------------------------------------------------------ */
 /*  selectPointAsJson                                                  */
@@ -14,8 +14,7 @@ export const selectPointAsJson = <T extends ObjectLiteral>(
   qb: SelectQueryBuilder<T>,
   column: string,
   alias: string,
-): SelectQueryBuilder<T> =>
-  qb.addSelect(`ST_AsGeoJSON(${column})`, alias);
+): SelectQueryBuilder<T> => qb.addSelect(`ST_AsGeoJSON(${column})`, alias);
 
 /* ------------------------------------------------------------------ */
 /*  whereDWithin                                                       */
@@ -37,7 +36,7 @@ export const whereDWithin = <T extends ObjectLiteral>(
   column: string,
   point: LngLat,
   meters: number,
-  paramPrefix = 'dw',
+  paramPrefix = "dw",
 ): SelectQueryBuilder<T> =>
   qb.andWhere(
     `ST_DWithin(${column}::geography, ` +
@@ -62,7 +61,7 @@ export const whereContains = <T extends ObjectLiteral>(
   qb: SelectQueryBuilder<T>,
   polygonCol: string,
   point: LngLat,
-  paramPrefix = 'ct',
+  paramPrefix = "ct",
 ): SelectQueryBuilder<T> =>
   qb.andWhere(
     `ST_Contains(${polygonCol}, ` +
@@ -91,7 +90,7 @@ export const whereCircleContains = <T extends ObjectLiteral>(
   centerCol: string,
   radiusCol: string,
   point: LngLat,
-  paramPrefix = 'cc',
+  paramPrefix = "cc",
 ): SelectQueryBuilder<T> =>
   qb.andWhere(
     `ST_DWithin(${centerCol}::geography, ` +
@@ -119,7 +118,7 @@ export const whereCircleContains = <T extends ObjectLiteral>(
 export const insertPointSql = (
   lng: number,
   lat: number,
-  paramPrefix = 'ip',
+  paramPrefix = "ip",
 ): { sql: string; params: Record<string, number> } => ({
   sql: `ST_SetSRID(ST_MakePoint(:${paramPrefix}_lng, :${paramPrefix}_lat), 4326)`,
   params: {
@@ -148,7 +147,7 @@ export const insertPointSql = (
 export const lineLengthMeters = <T extends ObjectLiteral>(
   qb: SelectQueryBuilder<T>,
   locTable: string,
-  alias = 'distance_meters',
+  alias = "distance_meters",
 ): SelectQueryBuilder<T> =>
   qb.addSelect(
     `ST_Length(ST_MakeLine(${locTable}.geom ORDER BY ${locTable}.timestamp)::geography)`,

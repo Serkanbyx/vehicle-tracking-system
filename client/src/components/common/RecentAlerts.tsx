@@ -36,9 +36,7 @@ export function RecentAlerts() {
       </CardHeader>
       <CardContent>
         {recent.length === 0 ? (
-          <p className="py-4 text-center text-sm text-gray-400">
-            Henüz yeni uyarı yok
-          </p>
+          <p className="py-4 text-center text-sm text-gray-400">Henüz yeni uyarı yok</p>
         ) : (
           <ul className="flex flex-col gap-2">
             {recent.map((alert) => (

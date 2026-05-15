@@ -1,24 +1,24 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { format, subDays } from "date-fns";
 import { Crosshair, Loader2 } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { format, subDays } from "date-fns";
-import { requireAuth } from "@/components/guards";
-import { getVehicle } from "@/api/vehicles";
-import { getHistory } from "@/api/locations";
 import { dashboardSocket } from "@/api";
-import { useLiveVehicle } from "@/stores/live-vehicles.store";
+import { getHistory } from "@/api/locations";
+import type { Location, Vehicle } from "@/api/types";
+import { getVehicle } from "@/api/vehicles";
+import { requireAuth } from "@/components/guards";
 import { LiveMap } from "@/components/map";
+import { Button, Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui";
+import { AlertsTab } from "@/components/vehicles/AlertsTab";
 import { CurrentSpeedGauge } from "@/components/vehicles/CurrentSpeedGauge";
-import { StatusCard } from "@/components/vehicles/StatusCard";
-import { RecentVehicleAlerts } from "@/components/vehicles/RecentVehicleAlerts";
-import { HistoryPlayer } from "@/components/vehicles/HistoryPlayer";
 import { DateRangePicker } from "@/components/vehicles/DateRangePicker";
 import { ExportButtons } from "@/components/vehicles/ExportButtons";
+import { HistoryPlayer } from "@/components/vehicles/HistoryPlayer";
+import { RecentVehicleAlerts } from "@/components/vehicles/RecentVehicleAlerts";
 import { StatsPanel } from "@/components/vehicles/StatsPanel";
+import { StatusCard } from "@/components/vehicles/StatusCard";
 import { TripsTab } from "@/components/vehicles/TripsTab";
-import { AlertsTab } from "@/components/vehicles/AlertsTab";
-import { Button, Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui";
-import type { Location, Vehicle } from "@/api/types";
+import { useLiveVehicle } from "@/stores/live-vehicles.store";
 
 interface DetailSearch {
   tab?: string;
@@ -43,7 +43,7 @@ function VehicleDetailPage() {
   const vehicle = Route.useLoaderData() as Vehicle;
   const { id } = Route.useParams();
   const { tab } = Route.useSearch();
-  const navigate = useNavigate();
+  const navigate = useNavigate({ from: "/vehicles/$id" });
   const [autoFollow, setAutoFollow] = useState(true);
   const mapRef = useRef<{ flyTo?: (coords: [number, number]) => void }>(null);
 
@@ -63,7 +63,7 @@ function VehicleDetailPage() {
   const handleTabChange = useCallback(
     (value: string) => {
       void navigate({
-        search: (prev: Record<string, unknown>) => ({ ...prev, tab: value }),
+        search: (prev) => ({ ...prev, tab: value }),
       });
     },
     [navigate],
@@ -130,7 +130,7 @@ function HistoryTab({ vehicleId }: { vehicleId: string }) {
   const [range, setRange] = useState({ from: dayAgo, to: now });
   const [history, setHistory] = useState<Location[] | null>(null);
   const [loading, setLoading] = useState(false);
-  const [playerPos, setPlayerPos] = useState<Location | null>(null);
+  const [, setPlayerPos] = useState<Location | null>(null);
 
   const loadHistory = async () => {
     setLoading(true);
@@ -147,9 +147,7 @@ function HistoryTab({ vehicleId }: { vehicleId: string }) {
     }
   };
 
-  const stats = history
-    ? computeStats(history)
-    : null;
+  const stats = history ? computeStats(history) : null;
 
   return (
     <div className="grid gap-4 lg:grid-cols-3">
@@ -173,9 +171,7 @@ function HistoryTab({ vehicleId }: { vehicleId: string }) {
             durationMin={stats.durationMin}
           />
         )}
-        {history && history.length > 0 && (
-          <HistoryPlayer points={history} onTick={setPlayerPos} />
-        )}
+        {history && history.length > 0 && <HistoryPlayer points={history} onTick={setPlayerPos} />}
         {history && (
           <ExportButtons
             vehicleId={vehicleId}
@@ -189,7 +185,8 @@ function HistoryTab({ vehicleId }: { vehicleId: string }) {
 }
 
 function computeStats(points: Location[]) {
-  if (points.length === 0) return { totalPoints: 0, distanceKm: 0, avgSpeedKmh: 0, maxSpeedKmh: 0, durationMin: 0 };
+  if (points.length === 0)
+    return { totalPoints: 0, distanceKm: 0, avgSpeedKmh: 0, maxSpeedKmh: 0, durationMin: 0 };
 
   let totalSpeed = 0;
   let maxSpeed = 0;

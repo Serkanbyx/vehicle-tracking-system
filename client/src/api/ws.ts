@@ -32,7 +32,9 @@ class DashboardSocket {
     this.ws.onmessage = (e) => {
       try {
         const { type, ...payload } = JSON.parse(e.data as string);
-        this.listeners.get(type)?.forEach((cb) => cb(payload));
+        this.listeners.get(type)?.forEach((cb) => {
+          cb(payload);
+        });
       } catch {
         /* malformed message — ignore */
       }
@@ -69,10 +71,12 @@ class DashboardSocket {
   }
 
   on(event: string, cb: Listener): () => void {
-    if (!this.listeners.has(event)) {
-      this.listeners.set(event, new Set());
+    let bucket = this.listeners.get(event);
+    if (!bucket) {
+      bucket = new Set();
+      this.listeners.set(event, bucket);
     }
-    this.listeners.get(event)!.add(cb);
+    bucket.add(cb);
 
     return () => {
       this.listeners.get(event)?.delete(cb);
@@ -114,7 +118,9 @@ class DashboardSocket {
   }
 
   private emit(event: string, payload: Record<string, unknown>): void {
-    this.listeners.get(event)?.forEach((cb) => cb(payload));
+    this.listeners.get(event)?.forEach((cb) => {
+      cb(payload);
+    });
   }
 
   private cleanup(): void {

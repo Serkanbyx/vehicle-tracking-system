@@ -2,9 +2,9 @@ import { useQuery } from "@tanstack/react-query";
 import { Circle, Hexagon, Plus, Search } from "lucide-react";
 import { useState } from "react";
 import { listGeofences } from "@/api/geofences";
-import type { Geofence, GeofenceShape } from "@/api/types";
-import { useAuth } from "@/context/auth.context";
+import type { Geofence } from "@/api/types";
 import { Badge, Button, Input, Select, Switch } from "@/components/ui";
+import { useAuth } from "@/context/auth.context";
 import { cn } from "@/lib/cn";
 
 interface GeofenceListProps {
@@ -62,18 +62,23 @@ export function GeofenceList({ onSelect, onNew, selectedId }: GeofenceListProps)
           <option value="circle">Daire</option>
         </Select>
 
-        <label className="flex items-center gap-2 text-sm text-gray-500">
+        <label
+          htmlFor="geofence-active-filter"
+          className="flex items-center gap-2 text-sm text-gray-500"
+        >
           <Switch
+            id="geofence-active-filter"
             checked={activeFilter === true}
-            onCheckedChange={(checked) =>
-              setActiveFilter(checked ? true : undefined)
-            }
+            onCheckedChange={(checked) => setActiveFilter(checked ? true : undefined)}
           />
           Aktif
         </label>
       </div>
 
-      <div className="flex flex-col gap-1.5 overflow-y-auto" style={{ maxHeight: "calc(100vh - 320px)" }}>
+      <div
+        className="flex flex-col gap-1.5 overflow-y-auto"
+        style={{ maxHeight: "calc(100vh - 320px)" }}
+      >
         {!data || data.items.length === 0 ? (
           <p className="py-6 text-center text-sm text-gray-400">Bölge bulunamadı</p>
         ) : (

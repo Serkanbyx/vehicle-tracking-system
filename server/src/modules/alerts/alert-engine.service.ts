@@ -1,12 +1,11 @@
-import { Injectable, Logger } from "@nestjs/common";
-import { ConfigService } from "@nestjs/config";
+import { Injectable } from "@nestjs/common";
+import type { ConfigService } from "@nestjs/config";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
+import type { Repository } from "typeorm";
 import { AlertSeverity, AlertType } from "../../common/enums/alert.enum.js";
 import { GeofenceDirection } from "../../common/enums/geofence.enum.js";
-import type { Geofence } from "../geofences/geofence.entity.js";
-import { GeofencesService } from "../geofences/geofences.service.js";
-import { RoomManager } from "../realtime/room-manager.service.js";
+import type { GeofencesService } from "../geofences/geofences.service.js";
+import type { RoomManager } from "../realtime/room-manager.service.js";
 import type { Vehicle } from "../vehicles/vehicle.entity.js";
 import { Alert } from "./alert.entity.js";
 
@@ -24,7 +23,6 @@ const CRITICAL_OVER_LIMIT = 30;
 
 @Injectable()
 export class AlertEngineService {
-  private readonly logger = new Logger(AlertEngineService.name);
   private readonly defaultSpeedLimit: number;
 
   constructor(
@@ -32,10 +30,9 @@ export class AlertEngineService {
     private readonly alertsRepo: Repository<Alert>,
     private readonly geofencesService: GeofencesService,
     private readonly roomManager: RoomManager,
-    private readonly configService: ConfigService,
+    configService: ConfigService,
   ) {
-    this.defaultSpeedLimit =
-      configService.get<number>("app.speedLimitKmh") ?? 90;
+    this.defaultSpeedLimit = configService.get<number>("app.speedLimitKmh") ?? 90;
   }
 
   async run(
@@ -75,10 +72,7 @@ export class AlertEngineService {
     if (recent) return null;
 
     const over = next.speed - limit;
-    const severity =
-      over >= CRITICAL_OVER_LIMIT
-        ? AlertSeverity.CRITICAL
-        : AlertSeverity.WARNING;
+    const severity = over >= CRITICAL_OVER_LIMIT ? AlertSeverity.CRITICAL : AlertSeverity.WARNING;
 
     const alert = await this.persistAlert({
       vehicleId: vehicle.id,
@@ -100,14 +94,9 @@ export class AlertEngineService {
   ): Promise<Alert[]> {
     const alerts: Alert[] = [];
 
-    const prevContaining = prev
-      ? await this.geofencesService.findContaining(vehicleId, prev)
-      : [];
+    const prevContaining = prev ? await this.geofencesService.findContaining(vehicleId, prev) : [];
 
-    const nextContaining = await this.geofencesService.findContaining(
-      vehicleId,
-      next,
-    );
+    const nextContaining = await this.geofencesService.findContaining(vehicleId, next);
 
     const prevIds = new Set(prevContaining.map((g) => g.id));
     const nextIds = new Set(nextContaining.map((g) => g.id));
@@ -205,9 +194,9 @@ export class AlertEngineService {
   }
 
   private broadcastAlert(vehicleId: string, alert: Alert): void {
-    this.roomManager.broadcastToMany(
-      [`vehicle:${vehicleId}`, "role:manager", "role:admin"],
-      { type: "alert:new", alert },
-    );
+    this.roomManager.broadcastToMany([`vehicle:${vehicleId}`, "role:manager", "role:admin"], {
+      type: "alert:new",
+      alert,
+    });
   }
 }

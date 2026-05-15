@@ -1,7 +1,7 @@
 import { Pause, Play } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Button, Select, Slider } from "@/components/ui";
 import type { Location } from "@/api/types";
+import { Button, Select, Slider } from "@/components/ui";
 
 interface HistoryPlayerProps {
   points: Location[];
@@ -90,17 +90,10 @@ export function HistoryPlayer({ points, onTick }: HistoryPlayerProps) {
           ))}
         </Select>
 
-        <span className="ml-auto text-xs text-gray-400">
-          {Math.round(t * 100)}%
-        </span>
+        <span className="ml-auto text-xs text-gray-400">{Math.round(t * 100)}%</span>
       </div>
 
-      <Slider
-        value={[t * 100]}
-        onValueChange={handleSliderChange}
-        max={100}
-        step={0.5}
-      />
+      <Slider value={[t * 100]} onValueChange={handleSliderChange} max={100} step={0.5} />
     </div>
   );
 }

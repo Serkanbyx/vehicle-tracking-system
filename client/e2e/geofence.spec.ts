@@ -1,14 +1,12 @@
-import { test, expect } from "@playwright/test";
-import { seedTestData, login, MANAGER, uniqueId } from "./helpers";
+import { expect, test } from "@playwright/test";
+import { login, MANAGER, seedTestData, uniqueId } from "./helpers";
 
 test.beforeAll(() => {
   seedTestData();
 });
 
 test.describe("Geofence E2E — Draw polygon + test point", () => {
-  test("Manager creates a polygon geofence via the form", async ({
-    page,
-  }) => {
+  test("Manager creates a polygon geofence via the form", async ({ page }) => {
     const uid = uniqueId();
     await login(page, MANAGER);
 
@@ -25,25 +23,25 @@ test.describe("Geofence E2E — Draw polygon + test point", () => {
     await nameInput.fill(`Test Zone ${uid}`);
 
     /* ── Select polygon shape ── */
-    const shapeSelect = page.getByLabel(/şekil|shape|tür/i).or(
-      page.locator('select[name*="shape"]'),
-    );
+    const shapeSelect = page
+      .getByLabel(/şekil|shape|tür/i)
+      .or(page.locator('select[name*="shape"]'));
     if (await shapeSelect.isVisible()) {
       await shapeSelect.selectOption("polygon");
     }
 
     /* ── Select direction ── */
-    const dirSelect = page.getByLabel(/yön|direction/i).or(
-      page.locator('select[name*="direction"]'),
-    );
+    const dirSelect = page
+      .getByLabel(/yön|direction/i)
+      .or(page.locator('select[name*="direction"]'));
     if (await dirSelect.isVisible()) {
       await dirSelect.selectOption("enter");
     }
 
     /* ── Select applies to ── */
-    const appliesToSelect = page.getByLabel(/kapsam|applies/i).or(
-      page.locator('select[name*="appliesTo"]'),
-    );
+    const appliesToSelect = page
+      .getByLabel(/kapsam|applies/i)
+      .or(page.locator('select[name*="appliesTo"]'));
     if (await appliesToSelect.isVisible()) {
       await appliesToSelect.selectOption("all");
     }
@@ -89,17 +87,18 @@ test.describe("Geofence E2E — Draw polygon + test point", () => {
     await page.waitForLoadState("networkidle");
 
     /* ── Select first geofence if available ── */
-    const firstGeofence = page.locator('[data-testid*="geofence"]').or(
-      page.locator("li").filter({ hasText: /zone|bölge/i }),
-    ).first();
+    const firstGeofence = page
+      .locator('[data-testid*="geofence"]')
+      .or(page.locator("li").filter({ hasText: /zone|bölge/i }))
+      .first();
 
     if (await firstGeofence.isVisible()) {
       await firstGeofence.click();
 
       /* ── Toggle test point mode ── */
-      const testBtn = page.getByRole("button", { name: /test.*nokta|test.*point/i }).or(
-        page.locator('[aria-label*="Test"]'),
-      );
+      const testBtn = page
+        .getByRole("button", { name: /test.*nokta|test.*point/i })
+        .or(page.locator('[aria-label*="Test"]'));
 
       if (await testBtn.isVisible()) {
         await testBtn.click();
@@ -109,18 +108,16 @@ test.describe("Geofence E2E — Draw polygon + test point", () => {
         if (await mapCanvas.isVisible()) {
           const box = await mapCanvas.boundingBox();
           if (box) {
-            await page.mouse.click(
-              box.x + box.width / 2,
-              box.y + box.height / 2,
-            );
+            await page.mouse.click(box.x + box.width / 2, box.y + box.height / 2);
           }
         }
 
         await page.waitForTimeout(2_000);
 
-        const resultText = page.locator("text=İçeride").or(
-          page.locator("text=Dışarıda"),
-        ).or(page.locator("text=inside").or(page.locator("text=outside")));
+        const resultText = page
+          .locator("text=İçeride")
+          .or(page.locator("text=Dışarıda"))
+          .or(page.locator("text=inside").or(page.locator("text=outside")));
 
         const resultVisible = await resultText.isVisible();
         expect(resultVisible).toBeTruthy();

@@ -1,10 +1,6 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from "@nestjs/common";
+import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { DataSource, Repository } from "typeorm";
+import type { DataSource, Repository } from "typeorm";
 import { UserRole } from "../../common/enums/user-role.enum.js";
 import { escapeRegex } from "../../common/utils/escape-regex.js";
 import { Alert } from "../alerts/alert.entity.js";
@@ -84,11 +80,7 @@ export class AdminService {
     return user;
   }
 
-  async setUserRole(
-    targetId: string,
-    newRole: UserRole,
-    currentUserId: string,
-  ): Promise<User> {
+  async setUserRole(targetId: string, newRole: UserRole, currentUserId: string): Promise<User> {
     this.assertNotSelf(targetId, currentUserId);
 
     return this.dataSource.transaction(async (trx) => {
@@ -104,9 +96,7 @@ export class AdminService {
         });
 
         if (adminCount <= 1) {
-          throw new BadRequestException(
-            "System must retain at least one admin",
-          );
+          throw new BadRequestException("System must retain at least one admin");
         }
       }
 
@@ -116,11 +106,7 @@ export class AdminService {
     });
   }
 
-  async setUserActive(
-    targetId: string,
-    isActive: boolean,
-    currentUserId: string,
-  ): Promise<User> {
+  async setUserActive(targetId: string, isActive: boolean, currentUserId: string): Promise<User> {
     this.assertNotSelf(targetId, currentUserId);
 
     const user = await this.findUserById(targetId);
@@ -131,9 +117,7 @@ export class AdminService {
       });
 
       if (adminCount <= 1) {
-        throw new BadRequestException(
-          "System must retain at least one admin",
-        );
+        throw new BadRequestException("System must retain at least one admin");
       }
     }
 
@@ -158,9 +142,7 @@ export class AdminService {
         });
 
         if (adminCount <= 1) {
-          throw new BadRequestException(
-            "System must retain at least one admin",
-          );
+          throw new BadRequestException("System must retain at least one admin");
         }
       }
 
@@ -193,9 +175,7 @@ export class AdminService {
 
   private assertNotSelf(targetId: string, currentUserId: string): void {
     if (targetId === currentUserId) {
-      throw new BadRequestException(
-        "Cannot perform this operation on your own account",
-      );
+      throw new BadRequestException("Cannot perform this operation on your own account");
     }
   }
 

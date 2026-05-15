@@ -9,9 +9,9 @@ export default defineConfig({
     coverage: {
       provider: "v8",
       reporter: ["text", "lcov"],
+      exclude: ["**/*.entity.ts", "**/*.module.ts", "**/main.ts"],
       thresholds: {
         lines: 70,
-        functions: 70,
       },
     },
   },

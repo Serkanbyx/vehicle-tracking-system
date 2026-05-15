@@ -1,14 +1,12 @@
-import { test, expect } from "@playwright/test";
-import { seedTestData, login, MANAGER } from "./helpers";
+import { expect, test } from "@playwright/test";
+import { login, MANAGER, seedTestData } from "./helpers";
 
 test.beforeAll(() => {
   seedTestData();
 });
 
 test.describe("Export E2E — CSV download", () => {
-  test("Vehicle history exports as CSV with correct headers", async ({
-    page,
-  }) => {
+  test("Vehicle history exports as CSV with correct headers", async ({ page }) => {
     await login(page, MANAGER);
 
     /* ── Navigate to vehicles list ── */
@@ -30,9 +28,9 @@ test.describe("Export E2E — CSV download", () => {
     await page.waitForLoadState("networkidle");
 
     /* ── Look for export button ── */
-    const exportBtn = page.getByRole("button", { name: /dışa aktar|export|csv/i }).or(
-      page.getByRole("link", { name: /dışa aktar|export|csv/i }),
-    );
+    const exportBtn = page
+      .getByRole("button", { name: /dışa aktar|export|csv/i })
+      .or(page.getByRole("link", { name: /dışa aktar|export|csv/i }));
 
     if (!(await exportBtn.isVisible())) {
       test.skip(true, "Export button not visible on vehicle detail page");
@@ -55,7 +53,7 @@ test.describe("Export E2E — CSV download", () => {
 
       expect(lines.length).toBeGreaterThanOrEqual(1);
 
-      const headers = lines[0]!.toLowerCase();
+      const headers = lines[0]?.toLowerCase() ?? "";
       const expectedHeaders = ["timestamp", "speed"];
       for (const header of expectedHeaders) {
         expect(headers).toContain(header);

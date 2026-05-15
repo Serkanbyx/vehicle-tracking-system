@@ -21,8 +21,7 @@ type State = {
 export const useLiveStore = create<State>((set) => ({
   vehicles: new Map(),
 
-  hydrate: (list) =>
-    set({ vehicles: new Map(list.map((v) => [v.id, v])) }),
+  hydrate: (list) => set({ vehicles: new Map(list.map((v) => [v.id, v])) }),
 
   upsert: (v) =>
     set((s) => {
@@ -43,8 +42,7 @@ export const useLiveStore = create<State>((set) => ({
   reset: () => set({ vehicles: new Map() }),
 }));
 
-export const useLiveVehicle = (id: string) =>
-  useLiveStore((s) => s.vehicles.get(id));
+export const useLiveVehicle = (id: string) => useLiveStore((s) => s.vehicles.get(id));
 
 export const useVehicleStatusCounts = () =>
   useLiveStore((s) => {

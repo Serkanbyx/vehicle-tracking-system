@@ -7,10 +7,25 @@ export function StatsRow() {
 
   return (
     <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-      <StatCard label="Toplam Filo" value={total} icon={<Truck className="h-5 w-5" />} color="brand" />
-      <StatCard label="Hareket Halinde" value={moving} icon={<Activity className="h-5 w-5" />} color="success" />
+      <StatCard
+        label="Toplam Filo"
+        value={total}
+        icon={<Truck className="h-5 w-5" />}
+        color="brand"
+      />
+      <StatCard
+        label="Hareket Halinde"
+        value={moving}
+        icon={<Activity className="h-5 w-5" />}
+        color="success"
+      />
       <StatCard label="Boşta" value={idle} icon={<Pause className="h-5 w-5" />} color="warning" />
-      <StatCard label="Çevrimdışı" value={offline} icon={<WifiOff className="h-5 w-5" />} color="neutral" />
+      <StatCard
+        label="Çevrimdışı"
+        value={offline}
+        icon={<WifiOff className="h-5 w-5" />}
+        color="neutral"
+      />
     </div>
   );
 }

@@ -16,13 +16,9 @@ import { CurrentUser } from "../../common/decorators/current-user.decorator.js";
 import { Public } from "../../common/decorators/public.decorator.js";
 import { JwtRefreshGuard } from "../../common/guards/jwt-refresh.guard.js";
 import { LocalAuthGuard } from "../../common/guards/local-auth.guard.js";
-import { AuthService } from "./auth.service.js";
-import {
-  ChangePasswordDto,
-  DeleteAccountDto,
-  RegisterDto,
-  UpdateMeDto,
-} from "./dto/index.js";
+import type { User } from "../users/user.entity.js";
+import type { AuthService } from "./auth.service.js";
+import type { ChangePasswordDto, DeleteAccountDto, RegisterDto, UpdateMeDto } from "./dto/index.js";
 
 @Controller("auth")
 export class AuthController {
@@ -31,10 +27,7 @@ export class AuthController {
   @Public()
   @Throttle({ auth: { ttl: 900_000, limit: 10 } })
   @Post("register")
-  async register(
-    @Body() dto: RegisterDto,
-    @Res({ passthrough: true }) res: Response,
-  ) {
+  async register(@Body() dto: RegisterDto, @Res({ passthrough: true }) res: Response) {
     const result = await this.authService.register(dto, res);
 
     return { success: true, data: result };
@@ -46,7 +39,7 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @Post("login")
   async login(
-    @CurrentUser() user: any,
+    @CurrentUser() user: Omit<User, "password">,
     @Res({ passthrough: true }) res: Response,
   ) {
     const result = await this.authService.login(user, res);
@@ -78,10 +71,7 @@ export class AuthController {
   }
 
   @Patch("me")
-  async updateMe(
-    @CurrentUser("id") userId: string,
-    @Body() dto: UpdateMeDto,
-  ) {
+  async updateMe(@CurrentUser("id") userId: string, @Body() dto: UpdateMeDto) {
     const user = await this.authService.updateMe(userId, dto);
 
     return { success: true, data: { user } };
@@ -95,11 +85,7 @@ export class AuthController {
     @Body() dto: ChangePasswordDto,
     @Res({ passthrough: true }) res: Response,
   ) {
-    await this.authService.changePassword(
-      userId,
-      dto.currentPassword,
-      dto.newPassword,
-    );
+    await this.authService.changePassword(userId, dto.currentPassword, dto.newPassword);
     this.authService.clearRefreshCookie(res);
 
     return { success: true, data: null };
@@ -107,10 +93,7 @@ export class AuthController {
 
   @HttpCode(HttpStatus.OK)
   @Post("logout")
-  async logout(
-    @CurrentUser("id") userId: string,
-    @Res({ passthrough: true }) res: Response,
-  ) {
+  async logout(@CurrentUser("id") userId: string, @Res({ passthrough: true }) res: Response) {
     await this.authService.logout(userId, res);
 
     return { success: true, data: null };

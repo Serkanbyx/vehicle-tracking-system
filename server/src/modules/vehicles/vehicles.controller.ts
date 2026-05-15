@@ -17,19 +17,20 @@ import type { Response } from "express";
 import { CurrentUser } from "../../common/decorators/current-user.decorator.js";
 import { Roles } from "../../common/decorators/roles.decorator.js";
 import { UserRole } from "../../common/enums/user-role.enum.js";
-import { ExportService } from "../../common/utils/export.service.js";
-import { LocationsService } from "../locations/locations.service.js";
+import type { RequestUser } from "../../common/interfaces/request-user.interface.js";
+import type { ExportService } from "../../common/utils/export.service.js";
+import type { LocationsService } from "../locations/locations.service.js";
 import {
-  BulkActivateDto,
-  CreateVehicleDto,
+  type BulkActivateDto,
+  type CreateVehicleDto,
   ExportFormat,
-  HeatmapQueryDto,
-  NearbyQueryDto,
-  RouteExportQueryDto,
-  UpdateVehicleDto,
-  VehicleQueryDto,
+  type HeatmapQueryDto,
+  type NearbyQueryDto,
+  type RouteExportQueryDto,
+  type UpdateVehicleDto,
+  type VehicleQueryDto,
 } from "./dto/index.js";
-import { VehiclesService } from "./vehicles.service.js";
+import type { VehiclesService } from "./vehicles.service.js";
 
 @Controller("vehicles")
 export class VehiclesController {
@@ -41,10 +42,7 @@ export class VehiclesController {
 
   @Roles(UserRole.MANAGER, UserRole.ADMIN)
   @Post()
-  async create(
-    @Body() dto: CreateVehicleDto,
-    @CurrentUser() user: any,
-  ) {
+  async create(@Body() dto: CreateVehicleDto, @CurrentUser() user: RequestUser) {
     const vehicle = await this.vehiclesService.create(dto, user);
 
     return { success: true, data: vehicle };
@@ -65,10 +63,7 @@ export class VehiclesController {
   }
 
   @Get(":id/heatmap")
-  async heatmap(
-    @Param("id", ParseUUIDPipe) id: string,
-    @Query() query: HeatmapQueryDto,
-  ) {
+  async heatmap(@Param("id", ParseUUIDPipe) id: string, @Query() query: HeatmapQueryDto) {
     const result = await this.locationsService.getHeatmap(
       id,
       new Date(query.from),
@@ -128,7 +123,7 @@ export class VehiclesController {
   async update(
     @Param("id", ParseUUIDPipe) id: string,
     @Body() dto: UpdateVehicleDto,
-    @CurrentUser() user: any,
+    @CurrentUser() user: RequestUser,
   ) {
     const vehicle = await this.vehiclesService.update(id, dto, user);
 
@@ -137,10 +132,7 @@ export class VehiclesController {
 
   @Roles(UserRole.MANAGER, UserRole.ADMIN)
   @Delete(":id")
-  async remove(
-    @Param("id", ParseUUIDPipe) id: string,
-    @CurrentUser() user: any,
-  ) {
+  async remove(@Param("id", ParseUUIDPipe) id: string, @CurrentUser() user: RequestUser) {
     await this.vehiclesService.remove(id, user);
 
     return { success: true, data: null };

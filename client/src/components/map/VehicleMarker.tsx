@@ -1,10 +1,10 @@
-import maplibregl from "maplibre-gl";
-import { useEffect, useRef } from "react";
 import { formatDistanceToNow } from "date-fns";
 import { tr } from "date-fns/locale";
-import { useLiveVehicle } from "@/stores/live-vehicles.store";
-import type { LiveVehicle } from "@/stores/live-vehicles.store";
+import maplibregl from "maplibre-gl";
+import { useEffect, useRef } from "react";
 import { useSmoothPosition } from "@/hooks/use-smooth-position";
+import type { LiveVehicle } from "@/stores/live-vehicles.store";
+import { useLiveVehicle } from "@/stores/live-vehicles.store";
 import { escapeHtml } from "@/utils/escape-html";
 
 function buildPopupHtml(vehicle: LiveVehicle | undefined): string {
@@ -27,11 +27,7 @@ function buildPopupHtml(vehicle: LiveVehicle | undefined): string {
         : "Çevrimdışı";
 
   const statusColor =
-    vehicle.status === "moving"
-      ? "#10b981"
-      : vehicle.status === "idle"
-        ? "#f59e0b"
-        : "#6b7280";
+    vehicle.status === "moving" ? "#10b981" : vehicle.status === "idle" ? "#f59e0b" : "#6b7280";
 
   return `
     <div style="min-width:180px;font-family:system-ui,sans-serif;font-size:13px;">

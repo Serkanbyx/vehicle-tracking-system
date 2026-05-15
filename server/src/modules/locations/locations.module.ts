@@ -1,4 +1,4 @@
-import { Module, forwardRef } from "@nestjs/common";
+import { forwardRef, Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { RealtimeModule } from "../realtime/realtime.module.js";
 import { Location } from "./location.entity.js";
@@ -6,10 +6,7 @@ import { LocationsController } from "./locations.controller.js";
 import { LocationsService } from "./locations.service.js";
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([Location]),
-    forwardRef(() => RealtimeModule),
-  ],
+  imports: [TypeOrmModule.forFeature([Location]), forwardRef(() => RealtimeModule)],
   controllers: [LocationsController],
   providers: [LocationsService],
   exports: [LocationsService, TypeOrmModule],
