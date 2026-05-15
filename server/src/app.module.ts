@@ -1,6 +1,7 @@
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { APP_GUARD } from "@nestjs/core";
+import { SentryModule } from "@sentry/nestjs/setup";
 import { ThrottlerGuard, ThrottlerModule } from "@nestjs/throttler";
 import { LoggerModule } from "nestjs-pino";
 import { HealthController } from "./common/controllers/health.controller";
@@ -23,6 +24,8 @@ import { VehiclesModule } from "./modules/vehicles/vehicles.module";
 
 @Module({
   imports: [
+    SentryModule.forRoot(),
+
     ConfigModule.forRoot({
       isGlobal: true,
       validate,

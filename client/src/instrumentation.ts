@@ -1,15 +1,27 @@
 import * as Sentry from "@sentry/react";
 import { env } from "./env";
+import { router } from "./router";
 
 if (env.SENTRY_DSN) {
   Sentry.init({
     dsn: env.SENTRY_DSN,
+    environment: import.meta.env.MODE,
+    tracesSampleRate: 0.1,
+    replaysSessionSampleRate: 0,
+    replaysOnErrorSampleRate: 0.5,
     integrations: [
-      Sentry.browserTracingIntegration(),
-      Sentry.replayIntegration(),
+      Sentry.tanstackRouterBrowserTracingIntegration(router),
+      Sentry.replayIntegration({
+        maskAllText: true,
+        blockAllMedia: true,
+      }),
     ],
-    tracesSampleRate: 0.2,
-    replaysSessionSampleRate: 0.1,
-    replaysOnErrorSampleRate: 1.0,
+    beforeSend(event) {
+      if (event.request?.headers) {
+        delete (event.request.headers as Record<string, string>).Authorization;
+        delete (event.request.headers as Record<string, string>).authorization;
+      }
+      return event;
+    },
   });
 }
