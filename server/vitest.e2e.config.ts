@@ -9,8 +9,7 @@ export default defineConfig({
     setupFiles: ["test/e2e/setup.ts"],
     testTimeout: 30_000,
     hookTimeout: 30_000,
-    pool: "forks",
-    forks: { singleFork: true },
+    sequence: { concurrent: false },
   },
   plugins: [swc.vite()],
 });

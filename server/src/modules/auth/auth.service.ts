@@ -53,8 +53,8 @@ export class AuthService {
     this.jwtRefresh = new JwtService({
       secret: configService.getOrThrow<string>("JWT_REFRESH_SECRET"),
       signOptions: {
-        expiresIn: configService.get<string>("JWT_REFRESH_TTL") || "7d",
-      } as const,
+        expiresIn: (configService.get<string>("JWT_REFRESH_TTL") || "7d") as any,
+      },
     });
 
     this.isProduction = configService.get<string>("NODE_ENV") === "production";
