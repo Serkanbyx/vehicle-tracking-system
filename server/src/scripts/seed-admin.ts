@@ -24,6 +24,9 @@ async function seed(): Promise<void> {
     url: process.env.DATABASE_URL,
     entities: [User],
     synchronize: false,
+    ssl: process.env.DATABASE_URL?.includes("supabase.com")
+      ? { rejectUnauthorized: false }
+      : false,
   });
 
   await dataSource.initialize();
