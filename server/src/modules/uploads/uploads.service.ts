@@ -8,7 +8,7 @@ interface UploadOptions {
   transformation?: Record<string, unknown>[];
 }
 
-interface UploadResult {
+export interface UploadResult {
   url: string;
   publicId: string;
 }

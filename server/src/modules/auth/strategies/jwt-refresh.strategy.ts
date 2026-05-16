@@ -20,9 +20,9 @@ export class JwtRefreshStrategy extends PassportStrategy(Strategy, "jwt-refresh"
   constructor(configService: ConfigService) {
     super({
       jwtFromRequest: extractFromCookie,
-      secretOrKey: configService.get<string>("JWT_REFRESH_SECRET"),
+      secretOrKey: configService.getOrThrow<string>("JWT_REFRESH_SECRET"),
       ignoreExpiration: false,
-      passReqToCallback: true,
+      passReqToCallback: true as const,
     });
   }
 

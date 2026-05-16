@@ -11,7 +11,7 @@ import { FileInterceptor } from "@nestjs/platform-express";
 import { Throttle } from "@nestjs/throttler";
 import { Roles } from "../../common/decorators/roles.decorator.js";
 import { UserRole } from "../../common/enums/user-role.enum.js";
-import type { UploadsService } from "./uploads.service.js";
+import type { UploadResult, UploadsService } from "./uploads.service.js";
 
 @Controller("uploads")
 export class UploadsController {
@@ -21,7 +21,7 @@ export class UploadsController {
   @Throttle({ upload: { ttl: 3_600_000, limit: 30 } })
   @UseInterceptors(FileInterceptor("image"))
   @Post("driver")
-  async uploadDriver(@UploadedFile() file: Express.Multer.File) {
+  async uploadDriver(@UploadedFile() file: Express.Multer.File): Promise<{ success: boolean; data: UploadResult }> {
     this.assertFile(file);
 
     const result = await this.uploadsService.upload(file.buffer, {
@@ -36,7 +36,7 @@ export class UploadsController {
   @Throttle({ upload: { ttl: 3_600_000, limit: 30 } })
   @UseInterceptors(FileInterceptor("image"))
   @Post("vehicle")
-  async uploadVehicle(@UploadedFile() file: Express.Multer.File) {
+  async uploadVehicle(@UploadedFile() file: Express.Multer.File): Promise<{ success: boolean; data: UploadResult }> {
     this.assertFile(file);
 
     const result = await this.uploadsService.upload(file.buffer, {
@@ -50,7 +50,7 @@ export class UploadsController {
   @Throttle({ upload: { ttl: 3_600_000, limit: 30 } })
   @UseInterceptors(FileInterceptor("image"))
   @Post("avatar")
-  async uploadAvatar(@UploadedFile() file: Express.Multer.File) {
+  async uploadAvatar(@UploadedFile() file: Express.Multer.File): Promise<{ success: boolean; data: UploadResult }> {
     this.assertFile(file);
 
     const result = await this.uploadsService.upload(file.buffer, {

@@ -8,7 +8,7 @@ import {
 } from "@nestjs/common";
 import type { Request, Response } from "express";
 
-interface PinoRequest extends Request {
+interface PinoRequest extends Omit<Request, "id"> {
   id?: string;
 }
 
