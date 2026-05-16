@@ -26,14 +26,16 @@ async function bootstrap() {
 
   app.set("trust proxy", 1);
 
-  app.use(helmet());
-  app.use(cookieParser());
-  app.use(compression());
-
   app.enableCors({
     origin: clientUrl,
     credentials: true,
+    methods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   });
+
+  app.use(helmet());
+  app.use(cookieParser());
+  app.use(compression());
 
   app.setGlobalPrefix("api");
 
