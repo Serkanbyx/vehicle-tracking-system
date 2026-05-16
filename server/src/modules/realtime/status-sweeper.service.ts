@@ -1,11 +1,11 @@
 import { Injectable } from "@nestjs/common";
-import type { ConfigService } from "@nestjs/config";
+import { ConfigService } from "@nestjs/config";
 import { Cron } from "@nestjs/schedule";
 import { InjectRepository } from "@nestjs/typeorm";
 import { IsNull, Not, type Repository } from "typeorm";
-import type { AlertEngineService } from "../alerts/alert-engine.service.js";
+import { AlertEngineService } from "../alerts/alert-engine.service.js";
 import { Vehicle } from "../vehicles/vehicle.entity.js";
-import type { RoomManager } from "./room-manager.service.js";
+import { RoomManager } from "./room-manager.service.js";
 
 @Injectable()
 export class StatusSweeperService {

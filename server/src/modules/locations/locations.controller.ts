@@ -12,14 +12,14 @@ import {
 } from "@nestjs/common";
 import { Public } from "../../common/decorators/public.decorator.js";
 import { SimulatorKeyGuard } from "../../common/guards/simulator-key.guard.js";
-import type { LocationIngestionService } from "../realtime/location-ingestion.service.js";
+import { LocationIngestionService } from "../realtime/location-ingestion.service.js";
 import type {
   HistoryQueryDto,
   LatestQueryDto,
   LocationIngestDto,
   StatsQueryDto,
 } from "./dto/index.js";
-import type { LocationsService } from "./locations.service.js";
+import { LocationsService } from "./locations.service.js";
 
 @Controller("vehicles/:vehicleId")
 export class LocationsController {

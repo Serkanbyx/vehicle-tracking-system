@@ -1,13 +1,13 @@
 import { Injectable, Logger } from "@nestjs/common";
-import type { ConfigService } from "@nestjs/config";
+import { ConfigService } from "@nestjs/config";
 import { InjectRepository } from "@nestjs/typeorm";
 import type { Repository } from "typeorm";
-import type { AlertEngineService } from "../alerts/alert-engine.service.js";
-import type { LocationsService } from "../locations/locations.service.js";
-import type { TripAggregatorService } from "../trips/trip-aggregator.service.js";
+import { AlertEngineService } from "../alerts/alert-engine.service.js";
+import { LocationsService } from "../locations/locations.service.js";
+import { TripAggregatorService } from "../trips/trip-aggregator.service.js";
 import type { VehicleLastLocation } from "../vehicles/vehicle.entity.js";
 import { Vehicle } from "../vehicles/vehicle.entity.js";
-import type { RoomManager } from "./room-manager.service.js";
+import { RoomManager } from "./room-manager.service.js";
 
 const MOVING_SPEED_THRESHOLD = 5;
 

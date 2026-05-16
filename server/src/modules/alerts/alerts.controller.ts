@@ -13,7 +13,7 @@ import {
 import { CurrentUser } from "../../common/decorators/current-user.decorator.js";
 import { Roles } from "../../common/decorators/roles.decorator.js";
 import { UserRole } from "../../common/enums/user-role.enum.js";
-import type { AlertsService } from "./alerts.service.js";
+import { AlertsService } from "./alerts.service.js";
 import type { AckManyDto, AlertQueryDto } from "./dto/index.js";
 
 @Controller("alerts")

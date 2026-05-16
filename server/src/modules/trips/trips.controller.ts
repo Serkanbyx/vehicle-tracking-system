@@ -2,7 +2,7 @@ import { Controller, Get, Header, Param, ParseUUIDPipe, Query, Res } from "@nest
 import { Throttle } from "@nestjs/throttler";
 import type { Response } from "express";
 import type { TripExportQueryDto, TripQueryDto, TripSummaryQueryDto } from "./dto/index.js";
-import type { TripsService } from "./trips.service.js";
+import { TripsService } from "./trips.service.js";
 
 @Controller("trips")
 export class TripsController {

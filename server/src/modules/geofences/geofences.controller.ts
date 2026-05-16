@@ -21,7 +21,7 @@ import type {
   TestPointDto,
   UpdateGeofenceDto,
 } from "./dto/index.js";
-import type { GeofencesService } from "./geofences.service.js";
+import { GeofencesService } from "./geofences.service.js";
 
 @Controller("geofences")
 export class GeofencesController {
