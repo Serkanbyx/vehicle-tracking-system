@@ -13,8 +13,16 @@ import { AllExceptionsFilter } from "./common/filters/all-exceptions.filter";
 import { TransformInterceptor } from "./common/interceptors/transform.interceptor";
 
 async function bootstrap() {
+  const clientUrl = process.env.CLIENT_URL || "http://localhost:3000";
+
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     bufferLogs: true,
+    cors: {
+      origin: clientUrl,
+      credentials: true,
+      methods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
+      allowedHeaders: ["Content-Type", "Authorization"],
+    },
   });
 
   app.useLogger(app.get(Logger));
@@ -22,16 +30,8 @@ async function bootstrap() {
 
   const config = app.get(ConfigService);
   const port = config.get<number>("app.port", 5000);
-  const clientUrl = config.get<string>("app.clientUrl", "http://localhost:3000");
 
   app.set("trust proxy", 1);
-
-  app.enableCors({
-    origin: clientUrl,
-    credentials: true,
-    methods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-  });
 
   app.use(helmet());
   app.use(cookieParser());
