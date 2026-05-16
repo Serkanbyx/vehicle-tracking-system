@@ -249,7 +249,7 @@ cd server
 npm install
 cp .env.example .env   # fill DATABASE_URL, JWT secrets, SIMULATOR_API_KEY, etc.
 npm run mig:run
-npm run seed           # optional: initial admin from ADMIN_* env vars
+npm run seed:admin     # optional: initial admin from ADMIN_* env vars
 npm run dev            # http://localhost:5000 — API prefix /api
 ```
 
