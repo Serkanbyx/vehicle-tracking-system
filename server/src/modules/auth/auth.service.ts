@@ -42,7 +42,7 @@ export interface AuthResponse {
 @Injectable()
 export class AuthService {
   private readonly jwtRefresh: JwtService;
-  private readonly isProduction: boolean;
+  private readonly isCrossSite: boolean;
 
   constructor(
     @InjectRepository(User)
@@ -57,7 +57,8 @@ export class AuthService {
       },
     });
 
-    this.isProduction = configService.get<string>("NODE_ENV") === "production";
+    const clientUrl = configService.get<string>("CLIENT_URL") ?? "";
+    this.isCrossSite = clientUrl.startsWith("https://");
   }
 
   /* ───── Password helpers ───── */
@@ -99,8 +100,8 @@ export class AuthService {
   setRefreshCookie(res: Response, token: string): void {
     res.cookie("refresh_token", token, {
       httpOnly: true,
-      secure: this.isProduction,
-      sameSite: this.isProduction ? "none" : "lax",
+      secure: this.isCrossSite,
+      sameSite: this.isCrossSite ? "none" : "lax",
       path: "/api/auth",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
@@ -109,8 +110,8 @@ export class AuthService {
   clearRefreshCookie(res: Response): void {
     res.cookie("refresh_token", "", {
       httpOnly: true,
-      secure: this.isProduction,
-      sameSite: this.isProduction ? "none" : "lax",
+      secure: this.isCrossSite,
+      sameSite: this.isCrossSite ? "none" : "lax",
       path: "/api/auth",
       maxAge: 0,
     });
