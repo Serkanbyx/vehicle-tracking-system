@@ -15,6 +15,7 @@ import {
   Label,
 } from "@/components/ui";
 import { useAuth } from "@/context/auth.context";
+import { router } from "@/router";
 
 export const Route = createFileRoute("/register")({
   beforeLoad: ({ context }) => {
@@ -37,6 +38,7 @@ function RegisterPage() {
       setError(null);
       try {
         await register(value.name, value.email, value.password);
+        await router.invalidate();
         await navigate({ to: "/" });
       } catch (err) {
         if (err instanceof ApiError) {

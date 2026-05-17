@@ -15,6 +15,7 @@ import {
   Label,
 } from "@/components/ui";
 import { useAuth } from "@/context/auth.context";
+import { router } from "@/router";
 
 interface LoginSearch {
   redirect?: string;
@@ -45,6 +46,7 @@ function LoginPage() {
       setError(null);
       try {
         await login(value.email, value.password);
+        await router.invalidate();
         await navigate({ to: redirectTo ?? "/" });
       } catch (err) {
         if (err instanceof ApiError && err.status === 401) {
