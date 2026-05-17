@@ -28,9 +28,7 @@ export class AuthController {
   @Throttle({ auth: { ttl: 900_000, limit: 10 } })
   @Post("register")
   async register(@Body() dto: RegisterDto, @Res({ passthrough: true }) res: Response) {
-    const result = await this.authService.register(dto, res);
-
-    return { success: true, data: result };
+    return this.authService.register(dto, res);
   }
 
   @Public()
@@ -42,9 +40,7 @@ export class AuthController {
     @CurrentUser() user: Omit<User, "password">,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const result = await this.authService.login(user, res);
-
-    return { success: true, data: result };
+    return this.authService.login(user, res);
   }
 
   @Public()
@@ -60,21 +56,17 @@ export class AuthController {
 
     this.authService.setRefreshCookie(res, newRefresh);
 
-    return { success: true, data: { accessToken } };
+    return { accessToken };
   }
 
   @Get("me")
   async me(@CurrentUser("id") userId: string) {
-    const user = await this.authService.getMe(userId);
-
-    return { success: true, data: { user } };
+    return this.authService.getMe(userId);
   }
 
   @Patch("me")
   async updateMe(@CurrentUser("id") userId: string, @Body() dto: UpdateMeDto) {
-    const user = await this.authService.updateMe(userId, dto);
-
-    return { success: true, data: { user } };
+    return this.authService.updateMe(userId, dto);
   }
 
   @Throttle({ auth: { ttl: 900_000, limit: 10 } })
@@ -87,16 +79,12 @@ export class AuthController {
   ) {
     await this.authService.changePassword(userId, dto.currentPassword, dto.newPassword);
     this.authService.clearRefreshCookie(res);
-
-    return { success: true, data: null };
   }
 
   @HttpCode(HttpStatus.OK)
   @Post("logout")
   async logout(@CurrentUser("id") userId: string, @Res({ passthrough: true }) res: Response) {
     await this.authService.logout(userId, res);
-
-    return { success: true, data: null };
   }
 
   @Delete("me")
@@ -107,7 +95,5 @@ export class AuthController {
   ) {
     await this.authService.deleteAccount(userId, dto.password);
     this.authService.clearRefreshCookie(res);
-
-    return { success: true, data: null };
   }
 }
