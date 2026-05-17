@@ -21,14 +21,14 @@ import type { RequestUser } from "../../common/interfaces/request-user.interface
 import { ExportService } from "../../common/utils/export.service.js";
 import { LocationsService } from "../locations/locations.service.js";
 import {
-  type BulkActivateDto,
-  type CreateVehicleDto,
+  BulkActivateDto,
+  CreateVehicleDto,
   ExportFormat,
-  type HeatmapQueryDto,
-  type NearbyQueryDto,
-  type RouteExportQueryDto,
-  type UpdateVehicleDto,
-  type VehicleQueryDto,
+  HeatmapQueryDto,
+  NearbyQueryDto,
+  RouteExportQueryDto,
+  UpdateVehicleDto,
+  VehicleQueryDto,
 } from "./dto/index.js";
 import { VehiclesService } from "./vehicles.service.js";
 
