@@ -1,7 +1,7 @@
 import { useForm } from "@tanstack/react-form";
-import { createFileRoute, Link, redirect, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { ApiError } from "@/api/client";
 import {
   Button,
@@ -26,28 +26,18 @@ export const Route = createFileRoute("/register")({
 });
 
 function RegisterPage() {
-  const { register, user } = useAuth();
-  const navigate = useNavigate();
+  const { register } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const pendingNav = useRef(false);
-
-  useEffect(() => {
-    if (user && pendingNav.current) {
-      pendingNav.current = false;
-      void navigate({ to: "/" });
-    }
-  }, [user, navigate]);
 
   const form = useForm({
     defaultValues: { name: "", email: "", password: "", confirmPassword: "" },
     onSubmit: async ({ value }) => {
       setError(null);
       try {
-        pendingNav.current = true;
         await register(value.name, value.email, value.password);
+        window.location.href = "/";
       } catch (err) {
-        pendingNav.current = false;
         if (err instanceof ApiError) {
           setError(err.message || "Kayıt başarısız oldu.");
         } else {
