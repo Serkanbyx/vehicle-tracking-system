@@ -100,18 +100,34 @@ export class AlertsService {
   }
 
   async stats() {
-    const result = await this.alertsRepo.query(`
+    const [row] = await this.alertsRepo.query(`
       SELECT
         COUNT(*)::int AS total,
         COUNT(*) FILTER (WHERE acknowledged = false)::int AS unacknowledged,
-        COUNT(*) FILTER (WHERE type = 'speed')::int AS "speedAlerts",
-        COUNT(*) FILTER (WHERE type = 'idle')::int AS "idleAlerts",
-        COUNT(*) FILTER (WHERE type = 'geofence_enter')::int AS "geofenceEnterAlerts",
-        COUNT(*) FILTER (WHERE type = 'geofence_exit')::int AS "geofenceExitAlerts",
-        COUNT(*) FILTER (WHERE severity = 'critical' AND acknowledged = false)::int AS "criticalUnacked"
+        COUNT(*) FILTER (WHERE type = 'speed')::int AS "speed",
+        COUNT(*) FILTER (WHERE type = 'idle')::int AS "idle",
+        COUNT(*) FILTER (WHERE type = 'geofence_enter')::int AS "geofence_enter",
+        COUNT(*) FILTER (WHERE type = 'geofence_exit')::int AS "geofence_exit",
+        COUNT(*) FILTER (WHERE severity = 'info')::int AS "info",
+        COUNT(*) FILTER (WHERE severity = 'warning')::int AS "warning",
+        COUNT(*) FILTER (WHERE severity = 'critical')::int AS "critical"
       FROM alert
     `);
 
-    return result[0];
+    return {
+      total: row.total,
+      unacknowledged: row.unacknowledged,
+      byType: {
+        speed: row.speed,
+        idle: row.idle,
+        geofence_enter: row.geofence_enter,
+        geofence_exit: row.geofence_exit,
+      },
+      bySeverity: {
+        info: row.info,
+        warning: row.warning,
+        critical: row.critical,
+      },
+    };
   }
 }
