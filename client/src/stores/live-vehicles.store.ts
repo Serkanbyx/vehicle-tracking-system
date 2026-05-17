@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { useShallow } from "zustand/react/shallow";
 
 export type LiveVehicle = {
   id: string;
@@ -45,14 +46,16 @@ export const useLiveStore = create<State>((set) => ({
 export const useLiveVehicle = (id: string) => useLiveStore((s) => s.vehicles.get(id));
 
 export const useVehicleStatusCounts = () =>
-  useLiveStore((s) => {
-    let moving = 0;
-    let idle = 0;
-    let offline = 0;
-    for (const v of s.vehicles.values()) {
-      if (v.status === "moving") moving++;
-      else if (v.status === "idle") idle++;
-      else offline++;
-    }
-    return { moving, idle, offline, total: s.vehicles.size };
-  });
+  useLiveStore(
+    useShallow((s) => {
+      let moving = 0;
+      let idle = 0;
+      let offline = 0;
+      for (const v of s.vehicles.values()) {
+        if (v.status === "moving") moving++;
+        else if (v.status === "idle") idle++;
+        else offline++;
+      }
+      return { moving, idle, offline, total: s.vehicles.size };
+    }),
+  );
