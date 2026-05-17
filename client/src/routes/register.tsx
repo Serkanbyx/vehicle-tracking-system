@@ -18,7 +18,7 @@ import { useAuth } from "@/context/auth.context";
 
 export const Route = createFileRoute("/register")({
   beforeLoad: ({ context }) => {
-    if (context.auth.user) {
+    if (context.auth?.user) {
       throw redirect({ to: "/" });
     }
   },

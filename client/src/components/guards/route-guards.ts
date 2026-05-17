@@ -7,14 +7,14 @@ interface BeforeLoadArgs {
 }
 
 export function requireAuth({ context, location }: BeforeLoadArgs): void {
-  if (!context.auth.user) {
+  if (!context.auth?.user) {
     throw redirect({ to: "/login", search: { redirect: location.href } });
   }
 }
 
 export function requireAdmin({ context, location }: BeforeLoadArgs): void {
   requireAuth({ context, location });
-  const user = context.auth.user;
+  const user = context.auth?.user;
   if (!user || user.role !== "admin") {
     throw redirect({ to: "/" });
   }
@@ -22,7 +22,7 @@ export function requireAdmin({ context, location }: BeforeLoadArgs): void {
 
 export function requireManagerOrAdmin({ context, location }: BeforeLoadArgs): void {
   requireAuth({ context, location });
-  const user = context.auth.user;
+  const user = context.auth?.user;
   if (!user || user.role === "viewer") {
     throw redirect({ to: "/" });
   }
@@ -31,7 +31,7 @@ export function requireManagerOrAdmin({ context, location }: BeforeLoadArgs): vo
 export function requireGuest({
   context,
 }: Pick<BeforeLoadArgs, "context"> & { search: Record<string, unknown> }): void {
-  if (context.auth.user) {
+  if (context.auth?.user) {
     throw redirect({ to: "/" });
   }
 }

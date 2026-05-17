@@ -25,7 +25,7 @@ export const Route = createFileRoute("/login")({
     redirect: (search.redirect as string) || undefined,
   }),
   beforeLoad: ({ context }) => {
-    if (context.auth.user) {
+    if (context.auth?.user) {
       throw redirect({ to: "/" });
     }
   },
