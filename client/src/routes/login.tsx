@@ -1,7 +1,7 @@
 import { useForm } from "@tanstack/react-form";
 import { createFileRoute, Link, redirect, useNavigate } from "@tanstack/react-router";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ApiError } from "@/api/client";
 import {
   Button,
@@ -15,7 +15,6 @@ import {
   Label,
 } from "@/components/ui";
 import { useAuth } from "@/context/auth.context";
-import { router } from "@/router";
 
 interface LoginSearch {
   redirect?: string;
@@ -34,21 +33,29 @@ export const Route = createFileRoute("/login")({
 });
 
 function LoginPage() {
-  const { login } = useAuth();
+  const { login, user } = useAuth();
   const navigate = useNavigate();
   const { redirect: redirectTo } = Route.useSearch();
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const pendingNav = useRef(false);
+
+  useEffect(() => {
+    if (user && pendingNav.current) {
+      pendingNav.current = false;
+      void navigate({ to: redirectTo ?? "/" });
+    }
+  }, [user, navigate, redirectTo]);
 
   const form = useForm({
     defaultValues: { email: "", password: "" },
     onSubmit: async ({ value }) => {
       setError(null);
       try {
+        pendingNav.current = true;
         await login(value.email, value.password);
-        await router.invalidate();
-        await navigate({ to: redirectTo ?? "/" });
       } catch (err) {
+        pendingNav.current = false;
         if (err instanceof ApiError && err.status === 401) {
           setError("Geçersiz e-posta veya şifre");
         } else {
