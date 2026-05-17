@@ -30,23 +30,17 @@ export class GeofencesController {
   @Roles(UserRole.MANAGER, UserRole.ADMIN)
   @Post()
   async create(@Body() dto: CreateGeofenceDto, @CurrentUser() user: RequestUser) {
-    const geofence = await this.geofencesService.create(dto, user);
-
-    return { success: true, data: geofence };
+    return this.geofencesService.create(dto, user);
   }
 
   @Get()
   async findAll(@Query() query: GeofenceQueryDto) {
-    const geofences = await this.geofencesService.findAll(query);
-
-    return { success: true, data: geofences };
+    return this.geofencesService.findAll(query);
   }
 
   @Get(":id")
   async findOne(@Param("id", ParseUUIDPipe) id: string) {
-    const geofence = await this.geofencesService.findOne(id);
-
-    return { success: true, data: geofence };
+    return this.geofencesService.findOne(id);
   }
 
   @Roles(UserRole.MANAGER, UserRole.ADMIN)
@@ -56,24 +50,18 @@ export class GeofencesController {
     @Body() dto: UpdateGeofenceDto,
     @CurrentUser() user: RequestUser,
   ) {
-    const geofence = await this.geofencesService.update(id, dto, user);
-
-    return { success: true, data: geofence };
+    return this.geofencesService.update(id, dto, user);
   }
 
   @Roles(UserRole.MANAGER, UserRole.ADMIN)
   @Delete(":id")
   async remove(@Param("id", ParseUUIDPipe) id: string, @CurrentUser() user: RequestUser) {
     await this.geofencesService.remove(id, user);
-
-    return { success: true, data: null };
   }
 
   @HttpCode(HttpStatus.OK)
   @Post(":id/test")
   async test(@Param("id", ParseUUIDPipe) id: string, @Body() point: TestPointDto) {
-    const result = await this.geofencesService.test(id, point);
-
-    return { success: true, data: result };
+    return this.geofencesService.test(id, point);
   }
 }

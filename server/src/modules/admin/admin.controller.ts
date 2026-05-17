@@ -14,23 +14,17 @@ export class AdminController {
 
   @Get("stats")
   async getStats() {
-    const stats = await this.adminService.getStats();
-
-    return { success: true, data: stats };
+    return this.adminService.getStats();
   }
 
   @Get("users")
   async findUsers(@Query() query: AdminUserQueryDto) {
-    const result = await this.adminService.findUsers(query);
-
-    return { success: true, data: result };
+    return this.adminService.findUsers(query);
   }
 
   @Get("users/:id")
   async findUserById(@Param("id", ParseUUIDPipe) id: string) {
-    const user = await this.adminService.findUserById(id);
-
-    return { success: true, data: user };
+    return this.adminService.findUserById(id);
   }
 
   @Patch("users/:id/role")
@@ -39,9 +33,7 @@ export class AdminController {
     @Body() dto: AdminSetRoleDto,
     @CurrentUser("id") currentUserId: string,
   ) {
-    const user = await this.adminService.setUserRole(id, dto.role, currentUserId);
-
-    return { success: true, data: user };
+    return this.adminService.setUserRole(id, dto.role, currentUserId);
   }
 
   @Patch("users/:id/status")
@@ -50,9 +42,7 @@ export class AdminController {
     @Body() dto: AdminSetStatusDto,
     @CurrentUser("id") currentUserId: string,
   ) {
-    const user = await this.adminService.setUserActive(id, dto.isActive, currentUserId);
-
-    return { success: true, data: user };
+    return this.adminService.setUserActive(id, dto.isActive, currentUserId);
   }
 
   @Delete("users/:id")
@@ -61,14 +51,10 @@ export class AdminController {
     @CurrentUser("id") currentUserId: string,
   ) {
     await this.adminService.removeUser(id, currentUserId);
-
-    return { success: true, data: null };
   }
 
   @Get("fleet")
   async fleetOverview() {
-    const fleet = await this.adminService.fleetOverview();
-
-    return { success: true, data: fleet };
+    return this.adminService.fleetOverview();
   }
 }

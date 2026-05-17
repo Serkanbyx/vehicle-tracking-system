@@ -22,41 +22,31 @@ export class AlertsController {
 
   @Get()
   async findAll(@Query() query: AlertQueryDto) {
-    const result = await this.alertsService.findAll(query);
-
-    return { success: true, data: result };
+    return this.alertsService.findAll(query);
   }
 
   @Get("stats")
   async stats() {
-    const result = await this.alertsService.stats();
-
-    return { success: true, data: result };
+    return this.alertsService.stats();
   }
 
   @Roles(UserRole.MANAGER, UserRole.ADMIN)
   @HttpCode(HttpStatus.OK)
   @Post(":id/ack")
   async acknowledge(@Param("id", ParseUUIDPipe) id: string, @CurrentUser("id") userId: string) {
-    const alert = await this.alertsService.acknowledge(id, userId);
-
-    return { success: true, data: alert };
+    return this.alertsService.acknowledge(id, userId);
   }
 
   @Roles(UserRole.MANAGER, UserRole.ADMIN)
   @HttpCode(HttpStatus.OK)
   @Post("ack-many")
   async acknowledgeMany(@Body() dto: AckManyDto, @CurrentUser("id") userId: string) {
-    const result = await this.alertsService.acknowledgeMany(dto.ids, userId);
-
-    return { success: true, data: result };
+    return this.alertsService.acknowledgeMany(dto.ids, userId);
   }
 
   @Roles(UserRole.ADMIN)
   @Delete(":id")
   async remove(@Param("id", ParseUUIDPipe) id: string) {
     await this.alertsService.remove(id);
-
-    return { success: true, data: null };
   }
 }

@@ -10,16 +10,12 @@ export class TripsController {
 
   @Get()
   async findAll(@Query() query: TripQueryDto) {
-    const result = await this.tripsService.findAll(query);
-
-    return { success: true, data: result };
+    return this.tripsService.findAll(query);
   }
 
   @Get("summary")
   async dailySummary(@Query() query: TripSummaryQueryDto) {
-    const result = await this.tripsService.dailySummary(query);
-
-    return { success: true, data: result };
+    return this.tripsService.dailySummary(query);
   }
 
   @Throttle({ export: {} })
@@ -34,8 +30,6 @@ export class TripsController {
 
   @Get(":id")
   async findOne(@Param("id", ParseUUIDPipe) id: string) {
-    const trip = await this.tripsService.findOne(id);
-
-    return { success: true, data: trip };
+    return this.tripsService.findOne(id);
   }
 }

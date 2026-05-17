@@ -43,34 +43,22 @@ export class VehiclesController {
   @Roles(UserRole.MANAGER, UserRole.ADMIN)
   @Post()
   async create(@Body() dto: CreateVehicleDto, @CurrentUser() user: RequestUser) {
-    const vehicle = await this.vehiclesService.create(dto, user);
-
-    return { success: true, data: vehicle };
+    return this.vehiclesService.create(dto, user);
   }
 
   @Get()
   async findAll(@Query() query: VehicleQueryDto) {
-    const result = await this.vehiclesService.findAll(query);
-
-    return { success: true, data: result };
+    return this.vehiclesService.findAll(query);
   }
 
   @Get("nearby")
   async nearby(@Query() query: NearbyQueryDto) {
-    const vehicles = await this.vehiclesService.nearby(query);
-
-    return { success: true, data: vehicles };
+    return this.vehiclesService.nearby(query);
   }
 
   @Get(":id/heatmap")
   async heatmap(@Param("id", ParseUUIDPipe) id: string, @Query() query: HeatmapQueryDto) {
-    const result = await this.locationsService.getHeatmap(
-      id,
-      new Date(query.from),
-      new Date(query.to),
-    );
-
-    return { success: true, data: result };
+    return this.locationsService.getHeatmap(id, new Date(query.from), new Date(query.to));
   }
 
   @Throttle({ export: {} })
@@ -113,9 +101,7 @@ export class VehiclesController {
 
   @Get(":id")
   async findOne(@Param("id", ParseUUIDPipe) id: string) {
-    const vehicle = await this.vehiclesService.findOne(id);
-
-    return { success: true, data: vehicle };
+    return this.vehiclesService.findOne(id);
   }
 
   @Roles(UserRole.MANAGER, UserRole.ADMIN)
@@ -125,25 +111,19 @@ export class VehiclesController {
     @Body() dto: UpdateVehicleDto,
     @CurrentUser() user: RequestUser,
   ) {
-    const vehicle = await this.vehiclesService.update(id, dto, user);
-
-    return { success: true, data: vehicle };
+    return this.vehiclesService.update(id, dto, user);
   }
 
   @Roles(UserRole.MANAGER, UserRole.ADMIN)
   @Delete(":id")
   async remove(@Param("id", ParseUUIDPipe) id: string, @CurrentUser() user: RequestUser) {
     await this.vehiclesService.remove(id, user);
-
-    return { success: true, data: null };
   }
 
   @Roles(UserRole.ADMIN)
   @HttpCode(HttpStatus.OK)
   @Post("bulk-activate")
   async bulkActivate(@Body() dto: BulkActivateDto) {
-    const result = await this.vehiclesService.bulkActivate(dto);
-
-    return { success: true, data: result };
+    return this.vehiclesService.bulkActivate(dto);
   }
 }

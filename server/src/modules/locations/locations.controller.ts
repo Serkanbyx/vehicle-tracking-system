@@ -33,15 +33,13 @@ export class LocationsController {
     @Param("vehicleId", ParseUUIDPipe) vehicleId: string,
     @Query() query: HistoryQueryDto,
   ) {
-    const points = await this.locationsService.getHistory(vehicleId, {
+    return this.locationsService.getHistory(vehicleId, {
       from: query.from ? new Date(query.from) : undefined,
       to: query.to ? new Date(query.to) : undefined,
       limit: query.limit,
       minSpeed: query.minSpeed,
       maxSpeed: query.maxSpeed,
     });
-
-    return { success: true, data: points };
   }
 
   @Get("locations/latest")
@@ -49,9 +47,7 @@ export class LocationsController {
     @Param("vehicleId", ParseUUIDPipe) vehicleId: string,
     @Query() query: LatestQueryDto,
   ) {
-    const points = await this.locationsService.getLatest(vehicleId, query.count);
-
-    return { success: true, data: points };
+    return this.locationsService.getLatest(vehicleId, query.count);
   }
 
   @Get("stats")
@@ -59,12 +55,10 @@ export class LocationsController {
     @Param("vehicleId", ParseUUIDPipe) vehicleId: string,
     @Query() query: StatsQueryDto,
   ) {
-    const stats = await this.locationsService.getStats(vehicleId, {
+    return this.locationsService.getStats(vehicleId, {
       from: query.from ? new Date(query.from) : undefined,
       to: query.to ? new Date(query.to) : undefined,
     });
-
-    return { success: true, data: stats };
   }
 
   @Public()
@@ -86,7 +80,5 @@ export class LocationsController {
       source: "device",
       timestamp: dto.timestamp ? new Date(dto.timestamp) : undefined,
     });
-
-    return { success: true, data: null };
   }
 }
