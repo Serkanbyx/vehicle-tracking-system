@@ -18,7 +18,7 @@ import { JwtRefreshGuard } from "../../common/guards/jwt-refresh.guard.js";
 import { LocalAuthGuard } from "../../common/guards/local-auth.guard.js";
 import type { User } from "../users/user.entity.js";
 import { AuthService } from "./auth.service.js";
-import type { ChangePasswordDto, DeleteAccountDto, RegisterDto, UpdateMeDto } from "./dto/index.js";
+import { ChangePasswordDto, DeleteAccountDto, RegisterDto, UpdateMeDto } from "./dto/index.js";
 
 @Controller("auth")
 export class AuthController {

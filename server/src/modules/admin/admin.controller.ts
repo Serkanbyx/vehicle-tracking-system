@@ -4,7 +4,7 @@ import { CurrentUser } from "../../common/decorators/current-user.decorator.js";
 import { Roles } from "../../common/decorators/roles.decorator.js";
 import { UserRole } from "../../common/enums/user-role.enum.js";
 import { AdminService } from "./admin.service.js";
-import type { AdminSetRoleDto, AdminSetStatusDto, AdminUserQueryDto } from "./dto/index.js";
+import { AdminSetRoleDto, AdminSetStatusDto, AdminUserQueryDto } from "./dto/index.js";
 
 @Roles(UserRole.ADMIN)
 @Throttle({ admin: {} })
