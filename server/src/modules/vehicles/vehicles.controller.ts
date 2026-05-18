@@ -19,8 +19,8 @@ import { CurrentUser } from "../../common/decorators/current-user.decorator.js";
 import { Roles } from "../../common/decorators/roles.decorator.js";
 import { UserRole } from "../../common/enums/user-role.enum.js";
 import type { RequestUser } from "../../common/interfaces/request-user.interface.js";
-import type { ExportService } from "../../common/utils/export.service.js";
-import type { LocationsService } from "../locations/locations.service.js";
+import { ExportService } from "../../common/utils/export.service.js";
+import { LocationsService } from "../locations/locations.service.js";
 import {
   type BulkActivateDto,
   type CreateVehicleDto,
@@ -31,7 +31,7 @@ import {
   type UpdateVehicleDto,
   type VehicleQueryDto,
 } from "./dto/index.js";
-import type { VehiclesService } from "./vehicles.service.js";
+import { VehiclesService } from "./vehicles.service.js";
 
 @ApiTags("Vehicles")
 @ApiBearerAuth("JWT")
