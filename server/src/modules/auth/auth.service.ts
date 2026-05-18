@@ -53,7 +53,8 @@ export class AuthService {
     this.jwtRefresh = new JwtService({
       secret: configService.getOrThrow<string>("JWT_REFRESH_SECRET"),
       signOptions: {
-        expiresIn: configService.get<string>("JWT_REFRESH_TTL") || "7d",
+        // biome-ignore lint/suspicious/noExplicitAny: env string satisfies StringValue at runtime
+        expiresIn: (configService.get<string>("JWT_REFRESH_TTL") || "7d") as any,
       },
     });
 

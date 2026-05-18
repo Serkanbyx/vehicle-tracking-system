@@ -17,7 +17,8 @@ import { JwtRefreshStrategy, JwtStrategy, LocalStrategy } from "./strategies/ind
       useFactory: (cfg: ConfigService) => ({
         secret: cfg.getOrThrow<string>("JWT_ACCESS_SECRET"),
         signOptions: {
-          expiresIn: cfg.get<string>("JWT_ACCESS_TTL") || "15m",
+          // biome-ignore lint/suspicious/noExplicitAny: env string satisfies StringValue at runtime
+          expiresIn: (cfg.get<string>("JWT_ACCESS_TTL") || "15m") as any,
         },
       }),
     }),

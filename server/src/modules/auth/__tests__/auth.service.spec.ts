@@ -25,6 +25,11 @@ const fakeEnv: Record<string, string> = {
 
 const mockConfigService = {
   get: vi.fn((key: string) => fakeEnv[key]),
+  getOrThrow: vi.fn((key: string) => {
+    const val = fakeEnv[key];
+    if (val === undefined) throw new Error(`Missing config key: ${key}`);
+    return val;
+  }),
 };
 
 const mockJwtAccess = {
