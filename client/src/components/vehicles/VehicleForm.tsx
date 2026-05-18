@@ -79,7 +79,7 @@ export function VehicleForm({ vehicle }: VehicleFormProps) {
         await queryClient.invalidateQueries({ queryKey: ["vehicles"] });
         await navigate({ to: "/vehicles/$id", params: { id: resultId } });
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Bir hata oluştu");
+        setError(err instanceof Error ? err.message : "An error occurred");
       }
     },
   });
@@ -100,12 +100,12 @@ export function VehicleForm({ vehicle }: VehicleFormProps) {
       )}
 
       <fieldset className="space-y-4">
-        <legend className="text-lg font-semibold">Araç Bilgileri</legend>
+        <legend className="text-lg font-semibold">Vehicle Information</legend>
         <div className="grid gap-4 sm:grid-cols-2">
           <form.Field name="plate">
             {(field) => (
               <div className="flex flex-col gap-1.5">
-                <Label htmlFor="plate">Plaka *</Label>
+                <Label htmlFor="plate">Plate *</Label>
                 <Input
                   id="plate"
                   value={field.state.value}
@@ -121,7 +121,7 @@ export function VehicleForm({ vehicle }: VehicleFormProps) {
           <form.Field name="vehicleType">
             {(field) => (
               <div className="flex flex-col gap-1.5">
-                <Label htmlFor="vehicleType">Tür</Label>
+                <Label htmlFor="vehicleType">Type</Label>
                 <Select
                   id="vehicleType"
                   value={field.state.value}
@@ -155,7 +155,7 @@ export function VehicleForm({ vehicle }: VehicleFormProps) {
           <form.Field name="year">
             {(field) => (
               <div className="flex flex-col gap-1.5">
-                <Label htmlFor="year">Yıl</Label>
+                <Label htmlFor="year">Year</Label>
                 <Input
                   id="year"
                   type="number"
@@ -171,12 +171,12 @@ export function VehicleForm({ vehicle }: VehicleFormProps) {
           <form.Field name="color">
             {(field) => (
               <div className="flex flex-col gap-1.5">
-                <Label htmlFor="color">Renk</Label>
+                <Label htmlFor="color">Color</Label>
                 <Input
                   id="color"
                   value={field.state.value}
                   onChange={(e) => field.handleChange(e.target.value)}
-                  placeholder="Beyaz"
+                  placeholder="White"
                   maxLength={30}
                 />
               </div>
@@ -186,17 +186,17 @@ export function VehicleForm({ vehicle }: VehicleFormProps) {
       </fieldset>
 
       <fieldset className="space-y-4">
-        <legend className="text-lg font-semibold">Sürücü Bilgileri</legend>
+        <legend className="text-lg font-semibold">Driver Information</legend>
         <div className="grid gap-4 sm:grid-cols-2">
           <form.Field name="driverName">
             {(field) => (
               <div className="flex flex-col gap-1.5">
-                <Label htmlFor="driverName">İsim</Label>
+                <Label htmlFor="driverName">Name</Label>
                 <Input
                   id="driverName"
                   value={field.state.value}
                   onChange={(e) => field.handleChange(e.target.value)}
-                  placeholder="Ahmet Yılmaz"
+                  placeholder="John Smith"
                 />
               </div>
             )}
@@ -205,7 +205,7 @@ export function VehicleForm({ vehicle }: VehicleFormProps) {
           <form.Field name="driverPhone">
             {(field) => (
               <div className="flex flex-col gap-1.5">
-                <Label htmlFor="driverPhone">Telefon</Label>
+                <Label htmlFor="driverPhone">Phone</Label>
                 <Input
                   id="driverPhone"
                   value={field.state.value}
@@ -219,7 +219,7 @@ export function VehicleForm({ vehicle }: VehicleFormProps) {
           <form.Field name="driverLicense">
             {(field) => (
               <div className="flex flex-col gap-1.5">
-                <Label htmlFor="driverLicense">Ehliyet No</Label>
+                <Label htmlFor="driverLicense">License No</Label>
                 <Input
                   id="driverLicense"
                   value={field.state.value}
@@ -232,7 +232,7 @@ export function VehicleForm({ vehicle }: VehicleFormProps) {
           <form.Field name="driverPhotoUrl">
             {(field) => (
               <PhotoUpload
-                label="Sürücü Fotoğrafı"
+                label="Driver Photo"
                 value={field.state.value}
                 onUpload={async (file) => {
                   const res = await uploadDriver(file);
@@ -247,11 +247,11 @@ export function VehicleForm({ vehicle }: VehicleFormProps) {
       </fieldset>
 
       <fieldset className="space-y-4">
-        <legend className="text-lg font-semibold">Araç Fotoğrafı</legend>
+        <legend className="text-lg font-semibold">Vehicle Photo</legend>
         <form.Field name="photoUrl">
           {(field) => (
             <PhotoUpload
-              label="Araç Fotoğrafı"
+              label="Vehicle Photo"
               value={field.state.value}
               onUpload={async (file) => {
                 const res = await uploadVehicle(file);
@@ -265,11 +265,11 @@ export function VehicleForm({ vehicle }: VehicleFormProps) {
       </fieldset>
 
       <fieldset className="space-y-4">
-        <legend className="text-lg font-semibold">Ayarlar</legend>
+        <legend className="text-lg font-semibold">Settings</legend>
         <form.Field name="speedLimitKmh">
           {(field) => (
             <div className="flex flex-col gap-1.5">
-              <Label>Hız Limiti: {field.state.value} km/h</Label>
+              <Label>Speed Limit: {field.state.value} km/h</Label>
               <Slider
                 value={[field.state.value]}
                 onValueChange={(v) => {
@@ -287,12 +287,12 @@ export function VehicleForm({ vehicle }: VehicleFormProps) {
         <form.Field name="tags">
           {(field) => (
             <div className="flex flex-col gap-1.5">
-              <Label htmlFor="tags">Etiketler (virgülle ayırın, maks 10)</Label>
+              <Label htmlFor="tags">Tags (comma-separated, max 10)</Label>
               <Input
                 id="tags"
                 value={field.state.value}
                 onChange={(e) => field.handleChange(e.target.value)}
-                placeholder="kargo, istanbul, acil"
+                placeholder="cargo, istanbul, urgent"
               />
             </div>
           )}
@@ -301,11 +301,11 @@ export function VehicleForm({ vehicle }: VehicleFormProps) {
 
       <div className="flex justify-end gap-3 border-t border-gray-200 pt-4 dark:border-gray-700">
         <Button type="button" variant="outline" onClick={() => window.history.back()}>
-          İptal
+          Cancel
         </Button>
         <Button type="submit" disabled={form.state.isSubmitting}>
           {form.state.isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          {editing ? "Güncelle" : "Oluştur"}
+          {editing ? "Update" : "Create"}
         </Button>
       </div>
     </form>

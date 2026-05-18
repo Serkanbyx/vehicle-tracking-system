@@ -18,7 +18,7 @@ function AdminDashboardPage() {
   if (isLoading) {
     return (
       <div className="space-y-6">
-        <h1 className="text-2xl font-bold">Yönetim Paneli</h1>
+        <h1 className="text-2xl font-bold">Admin Dashboard</h1>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {Array.from({ length: 6 }).map((_, i) => (
             <Skeleton key={`skel-${i.toString()}`} className="h-28" />
@@ -41,12 +41,12 @@ function AdminDashboardPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold">Yönetim Paneli</h1>
+      <h1 className="text-2xl font-bold">Admin Dashboard</h1>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <StatCard
           icon={Users}
-          title="Kullanıcılar"
+          title="Users"
           value={users?.total ?? 0}
           color="text-brand-600"
           items={[
@@ -58,60 +58,60 @@ function AdminDashboardPage() {
 
         <StatCard
           icon={Car}
-          title="Araçlar"
+          title="Vehicles"
           value={vehicles?.total ?? 0}
           color="text-success"
           items={[
-            { label: "Aktif", value: vehicles?.active ?? 0 },
-            { label: "Hareket", value: vehicles?.moving ?? 0 },
-            { label: "Rölanti", value: vehicles?.idle ?? 0 },
-            { label: "Çevrimdışı", value: vehicles?.offline ?? 0 },
+            { label: "Active", value: vehicles?.active ?? 0 },
+            { label: "Moving", value: vehicles?.moving ?? 0 },
+            { label: "Idle", value: vehicles?.idle ?? 0 },
+            { label: "Offline", value: vehicles?.offline ?? 0 },
           ]}
         />
 
         <StatCard
           icon={AlertTriangle}
-          title="Uyarılar"
+          title="Alerts"
           value={alerts?.today ?? 0}
           color="text-danger"
           items={[
-            { label: "Bugün", value: alerts?.today ?? 0 },
-            { label: "Bu Hafta", value: alerts?.week ?? 0 },
-            { label: "Onaysız", value: alerts?.unacknowledged ?? 0 },
+            { label: "Today", value: alerts?.today ?? 0 },
+            { label: "This Week", value: alerts?.week ?? 0 },
+            { label: "Unacknowledged", value: alerts?.unacknowledged ?? 0 },
           ]}
         />
 
         <StatCard
           icon={RouteIcon}
-          title="Seferler"
+          title="Trips"
           value={trips?.today ?? 0}
           color="text-warning"
           items={[
-            { label: "Bugün", value: trips?.today ?? 0 },
-            { label: "Bu Hafta", value: trips?.week ?? 0 },
-            { label: "Toplam km", value: `${(trips?.totalDistanceKm ?? 0).toFixed(0)}` },
+            { label: "Today", value: trips?.today ?? 0 },
+            { label: "This Week", value: trips?.week ?? 0 },
+            { label: "Total km", value: `${(trips?.totalDistanceKm ?? 0).toFixed(0)}` },
           ]}
         />
 
         <StatCard
           icon={Shield}
-          title="Güvenlik"
+          title="Security"
           value={users?.admins ?? 0}
           color="text-purple-600"
           items={[
-            { label: "Admin Sayısı", value: users?.admins ?? 0 },
-            { label: "Aktif Araç", value: vehicles?.active ?? 0 },
+            { label: "Admin Count", value: users?.admins ?? 0 },
+            { label: "Active Vehicles", value: vehicles?.active ?? 0 },
           ]}
         />
 
         <StatCard
           icon={Activity}
-          title="Sistem"
-          value="Aktif"
+          title="System"
+          value="Active"
           color="text-success"
           items={[
-            { label: "Yenileme", value: "60s" },
-            { label: "Toplam Araç", value: vehicles?.total ?? 0 },
+            { label: "Refresh", value: "60s" },
+            { label: "Total Vehicles", value: vehicles?.total ?? 0 },
           ]}
         />
       </div>
@@ -119,7 +119,7 @@ function AdminDashboardPage() {
       {data?.topViolators && (data.topViolators as unknown[]).length > 0 && (
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">En Çok İhlal Edenler</CardTitle>
+            <CardTitle className="text-base">Top Violators</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex flex-wrap gap-3">
@@ -129,7 +129,7 @@ function AdminDashboardPage() {
                   className="rounded-md border border-gray-200 px-3 py-1.5 text-sm dark:border-gray-700"
                 >
                   <span className="font-medium">{v.plate ?? "—"}</span>
-                  <span className="ml-2 text-xs text-gray-500 dark:text-gray-400">{v.count ?? 0} ihlal</span>
+                  <span className="ml-2 text-xs text-gray-500 dark:text-gray-400">{v.count ?? 0} violation(s)</span>
                 </div>
               ))}
             </div>

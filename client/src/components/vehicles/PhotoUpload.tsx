@@ -18,7 +18,7 @@ export function PhotoUpload({
   value,
   onUpload,
   onClear,
-  label = "Fotoğraf",
+  label = "Photo",
   className,
 }: PhotoUploadProps) {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -32,11 +32,11 @@ export function PhotoUpload({
     setError(null);
 
     if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
-      setError("Sadece JPEG, PNG veya WebP formatları desteklenir");
+      setError("Only JPEG, PNG, or WebP formats are supported");
       return;
     }
     if (file.size > MAX_SIZE_MB * 1024 * 1024) {
-      setError(`Dosya boyutu ${MAX_SIZE_MB}MB'ı aşamaz`);
+      setError(`File size cannot exceed ${MAX_SIZE_MB}MB`);
       return;
     }
 
@@ -44,7 +44,7 @@ export function PhotoUpload({
     try {
       await onUpload(file);
     } catch {
-      setError("Yükleme başarısız oldu");
+      setError("Upload failed");
     } finally {
       setUploading(false);
       if (inputRef.current) inputRef.current.value = "";
@@ -78,7 +78,7 @@ export function PhotoUpload({
           ) : (
             <Upload className="mr-1.5 h-4 w-4" />
           )}
-          {uploading ? "Yükleniyor…" : "Yükle"}
+          {uploading ? "Uploading…" : "Upload"}
         </Button>
       )}
       <input

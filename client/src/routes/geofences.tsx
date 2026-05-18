@@ -89,16 +89,16 @@ function GeofencesPage() {
   return (
     <div className="mx-auto max-w-7xl p-4">
       <div className="mb-4 flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Bölge Sınırları</h1>
+        <h1 className="text-2xl font-bold">Geofences</h1>
         <Button
           variant="outline"
           size="sm"
           className="lg:hidden"
           onClick={() => setListDrawerOpen(true)}
-          aria-label="Bölge listesini aç"
+          aria-label="Open geofence list"
         >
           <List className="mr-1.5 h-4 w-4" />
-          Bölgeler
+          Geofences
         </Button>
       </div>
 
@@ -134,13 +134,13 @@ function GeofencesPage() {
                     variant={testPointActive ? "default" : "outline"}
                     className="h-8 w-8 shadow-md"
                     onClick={toggleTestPoint}
-                    aria-label="Test noktası modu"
+                    aria-label="Test point mode"
                   >
                     <Crosshair className="h-4 w-4" />
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent side="left">
-                  {testPointActive ? "Test modu aktif — haritaya tıklayın" : "Test noktası modu"}
+                  {testPointActive ? "Test mode active — click on the map" : "Test point mode"}
                 </TooltipContent>
               </Tooltip>
             </div>
@@ -152,7 +152,7 @@ function GeofencesPage() {
       <Sheet open={listDrawerOpen} onOpenChange={setListDrawerOpen}>
         <SheetContent side="left" className="w-80 overflow-y-auto">
           <SheetHeader>
-            <SheetTitle>Bölgeler</SheetTitle>
+            <SheetTitle>Geofences</SheetTitle>
           </SheetHeader>
           <div className="mt-4">
             <GeofenceList

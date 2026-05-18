@@ -38,20 +38,20 @@ import { cn } from "@/lib/cn";
 
 const NAV_LINKS = [
   { to: "/", label: "Dashboard", icon: Gauge },
-  { to: "/vehicles", label: "Araçlar", icon: Truck },
-  { to: "/geofences", label: "Bölgeler", icon: Hexagon },
-  { to: "/alerts", label: "Uyarılar", icon: Bell },
-  { to: "/reports", label: "Raporlar", icon: FileText },
+  { to: "/vehicles", label: "Vehicles", icon: Truck },
+  { to: "/geofences", label: "Geofences", icon: Hexagon },
+  { to: "/alerts", label: "Alerts", icon: Bell },
+  { to: "/reports", label: "Reports", icon: FileText },
 ] as const;
 
 function ConnectionIndicator() {
   const status = useWsConnection();
 
   const config = {
-    open: { color: "bg-emerald-500", label: "Canlı" },
-    connecting: { color: "bg-yellow-500 animate-pulse", label: "Bağlanıyor…" },
-    reconnecting: { color: "bg-yellow-500 animate-pulse", label: "Yeniden bağlanıyor…" },
-    closed: { color: "bg-red-500", label: "Bağlantı kesildi" },
+    open: { color: "bg-emerald-500", label: "Live" },
+    connecting: { color: "bg-yellow-500 animate-pulse", label: "Connecting…" },
+    reconnecting: { color: "bg-yellow-500 animate-pulse", label: "Reconnecting…" },
+    closed: { color: "bg-red-500", label: "Disconnected" },
   } as const;
 
   const { color, label } = config[status];
@@ -94,27 +94,27 @@ function UserDropdown() {
         <DropdownMenuItem asChild>
           <Link to="/profile/$id" params={{ id: user.id }}>
             <User className="mr-2 h-4 w-4" />
-            Profil
+            Profile
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
           <Link to="/settings/profile">
             <Settings className="mr-2 h-4 w-4" />
-            Ayarlar
+            Settings
           </Link>
         </DropdownMenuItem>
         {hasRole("admin") && (
           <DropdownMenuItem asChild>
             <Link to="/admin">
               <Shield className="mr-2 h-4 w-4" />
-              Yönetim
+              Admin
             </Link>
           </DropdownMenuItem>
         )}
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={() => void logout()}>
           <LogOut className="mr-2 h-4 w-4" />
-          Çıkış Yap
+          Sign Out
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
@@ -156,7 +156,7 @@ export function Navbar() {
             type="button"
             className="inline-flex items-center justify-center rounded-md p-2 text-gray-600 hover:bg-gray-100 md:hidden dark:text-gray-300 dark:hover:bg-gray-800"
             onClick={() => setMobileOpen(true)}
-            aria-label="Menüyü aç"
+            aria-label="Open menu"
           >
             <Menu className="h-5 w-5" />
           </button>

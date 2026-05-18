@@ -16,22 +16,22 @@ test.describe("Vehicle CRUD E2E", () => {
     await page.goto("/vehicles/new");
     await page.waitForLoadState("networkidle");
 
-    await page.getByLabel(/plaka/i).fill(plate);
+    await page.getByLabel(/plate/i).fill(plate);
 
-    const typeSelect = page.getByLabel(/tür/i);
+    const typeSelect = page.getByLabel(/type/i);
     if (await typeSelect.isVisible()) {
       await typeSelect.selectOption("truck");
     }
 
     await page.getByLabel("Model").fill("Volvo FH16");
-    await page.getByLabel("Renk").fill("Beyaz");
+    await page.getByLabel("Color").fill("White");
 
-    const driverNameInput = page.getByLabel("İsim").or(page.getByLabel(/sürücü.*isim/i));
+    const driverNameInput = page.getByLabel("Name").or(page.getByLabel(/driver.*name/i));
     if (await driverNameInput.isVisible()) {
       await driverNameInput.fill("Test Driver");
     }
 
-    await page.getByRole("button", { name: /oluştur/i }).click();
+    await page.getByRole("button", { name: /create/i }).click();
 
     /* ── Should navigate to vehicle detail ── */
     await expect(page).toHaveURL(/\/vehicles\//);
@@ -39,25 +39,25 @@ test.describe("Vehicle CRUD E2E", () => {
 
     /* ── 2. Edit vehicle ── */
     const editBtn = page
-      .getByRole("link", { name: /düzenle|edit/i })
-      .or(page.getByRole("button", { name: /düzenle|edit/i }));
+      .getByRole("link", { name: /edit/i })
+      .or(page.getByRole("button", { name: /edit/i }));
     await editBtn.click();
     await page.waitForLoadState("networkidle");
 
-    const colorInput = page.getByLabel("Renk");
+    const colorInput = page.getByLabel("Color");
     await colorInput.clear();
-    await colorInput.fill("Mavi");
+    await colorInput.fill("Blue");
 
-    await page.getByRole("button", { name: /güncelle|update/i }).click();
+    await page.getByRole("button", { name: /update/i }).click();
 
     await expect(page).toHaveURL(/\/vehicles\//);
-    await expect(page.locator("body")).toContainText("Mavi");
+    await expect(page.locator("body")).toContainText("Blue");
 
     /* ── 3. Delete vehicle ── */
-    const deleteBtn = page.getByRole("button", { name: /sil|delete/i });
+    const deleteBtn = page.getByRole("button", { name: /delete/i });
     await deleteBtn.click();
 
-    const confirmDelete = page.getByRole("button", { name: /onayla|evet|confirm|sil/i }).last();
+    const confirmDelete = page.getByRole("button", { name: /confirm|yes|delete/i }).last();
     if (await confirmDelete.isVisible()) {
       await confirmDelete.click();
     }

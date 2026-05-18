@@ -15,8 +15,8 @@ test.describe("Settings E2E — Theme + Animations", () => {
 
     /* ── Find and click the dark theme option ── */
     const darkOption = page
-      .getByLabel(/karanlık|dark/i)
-      .or(page.locator('button[value="dark"]').or(page.locator("text=Karanlık").first()));
+      .getByLabel(/dark/i)
+      .or(page.locator('button[value="dark"]').or(page.locator("text=Dark").first()));
 
     if (await darkOption.isVisible()) {
       await darkOption.click();
@@ -54,8 +54,8 @@ test.describe("Settings E2E — Theme + Animations", () => {
 
     /* ── Find animations toggle (Switch) ── */
     const animSwitch = page
-      .getByLabel(/animasyon|animation/i)
-      .or(page.getByRole("switch", { name: /animasyon|animation/i }));
+      .getByLabel(/animation/i)
+      .or(page.getByRole("switch", { name: /animation/i }));
 
     if (await animSwitch.isVisible()) {
       const isChecked = await animSwitch.isChecked();
@@ -78,10 +78,10 @@ test.describe("Settings E2E — Theme + Animations", () => {
     await page.waitForLoadState("networkidle");
 
     /* ── Verify sections exist ── */
-    const themeSection = page.locator("text=Tema").or(page.locator("text=Theme"));
+    const themeSection = page.locator("text=Theme");
     await expect(themeSection).toBeVisible({ timeout: 5_000 });
 
-    const fontSection = page.locator("text=Yazı Boyutu").or(page.locator("text=Font"));
+    const fontSection = page.locator("text=Font Size").or(page.locator("text=Font"));
     const fontVisible = await fontSection.isVisible();
     expect(fontVisible).toBeTruthy();
   });

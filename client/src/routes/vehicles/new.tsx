@@ -13,7 +13,7 @@ function NewVehiclePage() {
     <div className="mx-auto max-w-3xl p-4">
       <Card>
         <CardHeader>
-          <CardTitle>Yeni Araç Oluştur</CardTitle>
+          <CardTitle>Create New Vehicle</CardTitle>
         </CardHeader>
         <CardContent>
           <VehicleForm />

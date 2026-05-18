@@ -1,7 +1,7 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { formatDistanceToNow } from "date-fns";
-import { tr } from "date-fns/locale";
+import { enUS } from "date-fns/locale";
 import { Search, Trash2 } from "lucide-react";
 import { useCallback, useState } from "react";
 import { toast } from "sonner";
@@ -123,9 +123,9 @@ function AdminUsersPage() {
       try {
         await setUserActive(user.id, active);
         await queryClient.invalidateQueries({ queryKey: ["admin", "users"] });
-        toast.success(`${user.name} ${active ? "aktif" : "pasif"} yapıldı.`);
+        toast.success(`${user.name} has been ${active ? "activated" : "deactivated"}.`);
       } catch {
-        toast.error("İşlem başarısız.");
+        toast.error("Operation failed.");
       }
     },
     [queryClient],
@@ -136,10 +136,10 @@ function AdminUsersPage() {
     try {
       await setUserRole(roleDialogUser.id, newRole);
       await queryClient.invalidateQueries({ queryKey: ["admin", "users"] });
-      toast.success(`${roleDialogUser.name} rolü ${ROLE_LABELS[newRole]} olarak güncellendi.`);
+      toast.success(`${roleDialogUser.name}'s role has been updated to ${ROLE_LABELS[newRole]}.`);
       setRoleDialogUser(null);
     } catch {
-      toast.error("Rol güncelenemedi.");
+      toast.error("Failed to update role.");
     }
   }, [roleDialogUser, newRole, queryClient]);
 
@@ -148,10 +148,10 @@ function AdminUsersPage() {
     try {
       await removeUser(deleteUser.id);
       await queryClient.invalidateQueries({ queryKey: ["admin", "users"] });
-      toast.success(`${deleteUser.name} silindi.`);
+      toast.success(`${deleteUser.name} has been deleted.`);
       setDeleteUser(null);
     } catch {
-      toast.error("Kullanıcı silinemedi.");
+      toast.error("Failed to delete user.");
     }
   }, [deleteUser, queryClient]);
 
@@ -171,13 +171,13 @@ function AdminUsersPage() {
 
   return (
     <div className="space-y-4">
-      <h1 className="text-2xl font-bold">Kullanıcı Yönetimi</h1>
+      <h1 className="text-2xl font-bold">User Management</h1>
 
       <div className="flex flex-wrap items-center gap-3">
         <div className="relative min-w-48 flex-1">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
           <Input
-            placeholder="İsim veya e-posta ara…"
+            placeholder="Search name or email…"
             value={searchLocal}
             onChange={(e) => handleSearchChange(e.target.value)}
             className="pl-9"
@@ -188,7 +188,7 @@ function AdminUsersPage() {
           onChange={(e) => setFilter("role", e.target.value)}
           className="w-32"
         >
-          <option value="">Tüm Roller</option>
+          <option value="">All Roles</option>
           <option value="admin">Admin</option>
           <option value="manager">Manager</option>
           <option value="viewer">Viewer</option>
@@ -198,9 +198,9 @@ function AdminUsersPage() {
           onChange={(e) => setFilter("isActive", e.target.value)}
           className="w-32"
         >
-          <option value="">Tümü</option>
-          <option value="true">Aktif</option>
-          <option value="false">Pasif</option>
+          <option value="">All</option>
+          <option value="true">Active</option>
+          <option value="false">Inactive</option>
         </Select>
       </div>
 
@@ -208,13 +208,13 @@ function AdminUsersPage() {
         <table className="w-full text-left text-sm">
           <thead className="border-b border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-gray-800">
             <tr>
-              <th className="px-3 py-2">Kullanıcı</th>
-              <th className="px-3 py-2">E-posta</th>
-              <th className="px-3 py-2">Rol</th>
-              <th className="px-3 py-2">Aktif</th>
-              <th className="px-3 py-2">Son Giriş</th>
-              <th className="px-3 py-2">Kayıt</th>
-              <th className="w-36 px-3 py-2">İşlem</th>
+              <th className="px-3 py-2">User</th>
+              <th className="px-3 py-2">Email</th>
+              <th className="px-3 py-2">Role</th>
+              <th className="px-3 py-2">Active</th>
+              <th className="px-3 py-2">Last Login</th>
+              <th className="px-3 py-2">Registered</th>
+              <th className="w-36 px-3 py-2">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -250,7 +250,7 @@ function AdminUsersPage() {
                       </span>
                     </TooltipTrigger>
                     {isSelf(user) && (
-                      <TooltipContent>Kendi hesabınızı pasifleştiremezsiniz</TooltipContent>
+                      <TooltipContent>You cannot deactivate your own account</TooltipContent>
                     )}
                   </Tooltip>
                 </td>
@@ -258,14 +258,14 @@ function AdminUsersPage() {
                   {user.lastLoginAt
                     ? formatDistanceToNow(new Date(user.lastLoginAt), {
                         addSuffix: true,
-                        locale: tr,
+                        locale: enUS,
                       })
                     : "—"}
                 </td>
                 <td className="whitespace-nowrap px-3 py-2 text-xs text-gray-500">
                   {formatDistanceToNow(new Date(user.createdAt), {
                     addSuffix: true,
-                    locale: tr,
+                    locale: enUS,
                   })}
                 </td>
                 <td className="px-3 py-2">
@@ -282,11 +282,11 @@ function AdminUsersPage() {
                             setNewRole(user.role);
                           }}
                         >
-                          Rol
+                          Role
                         </Button>
                       </TooltipTrigger>
                       {isSelf(user) && (
-                        <TooltipContent>Kendi rolünüzü değiştiremezsiniz</TooltipContent>
+                        <TooltipContent>You cannot change your own role</TooltipContent>
                       )}
                     </Tooltip>
 
@@ -303,7 +303,7 @@ function AdminUsersPage() {
                         </Button>
                       </TooltipTrigger>
                       {isSelf(user) && (
-                        <TooltipContent>Kendi hesabınızı silemezsiniz</TooltipContent>
+                        <TooltipContent>You cannot delete your own account</TooltipContent>
                       )}
                     </Tooltip>
                   </div>
@@ -313,7 +313,7 @@ function AdminUsersPage() {
             {(!data || data.items.length === 0) && (
               <tr>
                 <td colSpan={7} className="px-3 py-8 text-center text-gray-400">
-                  Kullanıcı bulunamadı
+                  No users found
                 </td>
               </tr>
             )}
@@ -331,14 +331,13 @@ function AdminUsersPage() {
       <Dialog open={!!roleDialogUser} onOpenChange={(open) => !open && setRoleDialogUser(null)}>
         <DialogContent className="max-w-sm">
           <DialogHeader>
-            <DialogTitle>Rol Değiştir</DialogTitle>
+            <DialogTitle>Change Role</DialogTitle>
           </DialogHeader>
           <div className="flex flex-col gap-3 py-3">
             <p className="text-sm text-gray-500">
-              <span className="font-medium">{roleDialogUser?.name}</span> kullanıcısının rolünü
-              değiştirin.
+              Change the role of <span className="font-medium">{roleDialogUser?.name}</span>.
             </p>
-            <Label htmlFor="role-select">Yeni Rol</Label>
+            <Label htmlFor="role-select">New Role</Label>
             <Select
               id="role-select"
               value={newRole}
@@ -351,9 +350,9 @@ function AdminUsersPage() {
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setRoleDialogUser(null)}>
-              İptal
+              Cancel
             </Button>
-            <Button onClick={handleRoleChange}>Güncelle</Button>
+            <Button onClick={handleRoleChange}>Update</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -362,15 +361,15 @@ function AdminUsersPage() {
       <AlertDialog open={!!deleteUser} onOpenChange={(open) => !open && setDeleteUser(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Kullanıcıyı Sil</AlertDialogTitle>
+            <AlertDialogTitle>Delete User</AlertDialogTitle>
             <AlertDialogDescription>
-              <span className="font-medium">{deleteUser?.name}</span> kullanıcısını silmek
-              istediğinize emin misiniz? Bu işlem geri alınamaz.
+              Are you sure you want to delete <span className="font-medium">{deleteUser?.name}</span>?
+              This action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>İptal</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDelete}>Sil</AlertDialogAction>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDelete}>Delete</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

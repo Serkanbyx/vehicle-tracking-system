@@ -20,24 +20,24 @@ interface AlertsFilterBarProps {
 }
 
 const TYPE_OPTIONS = [
-  { value: "", label: "Tüm Tipler" },
-  { value: "speed", label: "Hız" },
-  { value: "idle", label: "Rölanti" },
-  { value: "geofence_enter", label: "Bölge Giriş" },
-  { value: "geofence_exit", label: "Bölge Çıkış" },
+  { value: "", label: "All Types" },
+  { value: "speed", label: "Speed" },
+  { value: "idle", label: "Idle" },
+  { value: "geofence_enter", label: "Geofence Enter" },
+  { value: "geofence_exit", label: "Geofence Exit" },
 ];
 
 const SEVERITY_OPTIONS = [
-  { value: "", label: "Tüm Düzeyler" },
-  { value: "info", label: "Bilgi" },
-  { value: "warning", label: "Uyarı" },
-  { value: "critical", label: "Kritik" },
+  { value: "", label: "All Severities" },
+  { value: "info", label: "Info" },
+  { value: "warning", label: "Warning" },
+  { value: "critical", label: "Critical" },
 ];
 
 const ACK_OPTIONS = [
-  { value: "", label: "Tümü" },
-  { value: "false", label: "Onaylanmamış" },
-  { value: "true", label: "Onaylanmış" },
+  { value: "", label: "All" },
+  { value: "false", label: "Unacknowledged" },
+  { value: "true", label: "Acknowledged" },
 ];
 
 export function AlertsFilterBar({ filters }: AlertsFilterBarProps) {
@@ -85,7 +85,7 @@ export function AlertsFilterBar({ filters }: AlertsFilterBarProps) {
       <div className="relative min-w-48 flex-1">
         <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
         <Input
-          placeholder="Mesaj veya plaka ara…"
+          placeholder="Search message or plate…"
           value={searchLocal}
           onChange={(e) => setSearchLocal(e.target.value)}
           className="pl-9"
@@ -146,7 +146,7 @@ export function AlertsFilterBar({ filters }: AlertsFilterBarProps) {
 
       {hasFilters && (
         <Button variant="ghost" size="sm" onClick={clearAll}>
-          Temizle
+          Clear
         </Button>
       )}
     </div>

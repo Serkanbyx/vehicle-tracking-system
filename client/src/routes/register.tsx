@@ -39,9 +39,9 @@ function RegisterPage() {
         window.location.href = "/";
       } catch (err) {
         if (err instanceof ApiError) {
-          setError(err.message || "Kayıt başarısız oldu.");
+          setError(err.message || "Registration failed.");
         } else {
-          setError("Bir hata oluştu. Lütfen tekrar deneyin.");
+          setError("An error occurred. Please try again.");
         }
       }
     },
@@ -51,8 +51,8 @@ function RegisterPage() {
     <div className="grid min-h-screen place-items-center px-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl">Kayıt Ol</CardTitle>
-          <CardDescription>Yeni bir hesap oluşturun</CardDescription>
+          <CardTitle className="text-2xl">Sign Up</CardTitle>
+          <CardDescription>Create a new account</CardDescription>
         </CardHeader>
 
         <CardContent>
@@ -74,20 +74,20 @@ function RegisterPage() {
               name="name"
               validators={{
                 onChange: ({ value }) => {
-                  if (!value) return "İsim gerekli";
-                  if (value.length < 2) return "İsim en az 2 karakter olmalı";
-                  if (value.length > 60) return "İsim en fazla 60 karakter olabilir";
+                  if (!value) return "Name is required";
+                  if (value.length < 2) return "Name must be at least 2 characters";
+                  if (value.length > 60) return "Name must be at most 60 characters";
                   return undefined;
                 },
               }}
             >
               {(field) => (
                 <div className="flex flex-col gap-1.5">
-                  <Label htmlFor="name">İsim</Label>
+                  <Label htmlFor="name">Name</Label>
                   <Input
                     id="name"
                     type="text"
-                    placeholder="Adınız Soyadınız"
+                    placeholder="Your Full Name"
                     autoComplete="name"
                     value={field.state.value}
                     onBlur={field.handleBlur}
@@ -104,19 +104,19 @@ function RegisterPage() {
               name="email"
               validators={{
                 onChange: ({ value }) => {
-                  if (!value) return "E-posta gerekli";
-                  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return "Geçerli bir e-posta girin";
+                  if (!value) return "Email is required";
+                  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return "Enter a valid email";
                   return undefined;
                 },
               }}
             >
               {(field) => (
                 <div className="flex flex-col gap-1.5">
-                  <Label htmlFor="email">E-posta</Label>
+                  <Label htmlFor="email">Email</Label>
                   <Input
                     id="email"
                     type="email"
-                    placeholder="ornek@email.com"
+                    placeholder="example@email.com"
                     autoComplete="email"
                     value={field.state.value}
                     onBlur={field.handleBlur}
@@ -133,17 +133,17 @@ function RegisterPage() {
               name="password"
               validators={{
                 onChange: ({ value }) => {
-                  if (!value) return "Şifre gerekli";
-                  if (value.length < 8) return "Şifre en az 8 karakter olmalı";
-                  if (!/[a-zA-Z]/.test(value)) return "Şifre en az bir harf içermeli";
-                  if (!/\d/.test(value)) return "Şifre en az bir rakam içermeli";
+                  if (!value) return "Password is required";
+                  if (value.length < 8) return "Password must be at least 8 characters";
+                  if (!/[a-zA-Z]/.test(value)) return "Password must contain at least one letter";
+                  if (!/\d/.test(value)) return "Password must contain at least one digit";
                   return undefined;
                 },
               }}
             >
               {(field) => (
                 <div className="flex flex-col gap-1.5">
-                  <Label htmlFor="password">Şifre</Label>
+                  <Label htmlFor="password">Password</Label>
                   <div className="relative">
                     <Input
                       id="password"
@@ -159,7 +159,7 @@ function RegisterPage() {
                       type="button"
                       onClick={() => setShowPassword((p) => !p)}
                       className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                      aria-label={showPassword ? "Şifreyi gizle" : "Şifreyi göster"}
+                      aria-label={showPassword ? "Hide password" : "Show password"}
                     >
                       {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                     </button>
@@ -177,15 +177,15 @@ function RegisterPage() {
                 onChangeListenTo: ["password"],
                 onChange: ({ value, fieldApi }) => {
                   const password = fieldApi.form.getFieldValue("password");
-                  if (!value) return "Şifre tekrarı gerekli";
-                  if (value !== password) return "Şifreler eşleşmiyor";
+                  if (!value) return "Password confirmation is required";
+                  if (value !== password) return "Passwords do not match";
                   return undefined;
                 },
               }}
             >
               {(field) => (
                 <div className="flex flex-col gap-1.5">
-                  <Label htmlFor="confirmPassword">Şifre Tekrarı</Label>
+                  <Label htmlFor="confirmPassword">Confirm Password</Label>
                   <Input
                     id="confirmPassword"
                     type={showPassword ? "text" : "password"}
@@ -204,16 +204,16 @@ function RegisterPage() {
 
             <Button type="submit" disabled={form.state.isSubmitting} className="w-full">
               {form.state.isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Kayıt Ol
+              Sign Up
             </Button>
           </form>
         </CardContent>
 
         <CardFooter className="justify-center">
           <p className="text-sm text-gray-500">
-            Zaten hesabınız var mı?{" "}
+            Already have an account?{" "}
             <Link to="/login" className="text-brand-600 hover:underline">
-              Giriş Yap
+              Sign In
             </Link>
           </p>
         </CardFooter>

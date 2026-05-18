@@ -40,11 +40,11 @@ function SentryFallback({ error }: { error: unknown }) {
   return (
     <div className="flex min-h-[60vh] flex-col items-center justify-center gap-4 px-4 text-center">
       <AlertTriangle className="h-16 w-16 text-danger" />
-      <h1 className="text-2xl font-semibold">Bir hata oluştu</h1>
+      <h1 className="text-2xl font-semibold">An error occurred</h1>
       <p className="max-w-md text-gray-500">{message}</p>
       <Button variant="outline" onClick={() => window.location.reload()}>
         <RefreshCw className="mr-2 h-4 w-4" />
-        Sayfayı Yenile
+        Refresh Page
       </Button>
     </div>
   );
@@ -54,10 +54,10 @@ function NotFoundPage() {
   return (
     <div className="flex min-h-[60vh] flex-col items-center justify-center gap-4 px-4 text-center">
       <Compass className="h-16 w-16 text-gray-300 dark:text-gray-600" />
-      <h1 className="text-2xl font-semibold">Sayfa bulunamadı</h1>
-      <p className="max-w-md text-gray-500">Aradığınız sayfa taşınmış veya silinmiş olabilir.</p>
+      <h1 className="text-2xl font-semibold">Page not found</h1>
+      <p className="max-w-md text-gray-500">The page you're looking for may have been moved or deleted.</p>
       <Link to="/">
-        <Button>Ana Sayfaya Dön</Button>
+        <Button>Go to Home</Button>
       </Link>
     </div>
   );
@@ -67,11 +67,11 @@ function ErrorBoundaryPage({ error }: { error: Error }) {
   return (
     <div className="flex min-h-[60vh] flex-col items-center justify-center gap-4 px-4 text-center">
       <AlertTriangle className="h-16 w-16 text-danger" />
-      <h1 className="text-2xl font-semibold">Bir hata oluştu</h1>
+      <h1 className="text-2xl font-semibold">An error occurred</h1>
       <p className="max-w-md text-gray-500">{error.message}</p>
       <Button variant="outline" onClick={() => window.location.reload()}>
         <RefreshCw className="mr-2 h-4 w-4" />
-        Sayfayı Yenile
+        Refresh Page
       </Button>
     </div>
   );

@@ -6,8 +6,8 @@ import { cn } from "@/lib/cn";
 
 const ADMIN_LINKS = [
   { to: "/admin", label: "Dashboard", icon: Gauge },
-  { to: "/admin/users", label: "Kullanıcılar", icon: Users },
-  { to: "/admin/fleet", label: "Filo", icon: Ship },
+  { to: "/admin/users", label: "Users", icon: Users },
+  { to: "/admin/fleet", label: "Fleet", icon: Ship },
 ] as const;
 
 function SidebarNav({ onNavigate }: { onNavigate?: () => void }) {
@@ -42,7 +42,7 @@ export function AdminLayout() {
     <div className="mx-auto flex max-w-7xl gap-6 px-4 py-6">
       <aside className="hidden w-56 shrink-0 md:block">
         <h2 className="mb-4 px-3 text-xs font-semibold uppercase tracking-wider text-gray-400">
-          Yönetim
+          Admin
         </h2>
         <SidebarNav />
       </aside>
@@ -51,11 +51,11 @@ export function AdminLayout() {
         <Sheet open={drawerOpen} onOpenChange={setDrawerOpen}>
           <SheetTrigger className="flex items-center gap-2 rounded-md border border-gray-300 px-3 py-2 text-sm dark:border-gray-600">
             <Menu className="h-4 w-4" />
-            Menü
+            Menu
           </SheetTrigger>
           <SheetContent side="left" className="w-64">
             <SheetHeader>
-              <SheetTitle>Yönetim</SheetTitle>
+              <SheetTitle>Admin</SheetTitle>
             </SheetHeader>
             <div className="mt-4">
               <SidebarNav onNavigate={() => setDrawerOpen(false)} />

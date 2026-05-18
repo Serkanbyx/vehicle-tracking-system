@@ -43,9 +43,9 @@ function SettingsProfilePage() {
           phone: value.phone || null,
         });
         updateUser(updated);
-        toast.success("Profil güncellendi.");
+        toast.success("Profile updated.");
       } catch {
-        toast.error("Profil güncellenemedi.");
+        toast.error("Failed to update profile.");
       }
     },
   });
@@ -55,11 +55,11 @@ function SettingsProfilePage() {
     if (!file) return;
 
     if (!ALLOWED_TYPES.includes(file.type)) {
-      toast.error("Yalnızca JPEG, PNG veya WebP yükleyebilirsiniz.");
+      toast.error("You can only upload JPEG, PNG, or WebP files.");
       return;
     }
     if (file.size > MAX_SIZE) {
-      toast.error("Dosya boyutu maksimum 5 MB olmalıdır.");
+      toast.error("File size must be 5 MB or less.");
       return;
     }
 
@@ -68,9 +68,9 @@ function SettingsProfilePage() {
       const { url } = await uploadAvatar(file);
       const updated = await authService.updateMe({ name: user?.name ?? "" });
       updateUser({ ...updated, avatarUrl: url });
-      toast.success("Avatar güncellendi.");
+      toast.success("Avatar updated.");
     } catch {
-      toast.error("Avatar yüklenemedi.");
+      toast.error("Failed to upload avatar.");
     } finally {
       setUploading(false);
       if (fileRef.current) fileRef.current.value = "";
@@ -81,7 +81,7 @@ function SettingsProfilePage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold">Profil Ayarları</h1>
+      <h1 className="text-2xl font-bold">Profile Settings</h1>
 
       <Card>
         <CardHeader>
@@ -116,14 +116,14 @@ function SettingsProfilePage() {
             />
           </div>
           <div className="text-sm text-gray-500">
-            <p>JPEG, PNG veya WebP, maksimum 5 MB.</p>
+            <p>JPEG, PNG, or WebP, max 5 MB.</p>
           </div>
         </CardContent>
       </Card>
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Kişisel Bilgiler</CardTitle>
+          <CardTitle className="text-base">Personal Information</CardTitle>
         </CardHeader>
         <CardContent>
           <form
@@ -137,7 +137,7 @@ function SettingsProfilePage() {
             <form.Field name="name">
               {(field) => (
                 <div className="flex flex-col gap-1.5">
-                  <Label htmlFor="profile-name">İsim *</Label>
+                  <Label htmlFor="profile-name">Name *</Label>
                   <Input
                     id="profile-name"
                     value={field.state.value}
@@ -151,13 +151,13 @@ function SettingsProfilePage() {
             <form.Field name="phone">
               {(field) => (
                 <div className="flex flex-col gap-1.5">
-                  <Label htmlFor="profile-phone">Telefon</Label>
+                  <Label htmlFor="profile-phone">Phone</Label>
                   <Input
                     id="profile-phone"
                     type="tel"
                     value={field.state.value}
                     onChange={(e) => field.handleChange(e.target.value)}
-                    placeholder="+90 5XX XXX XX XX"
+                    placeholder="+1 XXX XXX XXXX"
                     maxLength={20}
                   />
                 </div>
@@ -167,7 +167,7 @@ function SettingsProfilePage() {
             <div>
               <Button type="submit" disabled={form.state.isSubmitting}>
                 {form.state.isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Kaydet
+                Save
               </Button>
             </div>
           </form>

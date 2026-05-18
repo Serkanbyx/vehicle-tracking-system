@@ -37,15 +37,15 @@ export function seedTestData(): void {
 
 export async function login(page: Page, user: { email: string; password: string }): Promise<void> {
   await page.goto("/login");
-  await page.getByLabel("E-posta").fill(user.email);
-  await page.getByLabel("Şifre").fill(user.password);
-  await page.getByRole("button", { name: /giriş yap/i }).click();
+  await page.getByLabel("Email").fill(user.email);
+  await page.getByLabel("Password").fill(user.password);
+  await page.getByRole("button", { name: /sign in/i }).click();
   await expect(page).not.toHaveURL(/\/login/);
 }
 
 export async function logout(page: Page): Promise<void> {
-  await page.getByRole("button", { name: /profil|kullanıcı|menu/i }).click();
-  await page.getByRole("menuitem", { name: /çıkış|logout/i }).click();
+  await page.getByRole("button", { name: /profile|user|menu/i }).click();
+  await page.getByRole("menuitem", { name: /logout|sign out/i }).click();
   await expect(page).toHaveURL(/\/login/);
 }
 

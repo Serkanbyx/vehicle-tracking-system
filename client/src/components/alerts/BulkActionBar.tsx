@@ -12,10 +12,10 @@ export function BulkActionBar({ selectedIds, onAcknowledge, loading }: BulkActio
 
   return (
     <div className="flex items-center gap-3 rounded-md border border-brand-200 bg-brand-50 px-4 py-2 dark:border-brand-700 dark:bg-brand-900/10">
-      <span className="text-sm font-medium">{selectedIds.size} uyarı seçildi</span>
+      <span className="text-sm font-medium">{selectedIds.size} alert(s) selected</span>
       <Button size="sm" onClick={onAcknowledge} disabled={loading}>
         <CheckCheck className="mr-1.5 h-4 w-4" />
-        Seçilenleri Onayla
+        Acknowledge Selected
       </Button>
     </div>
   );

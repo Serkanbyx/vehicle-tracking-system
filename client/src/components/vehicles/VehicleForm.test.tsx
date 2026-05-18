@@ -46,12 +46,12 @@ describe("VehicleForm — Create mode", () => {
 
     render(React.createElement(VehicleForm), { wrapper: Wrapper });
 
-    expect(screen.getByLabelText("Plaka *")).toBeInTheDocument();
-    expect(screen.getByLabelText("Tür")).toBeInTheDocument();
+    expect(screen.getByLabelText("Plate *")).toBeInTheDocument();
+    expect(screen.getByLabelText("Type")).toBeInTheDocument();
     expect(screen.getByLabelText("Model")).toBeInTheDocument();
-    expect(screen.getByLabelText("Renk")).toBeInTheDocument();
-    expect(screen.getByText("Sürücü Bilgileri")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /oluştur/i })).toBeInTheDocument();
+    expect(screen.getByLabelText("Color")).toBeInTheDocument();
+    expect(screen.getByText("Driver Information")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /create/i })).toBeInTheDocument();
   });
 
   it("should call createVehicle with correct payload on submit", async () => {
@@ -62,13 +62,13 @@ describe("VehicleForm — Create mode", () => {
 
     render(React.createElement(VehicleForm), { wrapper: Wrapper });
 
-    await user.clear(screen.getByLabelText("Plaka *"));
-    await user.type(screen.getByLabelText("Plaka *"), "34 TEST 01");
+    await user.clear(screen.getByLabelText("Plate *"));
+    await user.type(screen.getByLabelText("Plate *"), "34 TEST 01");
 
-    const driverNameInput = screen.getByLabelText("İsim");
+    const driverNameInput = screen.getByLabelText("Name");
     await user.type(driverNameInput, "Ahmet");
 
-    await user.click(screen.getByRole("button", { name: /oluştur/i }));
+    await user.click(screen.getByRole("button", { name: /create/i }));
 
     await waitFor(() => {
       expect(mockCreateVehicle).toHaveBeenCalledTimes(1);
@@ -88,10 +88,10 @@ describe("VehicleForm — Create mode", () => {
 
     render(React.createElement(VehicleForm), { wrapper: Wrapper });
 
-    await user.clear(screen.getByLabelText("Plaka *"));
-    await user.type(screen.getByLabelText("Plaka *"), "34 ERR 01");
-    await user.type(screen.getByLabelText("İsim"), "Driver");
-    await user.click(screen.getByRole("button", { name: /oluştur/i }));
+    await user.clear(screen.getByLabelText("Plate *"));
+    await user.type(screen.getByLabelText("Plate *"), "34 ERR 01");
+    await user.type(screen.getByLabelText("Name"), "Driver");
+    await user.click(screen.getByRole("button", { name: /create/i }));
 
     await waitFor(() => {
       expect(screen.getByText("Server error")).toBeInTheDocument();
@@ -124,9 +124,9 @@ describe("VehicleForm — Edit mode", () => {
 
     render(React.createElement(VehicleForm, { vehicle: existingVehicle }), { wrapper: Wrapper });
 
-    expect(screen.getByLabelText("Plaka *")).toHaveValue("06 EDIT 01");
+    expect(screen.getByLabelText("Plate *")).toHaveValue("06 EDIT 01");
     expect(screen.getByLabelText("Model")).toHaveValue("Volvo FH");
-    expect(screen.getByRole("button", { name: /güncelle/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /update/i })).toBeInTheDocument();
   });
 
   it("should call updateVehicle on submit in edit mode", async () => {
@@ -137,10 +137,10 @@ describe("VehicleForm — Edit mode", () => {
 
     render(React.createElement(VehicleForm, { vehicle: existingVehicle }), { wrapper: Wrapper });
 
-    const colorInput = screen.getByLabelText("Renk");
+    const colorInput = screen.getByLabelText("Color");
     await user.clear(colorInput);
     await user.type(colorInput, "Blue");
-    await user.click(screen.getByRole("button", { name: /güncelle/i }));
+    await user.click(screen.getByRole("button", { name: /update/i }));
 
     await waitFor(() => {
       expect(mockUpdateVehicle).toHaveBeenCalledTimes(1);

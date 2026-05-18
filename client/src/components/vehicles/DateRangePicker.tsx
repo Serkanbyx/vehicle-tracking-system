@@ -10,7 +10,7 @@ export function DateRangePicker({ from, to, onChange }: DateRangePickerProps) {
   return (
     <div className="flex flex-col gap-3">
       <div className="flex flex-col gap-1.5">
-        <Label htmlFor="history-from">Başlangıç</Label>
+        <Label htmlFor="history-from">Start</Label>
         <Input
           id="history-from"
           type="datetime-local"
@@ -19,7 +19,7 @@ export function DateRangePicker({ from, to, onChange }: DateRangePickerProps) {
         />
       </div>
       <div className="flex flex-col gap-1.5">
-        <Label htmlFor="history-to">Bitiş</Label>
+        <Label htmlFor="history-to">End</Label>
         <Input
           id="history-to"
           type="datetime-local"

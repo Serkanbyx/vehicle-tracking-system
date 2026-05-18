@@ -42,11 +42,11 @@ function SettingsAccountPage() {
     },
     onSubmit: async ({ value }) => {
       if (value.newPassword !== value.confirmPassword) {
-        toast.error("Yeni şifreler eşleşmiyor.");
+        toast.error("New passwords do not match.");
         return;
       }
       if (value.newPassword.length < 8) {
-        toast.error("Yeni şifre en az 8 karakter olmalıdır.");
+        toast.error("New password must be at least 8 characters.");
         return;
       }
       try {
@@ -54,27 +54,27 @@ function SettingsAccountPage() {
           currentPassword: value.currentPassword,
           newPassword: value.newPassword,
         });
-        toast.success("Şifre başarıyla değiştirildi.");
+        toast.success("Password changed successfully.");
         passwordForm.reset();
       } catch {
-        toast.error("Şifre değiştirilemedi. Mevcut şifrenizi kontrol edin.");
+        toast.error("Failed to change password. Please check your current password.");
       }
     },
   });
 
   const handleDeleteAccount = async () => {
     if (!deletePassword) {
-      toast.error("Şifrenizi girin.");
+      toast.error("Please enter your password.");
       return;
     }
     setDeleteLoading(true);
     try {
       await authService.deleteAccount();
-      toast.success("Hesabınız silindi.");
+      toast.success("Your account has been deleted.");
       await logout();
       void navigate({ to: "/login" });
     } catch {
-      toast.error("Hesap silinemedi.");
+      toast.error("Failed to delete account.");
     } finally {
       setDeleteLoading(false);
     }
@@ -84,24 +84,24 @@ function SettingsAccountPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold">Hesap Ayarları</h1>
+      <h1 className="text-2xl font-bold">Account Settings</h1>
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">E-posta</CardTitle>
+          <CardTitle className="text-base">Email</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex flex-col gap-1.5">
-            <Label>E-posta Adresi</Label>
+            <Label>Email Address</Label>
             <Input value={user.email} disabled className="max-w-sm" />
-            <p className="text-xs text-gray-500">E-posta adresi değiştirilemez.</p>
+            <p className="text-xs text-gray-500">Email address cannot be changed.</p>
           </div>
         </CardContent>
       </Card>
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Şifre Değiştir</CardTitle>
+          <CardTitle className="text-base">Change Password</CardTitle>
         </CardHeader>
         <CardContent>
           <form
@@ -115,7 +115,7 @@ function SettingsAccountPage() {
             <passwordForm.Field name="currentPassword">
               {(field) => (
                 <div className="flex flex-col gap-1.5">
-                  <Label htmlFor="current-pw">Mevcut Şifre *</Label>
+                  <Label htmlFor="current-pw">Current Password *</Label>
                   <Input
                     id="current-pw"
                     type="password"
@@ -130,7 +130,7 @@ function SettingsAccountPage() {
             <passwordForm.Field name="newPassword">
               {(field) => (
                 <div className="flex flex-col gap-1.5">
-                  <Label htmlFor="new-pw">Yeni Şifre *</Label>
+                  <Label htmlFor="new-pw">New Password *</Label>
                   <Input
                     id="new-pw"
                     type="password"
@@ -146,7 +146,7 @@ function SettingsAccountPage() {
             <passwordForm.Field name="confirmPassword">
               {(field) => (
                 <div className="flex flex-col gap-1.5">
-                  <Label htmlFor="confirm-pw">Yeni Şifre (Tekrar) *</Label>
+                  <Label htmlFor="confirm-pw">Confirm New Password *</Label>
                   <Input
                     id="confirm-pw"
                     type="password"
@@ -163,7 +163,7 @@ function SettingsAccountPage() {
                 {passwordForm.state.isSubmitting && (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 )}
-                Şifreyi Değiştir
+                Change Password
               </Button>
             </div>
           </form>
@@ -172,14 +172,14 @@ function SettingsAccountPage() {
 
       <Card className="border-danger/30">
         <CardHeader>
-          <CardTitle className="text-base text-danger">Tehlikeli Bölge</CardTitle>
+          <CardTitle className="text-base text-danger">Danger Zone</CardTitle>
         </CardHeader>
         <CardContent>
           <p className="mb-4 text-sm text-gray-500">
-            Hesabınızı sildiğinizde tüm verileriniz kalıcı olarak silinir. Bu işlem geri alınamaz.
+            When you delete your account, all your data will be permanently deleted. This action cannot be undone.
           </p>
           <Button variant="destructive" onClick={() => setDeleteOpen(true)}>
-            Hesabımı Sil
+            Delete My Account
           </Button>
         </CardContent>
       </Card>
@@ -187,14 +187,14 @@ function SettingsAccountPage() {
       <AlertDialog open={deleteOpen} onOpenChange={setDeleteOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Hesabı Sil</AlertDialogTitle>
+            <AlertDialogTitle>Delete Account</AlertDialogTitle>
             <AlertDialogDescription>
-              Hesabınızı silmek istediğinize emin misiniz? Bu işlem geri alınamaz. Doğrulamak için
-              şifrenizi girin.
+              Are you sure you want to delete your account? This action cannot be undone. Enter your
+              password to confirm.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <div className="py-2">
-            <Label htmlFor="delete-pw">Şifre</Label>
+            <Label htmlFor="delete-pw">Password</Label>
             <Input
               id="delete-pw"
               type="password"
@@ -210,14 +210,14 @@ function SettingsAccountPage() {
                 setDeletePassword("");
               }}
             >
-              İptal
+              Cancel
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDeleteAccount}
               disabled={deleteLoading || !deletePassword}
             >
               {deleteLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Hesabı Sil
+              Delete Account
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

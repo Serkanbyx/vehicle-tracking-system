@@ -29,8 +29,8 @@ test.describe("Export E2E — CSV download", () => {
 
     /* ── Look for export button ── */
     const exportBtn = page
-      .getByRole("button", { name: /dışa aktar|export|csv/i })
-      .or(page.getByRole("link", { name: /dışa aktar|export|csv/i }));
+      .getByRole("button", { name: /export|csv/i })
+      .or(page.getByRole("link", { name: /export|csv/i }));
 
     if (!(await exportBtn.isVisible())) {
       test.skip(true, "Export button not visible on vehicle detail page");

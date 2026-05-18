@@ -38,12 +38,12 @@ test.describe("Simulator E2E — Live markers + alerts", () => {
 
     /* ── Verify alerts page renders ── */
     const alertsHeading = page
-      .getByRole("heading", { name: /uyarı|alert/i })
-      .or(page.locator("text=Uyarılar"));
+      .getByRole("heading", { name: /alert/i })
+      .or(page.locator("text=Alerts"));
     await expect(alertsHeading).toBeVisible({ timeout: 10_000 });
 
     /* ── Check for speed alerts if any exist ── */
-    const speedAlerts = page.locator("text=speed").or(page.locator("text=hız"));
+    const speedAlerts = page.locator("text=speed").or(page.locator("text=Speed"));
     const alertCount = await speedAlerts.count();
     expect(alertCount).toBeGreaterThanOrEqual(0);
   });

@@ -9,10 +9,10 @@ import {
 import { cn } from "@/lib/cn";
 
 const SETTINGS_LINKS = [
-  { to: "/settings/profile", label: "Profil", icon: User },
-  { to: "/settings/account", label: "Hesap", icon: Settings },
-  { to: "/settings/appearance", label: "Görünüm", icon: Palette },
-  { to: "/settings/notifications", label: "Bildirimler", icon: Bell },
+  { to: "/settings/profile", label: "Profile", icon: User },
+  { to: "/settings/account", label: "Account", icon: Settings },
+  { to: "/settings/appearance", label: "Appearance", icon: Palette },
+  { to: "/settings/notifications", label: "Notifications", icon: Bell },
 ] as const;
 
 function SidebarNav() {
@@ -47,7 +47,7 @@ export function SettingsLayout() {
     <div className="mx-auto flex max-w-7xl gap-6 px-4 py-6">
       <aside className="hidden w-56 shrink-0 md:block">
         <h2 className="mb-4 px-3 text-xs font-semibold uppercase tracking-wider text-gray-400">
-          Ayarlar
+          Settings
         </h2>
         <SidebarNav />
       </aside>
@@ -56,7 +56,7 @@ export function SettingsLayout() {
         <DropdownMenu>
           <DropdownMenuTrigger className="flex items-center gap-2 rounded-md border border-gray-300 px-3 py-2 text-sm dark:border-gray-600">
             <CurrentIcon className="h-4 w-4" />
-            {currentLink?.label ?? "Ayarlar"}
+            {currentLink?.label ?? "Settings"}
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start" className="w-48">
             {SETTINGS_LINKS.map(({ to, label, icon: Icon }) => (

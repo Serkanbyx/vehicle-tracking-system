@@ -1,9 +1,9 @@
 import type { AlertSeverity, AlertType, UserRole, VehicleStatus } from "@/api/types";
 
 export const STATUS_LABELS: Record<VehicleStatus, string> = {
-  moving: "Hareket",
-  idle: "Boşta",
-  offline: "Çevrimdışı",
+  moving: "Moving",
+  idle: "Idle",
+  offline: "Offline",
 };
 
 export const ROLE_LABELS: Record<UserRole, string> = {
@@ -13,14 +13,14 @@ export const ROLE_LABELS: Record<UserRole, string> = {
 };
 
 export const SEVERITY_LABELS: Record<AlertSeverity, string> = {
-  info: "Bilgi",
-  warning: "Uyarı",
-  critical: "Kritik",
+  info: "Info",
+  warning: "Warning",
+  critical: "Critical",
 };
 
 export const ALERT_TYPE_LABELS: Record<AlertType, string> = {
-  speed: "Hız",
-  idle: "Rölanti",
-  geofence_enter: "Bölge Giriş",
-  geofence_exit: "Bölge Çıkış",
+  speed: "Speed",
+  idle: "Idle",
+  geofence_enter: "Geofence Enter",
+  geofence_exit: "Geofence Exit",
 };

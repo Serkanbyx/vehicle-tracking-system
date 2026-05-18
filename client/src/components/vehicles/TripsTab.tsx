@@ -1,6 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
 import { format, subDays } from "date-fns";
-import { tr } from "date-fns/locale";
 import { MapPin } from "lucide-react";
 import { useState } from "react";
 import { listTrips } from "@/api/trips";
@@ -31,7 +30,7 @@ export function TripsTab({ vehicleId }: TripsTabProps) {
     <div className="space-y-4">
       <div className="flex flex-wrap items-end gap-3">
         <div className="flex flex-col gap-1.5">
-          <Label htmlFor="trip-from">Başlangıç</Label>
+          <Label htmlFor="trip-from">Start</Label>
           <Input
             id="trip-from"
             type="datetime-local"
@@ -41,7 +40,7 @@ export function TripsTab({ vehicleId }: TripsTabProps) {
           />
         </div>
         <div className="flex flex-col gap-1.5">
-          <Label htmlFor="trip-to">Bitiş</Label>
+          <Label htmlFor="trip-to">End</Label>
           <Input
             id="trip-to"
             type="datetime-local"
@@ -53,20 +52,20 @@ export function TripsTab({ vehicleId }: TripsTabProps) {
       </div>
 
       {isLoading ? (
-        <p className="py-8 text-center text-sm text-gray-400">Yükleniyor…</p>
+        <p className="py-8 text-center text-sm text-gray-400">Loading…</p>
       ) : !data || data.items.length === 0 ? (
-        <p className="py-8 text-center text-sm text-gray-400">Sefer bulunamadı</p>
+        <p className="py-8 text-center text-sm text-gray-400">No trips found</p>
       ) : (
         <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700">
           <table className="w-full text-left text-sm">
             <thead className="border-b border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-gray-800">
               <tr>
-                <th className="px-4 py-3 font-medium">Başlangıç</th>
-                <th className="px-4 py-3 font-medium">Süre</th>
-                <th className="px-4 py-3 font-medium">Mesafe</th>
-                <th className="px-4 py-3 font-medium">Ort. Hız</th>
-                <th className="px-4 py-3 font-medium">Maks. Hız</th>
-                <th className="px-4 py-3 font-medium">İhlaller</th>
+                <th className="px-4 py-3 font-medium">Start</th>
+                <th className="px-4 py-3 font-medium">Duration</th>
+                <th className="px-4 py-3 font-medium">Distance</th>
+                <th className="px-4 py-3 font-medium">Avg. Speed</th>
+                <th className="px-4 py-3 font-medium">Max. Speed</th>
+                <th className="px-4 py-3 font-medium">Violations</th>
                 <th className="px-4 py-3 font-medium" />
               </tr>
             </thead>
@@ -90,10 +89,10 @@ function TripRow({ trip }: { trip: Trip }) {
   return (
     <tr className="hover:bg-gray-50 dark:hover:bg-gray-800/50">
       <td className="px-4 py-3">
-        {format(new Date(trip.startedAt), "dd MMM HH:mm", { locale: tr })}
+        {format(new Date(trip.startedAt), "dd MMM HH:mm")}
       </td>
       <td className="px-4 py-3">
-        {duration !== null ? `${duration} dk` : <Badge variant="warning">Devam ediyor</Badge>}
+        {duration !== null ? `${duration} min` : <Badge variant="warning">In progress</Badge>}
       </td>
       <td className="px-4 py-3">{trip.distanceKm?.toFixed(1) ?? "—"} km</td>
       <td className="px-4 py-3">{trip.avgSpeedKmh?.toFixed(0) ?? "—"} km/h</td>
@@ -103,19 +102,19 @@ function TripRow({ trip }: { trip: Trip }) {
           {trip.speedViolations > 0 && (
             <span
               className={cn("inline-block h-2 w-2 rounded-full bg-red-500")}
-              title={`${trip.speedViolations} hız ihlali`}
+              title={`${trip.speedViolations} speed violation(s)`}
             />
           )}
           {trip.idleEvents > 0 && (
             <span
               className={cn("inline-block h-2 w-2 rounded-full bg-amber-500")}
-              title={`${trip.idleEvents} boşta kalma`}
+              title={`${trip.idleEvents} idle event(s)`}
             />
           )}
           {trip.geofenceEvents > 0 && (
             <span
               className={cn("inline-block h-2 w-2 rounded-full bg-blue-500")}
-              title={`${trip.geofenceEvents} bölge olayı`}
+              title={`${trip.geofenceEvents} geofence event(s)`}
             />
           )}
         </div>
@@ -123,7 +122,7 @@ function TripRow({ trip }: { trip: Trip }) {
       <td className="px-4 py-3">
         <Button variant="ghost" size="sm">
           <MapPin className="mr-1 h-3.5 w-3.5" />
-          Haritada Gör
+          View on Map
         </Button>
       </td>
     </tr>

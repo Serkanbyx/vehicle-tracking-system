@@ -136,9 +136,9 @@ function AlertsPage() {
       try {
         await acknowledgeAlert(id);
         await queryClient.invalidateQueries({ queryKey: ["alerts"] });
-        toast.success("Uyarı onaylandı.");
+        toast.success("Alert acknowledged.");
       } catch {
-        toast.error("Uyarı onaylanamadı.");
+        toast.error("Failed to acknowledge alert.");
       }
     },
     [queryClient],
@@ -149,9 +149,9 @@ function AlertsPage() {
       try {
         await removeAlert(id);
         await queryClient.invalidateQueries({ queryKey: ["alerts"] });
-        toast.success("Uyarı silindi.");
+        toast.success("Alert deleted.");
       } catch {
-        toast.error("Uyarı silinemedi.");
+        toast.error("Failed to delete alert.");
       }
     },
     [queryClient],
@@ -164,9 +164,9 @@ function AlertsPage() {
       await acknowledgeMany([...selectedIds]);
       await queryClient.invalidateQueries({ queryKey: ["alerts"] });
       setSelectedIds(new Set());
-      toast.success(`${selectedIds.size} uyarı onaylandı.`);
+      toast.success(`${selectedIds.size} alert(s) acknowledged.`);
     } catch {
-      toast.error("Toplu onaylama başarısız.");
+      toast.error("Bulk acknowledgment failed.");
     } finally {
       setBulkLoading(false);
     }
@@ -182,7 +182,7 @@ function AlertsPage() {
 
   return (
     <div className="mx-auto max-w-7xl space-y-4 p-4">
-      <h1 className="text-2xl font-bold">Uyarılar</h1>
+      <h1 className="text-2xl font-bold">Alerts</h1>
 
       <AlertsFilterBar filters={filters} />
       <AlertsStats />

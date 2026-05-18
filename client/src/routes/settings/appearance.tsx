@@ -35,7 +35,7 @@ function SettingsAppearancePage() {
       const prefs = { ...user.preferences, mapDefaults: next };
       updateUser({ preferences: prefs });
       authService.updateMe({ preferences: prefs }).catch(() => {
-        toast.error("Harita ayarları kaydedilemedi.");
+        toast.error("Failed to save map settings.");
       });
     },
     [user, updateUser],
@@ -48,31 +48,31 @@ function SettingsAppearancePage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold">Görünüm Ayarları</h1>
+      <h1 className="text-2xl font-bold">Appearance Settings</h1>
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Tema</CardTitle>
+          <CardTitle className="text-base">Theme</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex flex-wrap gap-3">
             <ThemeOption
               icon={Sun}
-              label="Açık"
+              label="Light"
               value="light"
               active={preferences.theme === "light"}
               onClick={() => updatePreference("theme", "light")}
             />
             <ThemeOption
               icon={Moon}
-              label="Koyu"
+              label="Dark"
               value="dark"
               active={preferences.theme === "dark"}
               onClick={() => updatePreference("theme", "dark")}
             />
             <ThemeOption
               icon={Monitor}
-              label="Sistem"
+              label="System"
               value="system"
               active={preferences.theme === "system"}
               onClick={() => updatePreference("theme", "system")}
@@ -83,7 +83,7 @@ function SettingsAppearancePage() {
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Yazı Boyutu</CardTitle>
+          <CardTitle className="text-base">Font Size</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex flex-wrap gap-3">

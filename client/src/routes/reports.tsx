@@ -73,7 +73,7 @@ function ReportsPage() {
 
   const handleExport = useCallback(async () => {
     if (!search.from || !search.to) {
-      toast.error("Dışa aktarmak için tarih aralığı gereklidir.");
+      toast.error("A date range is required for export.");
       return;
     }
     try {
@@ -88,16 +88,16 @@ function ReportsPage() {
       a.download = `trips-${search.from}-${search.to}.csv`;
       a.click();
       URL.revokeObjectURL(url);
-      toast.success("CSV indiriliyor.");
+      toast.success("Downloading CSV.");
     } catch {
-      toast.error("Dışa aktarma başarısız.");
+      toast.error("Export failed.");
     }
   }, [search]);
 
   return (
     <div className="mx-auto max-w-7xl space-y-6 p-4">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Raporlar</h1>
+        <h1 className="text-2xl font-bold">Reports</h1>
         <Button
           variant="outline"
           size="sm"
@@ -105,7 +105,7 @@ function ReportsPage() {
           disabled={!search.from || !search.to}
         >
           <Download className="mr-1.5 h-4 w-4" />
-          CSV İndir
+          Download CSV
         </Button>
       </div>
 

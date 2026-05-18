@@ -48,16 +48,16 @@ export function HeatmapPanel() {
 
   const handleGenerate = () => {
     if (!vehicleId || !from || !to) {
-      toast.error("Araç, başlangıç ve bitiş tarihi gereklidir.");
+      toast.error("Vehicle, start, and end date are required.");
       return;
     }
     const diffDays = (new Date(to).getTime() - new Date(from).getTime()) / 86_400_000;
     if (diffDays > MAX_RANGE_DAYS) {
-      toast.error(`Maksimum ${MAX_RANGE_DAYS} günlük aralık seçilebilir.`);
+      toast.error(`Maximum ${MAX_RANGE_DAYS}-day range allowed.`);
       return;
     }
     if (diffDays < 0) {
-      toast.error("Bitiş tarihi başlangıçtan sonra olmalıdır.");
+      toast.error("End date must be after start date.");
       return;
     }
     setGenerated(true);
@@ -109,7 +109,7 @@ export function HeatmapPanel() {
       <CardHeader className="flex flex-row items-center justify-between pb-2">
         <CardTitle className="flex items-center gap-2 text-base">
           <Flame className="h-4 w-4 text-warning" />
-          Isı Haritası
+          Heatmap
         </CardTitle>
         {generated && (
           <Button
@@ -124,9 +124,9 @@ export function HeatmapPanel() {
       </CardHeader>
       <CardContent className="flex flex-col gap-3">
         <div className="flex flex-col gap-2">
-          <Label htmlFor="hm-vehicle">Araç</Label>
+          <Label htmlFor="hm-vehicle">Vehicle</Label>
           <Select id="hm-vehicle" value={vehicleId} onChange={(e) => setVehicleId(e.target.value)}>
-            <option value="">Seçiniz</option>
+            <option value="">Select</option>
             {vehiclesData?.items.map((v) => (
               <option key={v.id} value={v.id}>
                 {v.plate}
@@ -137,7 +137,7 @@ export function HeatmapPanel() {
 
         <div className="grid grid-cols-2 gap-2">
           <div className="flex flex-col gap-1">
-            <Label htmlFor="hm-from">Başlangıç</Label>
+            <Label htmlFor="hm-from">Start</Label>
             <Input
               id="hm-from"
               type="date"
@@ -146,13 +146,13 @@ export function HeatmapPanel() {
             />
           </div>
           <div className="flex flex-col gap-1">
-            <Label htmlFor="hm-to">Bitiş</Label>
+            <Label htmlFor="hm-to">End</Label>
             <Input id="hm-to" type="date" value={to} onChange={(e) => setTo(e.target.value)} />
           </div>
         </div>
 
         <Button size="sm" onClick={handleGenerate} disabled={isLoading || !vehicleId}>
-          {isLoading ? "Yükleniyor…" : "Oluştur"}
+          {isLoading ? "Loading…" : "Generate"}
         </Button>
 
         <div
@@ -168,8 +168,8 @@ export function HeatmapPanel() {
 
         {heatmapData && (
           <p className="text-xs text-gray-500">
-            {heatmapData.total} nokta
-            {heatmapData.downsampled ? " (örneklenmiş)" : ""}
+            {heatmapData.total} points
+            {heatmapData.downsampled ? " (downsampled)" : ""}
           </p>
         )}
       </CardContent>

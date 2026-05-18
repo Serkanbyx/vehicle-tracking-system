@@ -19,7 +19,7 @@ export function DailySummaryChart({ vehicleId, from, to }: DailySummaryChartProp
     return (
       <Card>
         <CardContent className="py-8 text-center text-sm text-gray-400">
-          Grafik görmek için tarih aralığı seçin.
+          Select a date range to view chart.
         </CardContent>
       </Card>
     );
@@ -29,7 +29,7 @@ export function DailySummaryChart({ vehicleId, from, to }: DailySummaryChartProp
     return (
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Günlük Özet</CardTitle>
+          <CardTitle className="text-base">Daily Summary</CardTitle>
         </CardHeader>
         <CardContent>
           <Skeleton className="h-48 w-full" />
@@ -42,10 +42,10 @@ export function DailySummaryChart({ vehicleId, from, to }: DailySummaryChartProp
     return (
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Günlük Özet</CardTitle>
+          <CardTitle className="text-base">Daily Summary</CardTitle>
         </CardHeader>
         <CardContent className="py-8 text-center text-sm text-gray-400">
-          Bu tarih aralığında veri bulunamadı.
+          No data found for this date range.
         </CardContent>
       </Card>
     );
@@ -63,7 +63,7 @@ export function DailySummaryChart({ vehicleId, from, to }: DailySummaryChartProp
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-base">Günlük Özet ({data.length} gün)</CardTitle>
+        <CardTitle className="text-base">Daily Summary ({data.length} days)</CardTitle>
       </CardHeader>
       <CardContent className="overflow-x-auto">
         <svg
@@ -73,7 +73,7 @@ export function DailySummaryChart({ vehicleId, from, to }: DailySummaryChartProp
           role="img"
           aria-labelledby="daily-summary-chart-title"
         >
-          <title id="daily-summary-chart-title">Günlük mesafe ve ihlal özeti</title>
+          <title id="daily-summary-chart-title">Daily distance and violation summary</title>
           {data.map((day, i) => {
             const barH = Math.max((day.totalDistanceKm / maxDistance) * chartH, 2);
             const x = 36 + i * (barWidth + barGap);
@@ -84,9 +84,9 @@ export function DailySummaryChart({ vehicleId, from, to }: DailySummaryChartProp
               <g key={day.date}>
                 <title>
                   {day.date}
-                  {"\n"}Mesafe: {day.totalDistanceKm.toFixed(1)} km
-                  {"\n"}Seferler: {day.totalTrips}
-                  {"\n"}İhlaller: {day.totalViolations}
+                  {"\n"}Distance: {day.totalDistanceKm.toFixed(1)} km
+                  {"\n"}Trips: {day.totalTrips}
+                  {"\n"}Violations: {day.totalViolations}
                 </title>
                 <rect
                   x={x}

@@ -52,7 +52,7 @@ function VehicleListPage() {
 
   return (
     <div className="mx-auto max-w-7xl space-y-4 p-4">
-      <h1 className="text-2xl font-bold">Araçlar</h1>
+      <h1 className="text-2xl font-bold">Vehicles</h1>
 
       <VehicleFilters search={search} />
 
@@ -64,8 +64,8 @@ function VehicleListPage() {
         </div>
       ) : data.items.length === 0 ? (
         <EmptyState
-          title="Araç bulunamadı"
-          description="Filtrelerinizi değiştirmeyi deneyin"
+          title="No vehicles found"
+          description="Try changing your filters"
           icon={Car}
         />
       ) : (

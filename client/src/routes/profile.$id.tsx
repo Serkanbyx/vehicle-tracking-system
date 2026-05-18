@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { format } from "date-fns";
-import { tr } from "date-fns/locale";
+import { enUS } from "date-fns/locale";
 import { Calendar, Edit, Shield } from "lucide-react";
 import { getAdminUser } from "@/api/admin";
 import type { UserRole } from "@/api/types";
@@ -56,7 +56,7 @@ function ProfilePage() {
   if (!user) {
     return (
       <div className="mx-auto max-w-3xl p-6">
-        <div className="py-12 text-center text-gray-400">Kullanıcı yükleniyor…</div>
+        <div className="py-12 text-center text-gray-400">Loading user…</div>
       </div>
     );
   }
@@ -81,10 +81,10 @@ function ProfilePage() {
               </Badge>
               <span className="flex items-center gap-1 text-xs text-gray-500">
                 <Calendar className="h-3 w-3" />
+                Joined on{" "}
                 {format(new Date(user.createdAt), "dd MMMM yyyy", {
-                  locale: tr,
-                })}{" "}
-                tarihinde katıldı
+                  locale: enUS,
+                })}
               </span>
             </div>
             {user.email && <p className="mt-1 text-sm text-gray-500">{user.email}</p>}
@@ -94,7 +94,7 @@ function ProfilePage() {
             <Link to="/settings/profile">
               <Button variant="outline" size="sm">
                 <Edit className="mr-1.5 h-3.5 w-3.5" />
-                Profili Düzenle
+                Edit Profile
               </Button>
             </Link>
           )}
@@ -103,29 +103,29 @@ function ProfilePage() {
 
       <Tabs defaultValue="activity">
         <TabsList>
-          <TabsTrigger value="activity">Aktivite</TabsTrigger>
-          <TabsTrigger value="about">Hakkında</TabsTrigger>
+          <TabsTrigger value="activity">Activity</TabsTrigger>
+          <TabsTrigger value="about">About</TabsTrigger>
         </TabsList>
 
         <TabsContent value="activity" className="mt-4">
           <Card>
             <CardHeader>
-              <CardTitle className="text-base">Son Aktivite</CardTitle>
+              <CardTitle className="text-base">Recent Activity</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-3 text-sm text-gray-500">
                 {user.lastLoginAt ? (
                   <p>
-                    Son giriş:{" "}
-                    {format(new Date(user.lastLoginAt), "dd MMM yyyy HH:mm", { locale: tr })}
+                    Last login:{" "}
+                    {format(new Date(user.lastLoginAt), "dd MMM yyyy HH:mm", { locale: enUS })}
                   </p>
                 ) : (
-                  <p>Henüz giriş yapılmamış.</p>
+                  <p>No login yet.</p>
                 )}
                 <p>
-                  Hesap durumu:{" "}
+                  Account status:{" "}
                   <span className={user.isActive ? "text-success" : "text-danger"}>
-                    {user.isActive ? "Aktif" : "Pasif"}
+                    {user.isActive ? "Active" : "Inactive"}
                   </span>
                 </p>
               </div>
@@ -136,29 +136,29 @@ function ProfilePage() {
         <TabsContent value="about" className="mt-4">
           <Card>
             <CardHeader>
-              <CardTitle className="text-base">Bilgiler</CardTitle>
+              <CardTitle className="text-base">Information</CardTitle>
             </CardHeader>
             <CardContent>
               <dl className="grid gap-3 text-sm sm:grid-cols-2">
                 <div>
-                  <dt className="text-gray-500">İsim</dt>
+                  <dt className="text-gray-500">Name</dt>
                   <dd className="font-medium">{user.name}</dd>
                 </div>
                 <div>
-                  <dt className="text-gray-500">Rol</dt>
+                  <dt className="text-gray-500">Role</dt>
                   <dd className="font-medium">{ROLE_LABELS[user.role]}</dd>
                 </div>
                 {user.phone && (
                   <div>
-                    <dt className="text-gray-500">Telefon</dt>
+                    <dt className="text-gray-500">Phone</dt>
                     <dd className="font-medium">{user.phone}</dd>
                   </div>
                 )}
                 <div>
-                  <dt className="text-gray-500">Kayıt Tarihi</dt>
+                  <dt className="text-gray-500">Registration Date</dt>
                   <dd className="font-medium">
                     {format(new Date(user.createdAt), "dd MMMM yyyy", {
-                      locale: tr,
+                      locale: enUS,
                     })}
                   </dd>
                 </div>

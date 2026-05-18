@@ -5,10 +5,10 @@ import type { AlertType } from "@/api/types";
 import { Card } from "@/components/ui";
 
 const TYPE_META: Record<AlertType, { label: string; icon: typeof Bell; color: string }> = {
-  speed: { label: "Hız", icon: Gauge, color: "bg-red-500" },
-  idle: { label: "Rölanti", icon: Bell, color: "bg-amber-500" },
-  geofence_enter: { label: "Bölge Giriş", icon: MapPin, color: "bg-blue-500" },
-  geofence_exit: { label: "Bölge Çıkış", icon: MapPin, color: "bg-purple-500" },
+  speed: { label: "Speed", icon: Gauge, color: "bg-red-500" },
+  idle: { label: "Idle", icon: Bell, color: "bg-amber-500" },
+  geofence_enter: { label: "Geofence Enter", icon: MapPin, color: "bg-blue-500" },
+  geofence_exit: { label: "Geofence Exit", icon: MapPin, color: "bg-purple-500" },
 };
 
 export function AlertsStats() {
@@ -29,7 +29,7 @@ export function AlertsStats() {
           <AlertTriangle className="h-5 w-5 text-danger" />
           <div>
             <p className="text-2xl font-bold">{data.total}</p>
-            <p className="text-xs text-gray-500 dark:text-gray-400">Toplam</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400">Total</p>
           </div>
         </div>
 
@@ -37,7 +37,7 @@ export function AlertsStats() {
           <Bell className="h-5 w-5 text-warning" />
           <div>
             <p className="text-2xl font-bold">{data.unacknowledged}</p>
-            <p className="text-xs text-gray-500 dark:text-gray-400">Onaylanmamış</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400">Unacknowledged</p>
           </div>
         </div>
 

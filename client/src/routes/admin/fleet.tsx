@@ -1,7 +1,7 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { formatDistanceToNow } from "date-fns";
-import { tr } from "date-fns/locale";
+import { enUS } from "date-fns/locale";
 import { Search } from "lucide-react";
 import { useCallback, useMemo, useState } from "react";
 import { toast } from "sonner";
@@ -30,12 +30,12 @@ export const Route = createFileRoute("/admin/fleet")({
 });
 
 const TYPE_LABELS: Record<VehicleType, string> = {
-  car: "Otomobil",
-  truck: "Kamyon",
+  car: "Car",
+  truck: "Truck",
   van: "Van",
-  motorcycle: "Motorsiklet",
-  bus: "Otobüs",
-  other: "Diğer",
+  motorcycle: "Motorcycle",
+  bus: "Bus",
+  other: "Other",
 };
 
 function AdminFleetPage() {
@@ -106,9 +106,9 @@ function AdminFleetPage() {
         await bulkActivate([...selectedIds], isActive);
         await queryClient.invalidateQueries({ queryKey: ["admin", "fleet"] });
         setSelectedIds(new Set());
-        toast.success(`${selectedIds.size} araç ${isActive ? "aktif" : "pasif"} yapıldı.`);
+        toast.success(`${selectedIds.size} vehicle(s) ${isActive ? "activated" : "deactivated"}.`);
       } catch {
-        toast.error("Toplu işlem başarısız.");
+        toast.error("Bulk operation failed.");
       } finally {
         setBulkLoading(false);
       }
@@ -127,13 +127,13 @@ function AdminFleetPage() {
 
   return (
     <div className="space-y-4">
-      <h1 className="text-2xl font-bold">Filo Genel Bakış</h1>
+      <h1 className="text-2xl font-bold">Fleet Overview</h1>
 
       <div className="flex flex-wrap items-center gap-3">
         <div className="relative min-w-48 flex-1">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
           <Input
-            placeholder="Plaka veya model ara…"
+            placeholder="Search plate or model…"
             value={searchLocal}
             onChange={(e) => setSearchLocal(e.target.value)}
             className="pl-9"
@@ -144,7 +144,7 @@ function AdminFleetPage() {
           onChange={(e) => setFilter("type", e.target.value)}
           className="w-36"
         >
-          <option value="">Tüm Tipler</option>
+          <option value="">All Types</option>
           {Object.entries(TYPE_LABELS).map(([val, lbl]) => (
             <option key={val} value={val}>
               {lbl}
@@ -156,10 +156,10 @@ function AdminFleetPage() {
           onChange={(e) => setFilter("status", e.target.value)}
           className="w-36"
         >
-          <option value="">Tüm Durum</option>
-          <option value="moving">Hareket</option>
-          <option value="idle">Rölanti</option>
-          <option value="offline">Çevrimdışı</option>
+          <option value="">All Status</option>
+          <option value="moving">Moving</option>
+          <option value="idle">Idle</option>
+          <option value="offline">Offline</option>
         </Select>
         {allTags.length > 0 && (
           <Select
@@ -167,7 +167,7 @@ function AdminFleetPage() {
             onChange={(e) => setFilter("tag", e.target.value)}
             className="w-36"
           >
-            <option value="">Tüm Etiketler</option>
+            <option value="">All Tags</option>
             {allTags.map((t) => (
               <option key={t} value={t}>
                 {t}
@@ -179,9 +179,9 @@ function AdminFleetPage() {
 
       {selectedIds.size > 0 && (
         <div className="flex items-center gap-3 rounded-md border border-brand-200 bg-brand-50 px-4 py-2 dark:border-brand-700 dark:bg-brand-900/10">
-          <span className="text-sm font-medium">{selectedIds.size} araç seçildi</span>
+          <span className="text-sm font-medium">{selectedIds.size} vehicle(s) selected</span>
           <Button size="sm" onClick={() => handleBulkActivate(true)} disabled={bulkLoading}>
-            Aktifleştir
+            Activate
           </Button>
           <Button
             size="sm"
@@ -189,7 +189,7 @@ function AdminFleetPage() {
             onClick={() => handleBulkActivate(false)}
             disabled={bulkLoading}
           >
-            Pasifleştir
+            Deactivate
           </Button>
         </div>
       )}
@@ -206,13 +206,13 @@ function AdminFleetPage() {
                   className="accent-brand-600"
                 />
               </th>
-              <th className="px-3 py-2">Plaka</th>
-              <th className="px-3 py-2">Tip</th>
-              <th className="px-3 py-2">Durum</th>
-              <th className="px-3 py-2">Aktif</th>
-              <th className="px-3 py-2">Etiketler</th>
-              <th className="px-3 py-2">Uyarılar</th>
-              <th className="px-3 py-2">Oluşturulma</th>
+              <th className="px-3 py-2">Plate</th>
+              <th className="px-3 py-2">Type</th>
+              <th className="px-3 py-2">Status</th>
+              <th className="px-3 py-2">Active</th>
+              <th className="px-3 py-2">Tags</th>
+              <th className="px-3 py-2">Alerts</th>
+              <th className="px-3 py-2">Created</th>
             </tr>
           </thead>
           <tbody>
@@ -256,7 +256,7 @@ function AdminFleetPage() {
                 <td className="whitespace-nowrap px-3 py-2 text-xs text-gray-500">
                   {formatDistanceToNow(new Date(v.createdAt), {
                     addSuffix: true,
-                    locale: tr,
+                    locale: enUS,
                   })}
                 </td>
               </tr>
@@ -264,7 +264,7 @@ function AdminFleetPage() {
             {filtered.length === 0 && (
               <tr>
                 <td colSpan={8} className="px-3 py-8 text-center text-gray-400">
-                  Araç bulunamadı
+                  No vehicles found
                 </td>
               </tr>
             )}
@@ -273,7 +273,7 @@ function AdminFleetPage() {
       </div>
 
       <p className="text-xs text-gray-500">
-        Toplam: {filtered.length} araç
+        Total: {filtered.length} vehicle(s)
         {fleet && fleet.length !== filtered.length && ` / ${fleet.length}`}
       </p>
     </div>

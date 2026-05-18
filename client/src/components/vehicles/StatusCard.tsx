@@ -1,5 +1,4 @@
 import { formatDistanceToNow } from "date-fns";
-import { tr } from "date-fns/locale";
 import { Clock, Compass, MapPin } from "lucide-react";
 import { StatusBadge } from "@/components/common/StatusBadge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui";
@@ -16,7 +15,7 @@ export function StatusCard({ vehicleId }: StatusCardProps) {
     return (
       <Card>
         <CardContent className="p-4 text-center text-sm text-gray-400">
-          Araç verisi bekleniyor…
+          Waiting for vehicle data…
         </CardContent>
       </Card>
     );
@@ -41,14 +40,13 @@ export function StatusCard({ vehicleId }: StatusCardProps) {
         </div>
         <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
           <Compass className="h-4 w-4 shrink-0 text-gray-400" />
-          <span>Yön: {vehicle.heading}°</span>
+          <span>Heading: {vehicle.heading}°</span>
         </div>
         <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
           <Clock className="h-4 w-4 shrink-0 text-gray-400" />
           <span>
             {formatDistanceToNow(new Date(vehicle.timestamp), {
               addSuffix: true,
-              locale: tr,
             })}
           </span>
         </div>

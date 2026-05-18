@@ -1,6 +1,5 @@
 import { Link } from "@tanstack/react-router";
 import { formatDistanceToNow } from "date-fns";
-import { tr } from "date-fns/locale";
 import { Edit, Eye, Truck } from "lucide-react";
 import type { Vehicle } from "@/api/types";
 import { StatusBadge } from "@/components/common/StatusBadge";
@@ -48,7 +47,6 @@ export function VehicleCard({ vehicle }: VehicleCardProps) {
               <span>
                 {formatDistanceToNow(new Date(lastUpdate), {
                   addSuffix: true,
-                  locale: tr,
                 })}
               </span>
             )}
@@ -66,13 +64,13 @@ export function VehicleCard({ vehicle }: VehicleCardProps) {
         </div>
 
         <div className="flex shrink-0 flex-col gap-1">
-          <Button variant="ghost" size="icon" asChild aria-label="Detay görüntüle">
+          <Button variant="ghost" size="icon" asChild aria-label="View details">
             <Link to="/vehicles/$id" params={{ id: vehicle.id }}>
               <Eye className="h-4 w-4" />
             </Link>
           </Button>
           {hasRole("manager", "admin") && (
-            <Button variant="ghost" size="icon" asChild aria-label="Düzenle">
+            <Button variant="ghost" size="icon" asChild aria-label="Edit">
               <Link to="/vehicles/$id/edit" params={{ id: vehicle.id }}>
                 <Edit className="h-4 w-4" />
               </Link>

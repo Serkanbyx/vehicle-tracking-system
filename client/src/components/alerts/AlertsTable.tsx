@@ -1,6 +1,5 @@
 import { Link } from "@tanstack/react-router";
 import { formatDistanceToNow } from "date-fns";
-import { tr } from "date-fns/locale";
 import { Check, MapPin, Trash2 } from "lucide-react";
 import type { Alert, AlertSeverity, AlertType } from "@/api/types";
 import { Badge, Button } from "@/components/ui";
@@ -13,10 +12,10 @@ const SEVERITY_COLORS: Record<AlertSeverity, string> = {
 };
 
 const TYPE_LABELS: Record<AlertType, string> = {
-  speed: "Hız",
-  idle: "Rölanti",
-  geofence_enter: "Bölge Giriş",
-  geofence_exit: "Bölge Çıkış",
+  speed: "Speed",
+  idle: "Idle",
+  geofence_enter: "Geofence Enter",
+  geofence_exit: "Geofence Exit",
 };
 
 const TYPE_VARIANTS: Record<
@@ -50,7 +49,7 @@ export function AlertsTable({
   const allChecked = alerts.length > 0 && alerts.every((a) => selectedIds.has(a.id));
 
   if (alerts.length === 0) {
-    return <div className="py-12 text-center text-sm text-gray-400">Uyarı bulunamadı</div>;
+    return <div className="py-12 text-center text-sm text-gray-400">No alerts found</div>;
   }
 
   return (
@@ -66,14 +65,14 @@ export function AlertsTable({
                 className="accent-brand-600"
               />
             </th>
-            <th className="w-10 px-2 py-2">Düzey</th>
-            <th className="px-3 py-2">Araç</th>
-            <th className="px-3 py-2">Tip</th>
-            <th className="min-w-[180px] px-3 py-2">Mesaj</th>
-            <th className="px-3 py-2">Konum</th>
-            <th className="px-3 py-2">Zaman</th>
-            <th className="px-3 py-2">Onaylayan</th>
-            <th className="w-24 px-3 py-2">İşlem</th>
+            <th className="w-10 px-2 py-2">Severity</th>
+            <th className="px-3 py-2">Vehicle</th>
+            <th className="px-3 py-2">Type</th>
+            <th className="min-w-[180px] px-3 py-2">Message</th>
+            <th className="px-3 py-2">Location</th>
+            <th className="px-3 py-2">Time</th>
+            <th className="px-3 py-2">Acknowledged By</th>
+            <th className="w-24 px-3 py-2">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -129,14 +128,13 @@ export function AlertsTable({
               <td className="whitespace-nowrap px-3 py-2 text-xs text-gray-500">
                 {formatDistanceToNow(new Date(alert.createdAt), {
                   addSuffix: true,
-                  locale: tr,
                 })}
               </td>
               <td className="px-3 py-2 text-xs text-gray-500">
                 {alert.acknowledged ? (
                   <span className="inline-flex items-center gap-1 text-success">
                     <Check className="h-3 w-3" />
-                    Onaylandı
+                    Acknowledged
                   </span>
                 ) : (
                   <span className="text-gray-400">—</span>
@@ -150,7 +148,7 @@ export function AlertsTable({
                       variant="ghost"
                       className="h-7 w-7"
                       onClick={() => onAcknowledge(alert.id)}
-                      title="Onayla"
+                      title="Acknowledge"
                     >
                       <Check className="h-3.5 w-3.5" />
                     </Button>
@@ -161,7 +159,7 @@ export function AlertsTable({
                       variant="ghost"
                       className="h-7 w-7 text-danger"
                       onClick={() => onDelete(alert.id)}
-                      title="Sil"
+                      title="Delete"
                     >
                       <Trash2 className="h-3.5 w-3.5" />
                     </Button>

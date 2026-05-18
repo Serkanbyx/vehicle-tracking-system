@@ -16,23 +16,23 @@ test.describe("Auth E2E — Register, Login, Logout flow", () => {
 
     /* ── 1. Register ── */
     await page.goto("/register");
-    await page.getByLabel("İsim").fill(newUser.name);
-    await page.getByLabel("E-posta").fill(newUser.email);
-    await page.getByLabel("Şifre", { exact: true }).fill(newUser.password);
-    await page.getByLabel("Şifre Tekrarı").fill(newUser.password);
-    await page.getByRole("button", { name: /kayıt ol/i }).click();
+    await page.getByLabel("Name").fill(newUser.name);
+    await page.getByLabel("Email").fill(newUser.email);
+    await page.getByLabel("Password", { exact: true }).fill(newUser.password);
+    await page.getByLabel("Confirm Password").fill(newUser.password);
+    await page.getByRole("button", { name: /sign up/i }).click();
 
     /* ── Should land on dashboard ── */
     await expect(page).toHaveURL("/");
-    await expect(page.locator("body")).not.toHaveText(/kayıt ol/i);
+    await expect(page.locator("body")).not.toHaveText(/sign up/i);
 
     /* ── 2. Logout ── */
     const profileBtn = page
-      .getByRole("button", { name: /profil|kullanıcı/i })
+      .getByRole("button", { name: /profile|user/i })
       .or(page.locator('[data-testid="user-menu"]'));
     if (await profileBtn.isVisible()) {
       await profileBtn.click();
-      const logoutItem = page.getByRole("menuitem", { name: /çıkış|logout/i });
+      const logoutItem = page.getByRole("menuitem", { name: /logout|sign out/i });
       await logoutItem.click();
     } else {
       await page.goto("/login");
@@ -40,30 +40,30 @@ test.describe("Auth E2E — Register, Login, Logout flow", () => {
     await expect(page).toHaveURL(/\/login/);
 
     /* ── 3. Login with the new user ── */
-    await page.getByLabel("E-posta").fill(newUser.email);
-    await page.getByLabel("Şifre").fill(newUser.password);
-    await page.getByRole("button", { name: /giriş yap/i }).click();
+    await page.getByLabel("Email").fill(newUser.email);
+    await page.getByLabel("Password").fill(newUser.password);
+    await page.getByRole("button", { name: /sign in/i }).click();
     await expect(page).toHaveURL("/");
 
     /* ── 4. Logout again ── */
     const profileBtn2 = page
-      .getByRole("button", { name: /profil|kullanıcı/i })
+      .getByRole("button", { name: /profile|user/i })
       .or(page.locator('[data-testid="user-menu"]'));
     if (await profileBtn2.isVisible()) {
       await profileBtn2.click();
-      await page.getByRole("menuitem", { name: /çıkış|logout/i }).click();
+      await page.getByRole("menuitem", { name: /logout|sign out/i }).click();
     }
     await expect(page).toHaveURL(/\/login/);
   });
 
   test("Login with invalid credentials shows error", async ({ page }) => {
     await page.goto("/login");
-    await page.getByLabel("E-posta").fill("nonexistent@test.com");
-    await page.getByLabel("Şifre").fill("WrongPassword99");
-    await page.getByRole("button", { name: /giriş yap/i }).click();
+    await page.getByLabel("Email").fill("nonexistent@test.com");
+    await page.getByLabel("Password").fill("WrongPassword99");
+    await page.getByRole("button", { name: /sign in/i }).click();
 
     await expect(
-      page.locator("text=Geçersiz e-posta veya şifre").or(page.locator("text=Bir hata oluştu")),
+      page.locator("text=Invalid email or password").or(page.locator("text=An error occurred")),
     ).toBeVisible();
   });
 

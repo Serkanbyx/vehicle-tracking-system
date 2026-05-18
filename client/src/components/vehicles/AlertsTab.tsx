@@ -1,6 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
 import { formatDistanceToNow } from "date-fns";
-import { tr } from "date-fns/locale";
 import { Check } from "lucide-react";
 import { useEffect, useState } from "react";
 import { dashboardSocket } from "@/api";
@@ -61,11 +60,11 @@ export function AlertsTab({ vehicleId }: AlertsTabProps) {
     <div className="space-y-4">
       <div className="flex flex-wrap items-center gap-3">
         <Select value={typeFilter} onChange={(e) => setTypeFilter(e.target.value)} className="w-40">
-          <option value="">Tüm Türler</option>
-          <option value="speed">Hız</option>
-          <option value="idle">Boşta</option>
-          <option value="geofence_enter">Bölge Giriş</option>
-          <option value="geofence_exit">Bölge Çıkış</option>
+          <option value="">All Types</option>
+          <option value="speed">Speed</option>
+          <option value="idle">Idle</option>
+          <option value="geofence_enter">Geofence Enter</option>
+          <option value="geofence_exit">Geofence Exit</option>
         </Select>
 
         <Select
@@ -73,23 +72,23 @@ export function AlertsTab({ vehicleId }: AlertsTabProps) {
           onChange={(e) => setSeverityFilter(e.target.value)}
           className="w-36"
         >
-          <option value="">Tüm Önem</option>
-          <option value="info">Bilgi</option>
-          <option value="warning">Uyarı</option>
-          <option value="critical">Kritik</option>
+          <option value="">All Severities</option>
+          <option value="info">Info</option>
+          <option value="warning">Warning</option>
+          <option value="critical">Critical</option>
         </Select>
 
         <Select value={ackFilter} onChange={(e) => setAckFilter(e.target.value)} className="w-40">
-          <option value="">Tümü</option>
-          <option value="false">Onaylanmamış</option>
-          <option value="true">Onaylanmış</option>
+          <option value="">All</option>
+          <option value="false">Unacknowledged</option>
+          <option value="true">Acknowledged</option>
         </Select>
       </div>
 
       {isLoading ? (
-        <p className="py-8 text-center text-sm text-gray-400">Yükleniyor…</p>
+        <p className="py-8 text-center text-sm text-gray-400">Loading…</p>
       ) : allAlerts.length === 0 ? (
-        <p className="py-8 text-center text-sm text-gray-400">Uyarı bulunamadı</p>
+        <p className="py-8 text-center text-sm text-gray-400">No alerts found</p>
       ) : (
         <div className="flex flex-col gap-2">
           {allAlerts.map((alert) => (
@@ -110,7 +109,7 @@ export function AlertsTab({ vehicleId }: AlertsTabProps) {
                   </Badge>
                   {alert.acknowledged && (
                     <Badge variant="success" className="text-xs">
-                      Onaylandı
+                      Acknowledged
                     </Badge>
                   )}
                 </div>
@@ -118,7 +117,6 @@ export function AlertsTab({ vehicleId }: AlertsTabProps) {
                 <p className="mt-0.5 text-xs text-gray-400">
                   {formatDistanceToNow(new Date(alert.createdAt), {
                     addSuffix: true,
-                    locale: tr,
                   })}
                 </p>
               </div>
@@ -127,7 +125,7 @@ export function AlertsTab({ vehicleId }: AlertsTabProps) {
                   variant="ghost"
                   size="sm"
                   onClick={() => void handleAck(alert.id)}
-                  title="Onayla"
+                  title="Acknowledge"
                 >
                   <Check className="h-4 w-4" />
                 </Button>

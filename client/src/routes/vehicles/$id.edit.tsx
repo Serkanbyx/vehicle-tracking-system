@@ -1,7 +1,7 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { format } from "date-fns";
-import { tr } from "date-fns/locale";
+import { enUS } from "date-fns/locale";
 import { Trash2 } from "lucide-react";
 import { useState } from "react";
 import type { Vehicle } from "@/api/types";
@@ -58,11 +58,11 @@ function EditVehiclePage() {
         <CardHeader>
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle>Araç Düzenle — {vehicle.plate}</CardTitle>
+              <CardTitle>Edit Vehicle — {vehicle.plate}</CardTitle>
               <p className="mt-1 text-sm text-gray-400">
-                Son güncelleme:{" "}
+                Last updated:{" "}
                 {format(new Date(vehicle.updatedAt), "dd MMM yyyy HH:mm", {
-                  locale: tr,
+                  locale: enUS,
                 })}
               </p>
             </div>
@@ -70,21 +70,21 @@ function EditVehiclePage() {
               <AlertDialogTrigger asChild>
                 <Button variant="destructive" size="sm">
                   <Trash2 className="mr-1.5 h-4 w-4" />
-                  Sil
+                  Delete
                 </Button>
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
-                  <AlertDialogTitle>{vehicle.plate} aracını sil?</AlertDialogTitle>
+                  <AlertDialogTitle>Delete vehicle {vehicle.plate}?</AlertDialogTitle>
                   <AlertDialogDescription>
-                    Bu işlem araçla ilişkili tüm konum verilerini, seferleri ve uyarıları kalıcı
-                    olarak silecektir. Bu işlem geri alınamaz.
+                    This action will permanently delete all location data, trips, and alerts
+                    associated with this vehicle. This action cannot be undone.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                  <AlertDialogCancel>İptal</AlertDialogCancel>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
                   <AlertDialogAction onClick={() => void handleDelete()} disabled={deleting}>
-                    {deleting ? "Siliniyor…" : "Sil"}
+                    {deleting ? "Deleting…" : "Delete"}
                   </AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>

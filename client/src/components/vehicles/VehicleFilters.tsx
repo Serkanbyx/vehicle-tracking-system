@@ -8,9 +8,9 @@ import { useDebounce } from "@/hooks/use-debounce";
 const VEHICLE_TYPES = ["car", "truck", "van", "motorcycle", "bus", "other"] as const;
 const STATUSES = ["moving", "idle", "offline"] as const;
 const SORTS = [
-  { value: "recent", label: "Son Güncelleme" },
-  { value: "plate", label: "Plaka" },
-  { value: "speed", label: "Hız" },
+  { value: "recent", label: "Last Updated" },
+  { value: "plate", label: "Plate" },
+  { value: "speed", label: "Speed" },
 ] as const;
 
 interface VehicleFiltersProps {
@@ -52,7 +52,7 @@ export function VehicleFilters({ search }: VehicleFiltersProps) {
       <div className="relative min-w-[200px] flex-1">
         <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
         <Input
-          placeholder="Plaka veya sürücü ara…"
+          placeholder="Search plate or driver…"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           className="pl-9"
@@ -64,7 +64,7 @@ export function VehicleFilters({ search }: VehicleFiltersProps) {
         onChange={(e) => updateSearch("vehicleType", e.target.value)}
         className="w-36"
       >
-        <option value="">Tüm Türler</option>
+        <option value="">All Types</option>
         {VEHICLE_TYPES.map((t) => (
           <option key={t} value={t}>
             {t.charAt(0).toUpperCase() + t.slice(1)}
@@ -77,10 +77,10 @@ export function VehicleFilters({ search }: VehicleFiltersProps) {
         onChange={(e) => updateSearch("status", e.target.value)}
         className="w-32"
       >
-        <option value="">Tüm Durumlar</option>
+        <option value="">All Statuses</option>
         {STATUSES.map((s) => (
           <option key={s} value={s}>
-            {s === "moving" ? "Hareket" : s === "idle" ? "Boşta" : "Çevrimdışı"}
+            {s === "moving" ? "Moving" : s === "idle" ? "Idle" : "Offline"}
           </option>
         ))}
       </Select>
@@ -101,7 +101,7 @@ export function VehicleFilters({ search }: VehicleFiltersProps) {
         <Button asChild>
           <a href="/vehicles/new">
             <Plus className="mr-1.5 h-4 w-4" />
-            Yeni Araç
+            New Vehicle
           </a>
         </Button>
       )}

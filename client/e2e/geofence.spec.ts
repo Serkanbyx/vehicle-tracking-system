@@ -15,16 +15,16 @@ test.describe("Geofence E2E — Draw polygon + test point", () => {
     await page.waitForLoadState("networkidle");
 
     /* ── Open create form ── */
-    const createBtn = page.getByRole("button", { name: /yeni|ekle|oluştur|create|new/i });
+    const createBtn = page.getByRole("button", { name: /new|add|create/i });
     await createBtn.click();
 
     /* ── Fill geofence form ── */
-    const nameInput = page.getByLabel(/ad|isim|name/i).first();
+    const nameInput = page.getByLabel(/name/i).first();
     await nameInput.fill(`Test Zone ${uid}`);
 
     /* ── Select polygon shape ── */
     const shapeSelect = page
-      .getByLabel(/şekil|shape|tür/i)
+      .getByLabel(/shape|type/i)
       .or(page.locator('select[name*="shape"]'));
     if (await shapeSelect.isVisible()) {
       await shapeSelect.selectOption("polygon");
@@ -32,7 +32,7 @@ test.describe("Geofence E2E — Draw polygon + test point", () => {
 
     /* ── Select direction ── */
     const dirSelect = page
-      .getByLabel(/yön|direction/i)
+      .getByLabel(/direction/i)
       .or(page.locator('select[name*="direction"]'));
     if (await dirSelect.isVisible()) {
       await dirSelect.selectOption("enter");
@@ -40,14 +40,14 @@ test.describe("Geofence E2E — Draw polygon + test point", () => {
 
     /* ── Select applies to ── */
     const appliesToSelect = page
-      .getByLabel(/kapsam|applies/i)
+      .getByLabel(/scope|applies/i)
       .or(page.locator('select[name*="appliesTo"]'));
     if (await appliesToSelect.isVisible()) {
       await appliesToSelect.selectOption("all");
     }
 
     /* ── Check for draw button to draw on map ── */
-    const drawBtn = page.getByRole("button", { name: /haritada çiz|draw/i });
+    const drawBtn = page.getByRole("button", { name: /draw on map|draw/i });
     const hasDrawBtn = await drawBtn.isVisible();
 
     if (hasDrawBtn) {
@@ -69,7 +69,7 @@ test.describe("Geofence E2E — Draw polygon + test point", () => {
     }
 
     /* ── Submit form ── */
-    const submitBtn = page.getByRole("button", { name: /kaydet|oluştur|save|create/i });
+    const submitBtn = page.getByRole("button", { name: /save|create/i });
     if (await submitBtn.isVisible()) {
       await submitBtn.click();
     }
@@ -89,7 +89,7 @@ test.describe("Geofence E2E — Draw polygon + test point", () => {
     /* ── Select first geofence if available ── */
     const firstGeofence = page
       .locator('[data-testid*="geofence"]')
-      .or(page.locator("li").filter({ hasText: /zone|bölge/i }))
+      .or(page.locator("li").filter({ hasText: /zone|geofence/i }))
       .first();
 
     if (await firstGeofence.isVisible()) {
@@ -97,7 +97,7 @@ test.describe("Geofence E2E — Draw polygon + test point", () => {
 
       /* ── Toggle test point mode ── */
       const testBtn = page
-        .getByRole("button", { name: /test.*nokta|test.*point/i })
+        .getByRole("button", { name: /test.*point/i })
         .or(page.locator('[aria-label*="Test"]'));
 
       if (await testBtn.isVisible()) {
@@ -115,8 +115,8 @@ test.describe("Geofence E2E — Draw polygon + test point", () => {
         await page.waitForTimeout(2_000);
 
         const resultText = page
-          .locator("text=İçeride")
-          .or(page.locator("text=Dışarıda"))
+          .locator("text=Inside")
+          .or(page.locator("text=Outside"))
           .or(page.locator("text=inside").or(page.locator("text=outside")));
 
         const resultVisible = await resultText.isVisible();

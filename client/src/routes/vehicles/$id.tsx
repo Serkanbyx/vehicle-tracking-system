@@ -77,10 +77,10 @@ function VehicleDetailPage() {
 
       <Tabs value={tab ?? "live"} onValueChange={handleTabChange}>
         <TabsList>
-          <TabsTrigger value="live">Canlı</TabsTrigger>
-          <TabsTrigger value="history">Geçmiş</TabsTrigger>
-          <TabsTrigger value="trips">Seferler</TabsTrigger>
-          <TabsTrigger value="alerts">Uyarılar</TabsTrigger>
+          <TabsTrigger value="live">Live</TabsTrigger>
+          <TabsTrigger value="history">History</TabsTrigger>
+          <TabsTrigger value="trips">Trips</TabsTrigger>
+          <TabsTrigger value="alerts">Alerts</TabsTrigger>
         </TabsList>
 
         <TabsContent value="live">
@@ -93,7 +93,7 @@ function VehicleDetailPage() {
                   size="icon"
                   className="absolute bottom-3 right-3 z-10"
                   onClick={() => setAutoFollow((p) => !p)}
-                  title={autoFollow ? "Otomatik takip açık" : "Otomatik takip kapalı"}
+                  title={autoFollow ? "Auto-follow on" : "Auto-follow off"}
                 >
                   <Crosshair className="h-4 w-4" />
                 </Button>
@@ -160,7 +160,7 @@ function HistoryTab({ vehicleId }: { vehicleId: string }) {
         <DateRangePicker from={range.from} to={range.to} onChange={setRange} />
         <Button onClick={() => void loadHistory()} disabled={loading} className="w-full">
           {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          Rotayı Yükle
+          Load Route
         </Button>
         {stats && (
           <StatsPanel
