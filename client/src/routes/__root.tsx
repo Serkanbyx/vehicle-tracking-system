@@ -55,7 +55,9 @@ function NotFoundPage() {
     <div className="flex min-h-[60vh] flex-col items-center justify-center gap-4 px-4 text-center">
       <Compass className="h-16 w-16 text-gray-300 dark:text-gray-600" />
       <h1 className="text-2xl font-semibold">Page not found</h1>
-      <p className="max-w-md text-gray-500">The page you're looking for may have been moved or deleted.</p>
+      <p className="max-w-md text-gray-500">
+        The page you're looking for may have been moved or deleted.
+      </p>
       <Link to="/">
         <Button>Go to Home</Button>
       </Link>

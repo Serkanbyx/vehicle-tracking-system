@@ -2,8 +2,8 @@ import { Controller, Get, Header, Param, ParseUUIDPipe, Query, Res } from "@nest
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { Throttle } from "@nestjs/throttler";
 import type { Response } from "express";
-import { TripExportQueryDto, TripQueryDto, TripSummaryQueryDto } from "./dto/index.js";
-import { TripsService } from "./trips.service.js";
+import type { TripExportQueryDto, TripQueryDto, TripSummaryQueryDto } from "./dto/index.js";
+import type { TripsService } from "./trips.service.js";
 
 @ApiTags("Trips")
 @ApiBearerAuth("JWT")

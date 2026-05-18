@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { DataSource, type Repository } from "typeorm";
+import type { DataSource, Repository } from "typeorm";
 import { UserRole } from "../../common/enums/user-role.enum.js";
 import { escapeRegex } from "../../common/utils/escape-regex.js";
 import { Alert } from "../alerts/alert.entity.js";

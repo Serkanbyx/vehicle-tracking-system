@@ -19,19 +19,19 @@ import { CurrentUser } from "../../common/decorators/current-user.decorator.js";
 import { Roles } from "../../common/decorators/roles.decorator.js";
 import { UserRole } from "../../common/enums/user-role.enum.js";
 import type { RequestUser } from "../../common/interfaces/request-user.interface.js";
-import { ExportService } from "../../common/utils/export.service.js";
-import { LocationsService } from "../locations/locations.service.js";
+import type { ExportService } from "../../common/utils/export.service.js";
+import type { LocationsService } from "../locations/locations.service.js";
 import {
-  BulkActivateDto,
-  CreateVehicleDto,
+  type BulkActivateDto,
+  type CreateVehicleDto,
   ExportFormat,
-  HeatmapQueryDto,
-  NearbyQueryDto,
-  RouteExportQueryDto,
-  UpdateVehicleDto,
-  VehicleQueryDto,
+  type HeatmapQueryDto,
+  type NearbyQueryDto,
+  type RouteExportQueryDto,
+  type UpdateVehicleDto,
+  type VehicleQueryDto,
 } from "./dto/index.js";
-import { VehiclesService } from "./vehicles.service.js";
+import type { VehiclesService } from "./vehicles.service.js";
 
 @ApiTags("Vehicles")
 @ApiBearerAuth("JWT")

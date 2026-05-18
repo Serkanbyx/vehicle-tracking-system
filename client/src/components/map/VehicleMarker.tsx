@@ -18,11 +18,7 @@ function buildPopupHtml(vehicle: LiveVehicle | undefined): string {
   );
 
   const statusLabel =
-    vehicle.status === "moving"
-      ? "Moving"
-      : vehicle.status === "idle"
-        ? "Idle"
-        : "Offline";
+    vehicle.status === "moving" ? "Moving" : vehicle.status === "idle" ? "Idle" : "Offline";
 
   const statusColor =
     vehicle.status === "moving" ? "#10b981" : vehicle.status === "idle" ? "#f59e0b" : "#6b7280";

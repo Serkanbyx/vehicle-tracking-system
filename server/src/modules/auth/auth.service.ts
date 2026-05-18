@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto";
 import { ConflictException, Injectable, UnauthorizedException } from "@nestjs/common";
-import { ConfigService } from "@nestjs/config";
+import type { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
 import { InjectRepository } from "@nestjs/typeorm";
 import * as bcrypt from "bcrypt";
@@ -53,7 +53,7 @@ export class AuthService {
     this.jwtRefresh = new JwtService({
       secret: configService.getOrThrow<string>("JWT_REFRESH_SECRET"),
       signOptions: {
-        expiresIn: (configService.get<string>("JWT_REFRESH_TTL") || "7d") as any,
+        expiresIn: configService.get<string>("JWT_REFRESH_TTL") || "7d",
       },
     });
 

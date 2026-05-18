@@ -12,7 +12,7 @@ import { ApiBearerAuth, ApiConsumes, ApiTags } from "@nestjs/swagger";
 import { Throttle } from "@nestjs/throttler";
 import { Roles } from "../../common/decorators/roles.decorator.js";
 import { UserRole } from "../../common/enums/user-role.enum.js";
-import { type UploadResult, UploadsService } from "./uploads.service.js";
+import type { UploadResult, UploadsService } from "./uploads.service.js";
 
 @ApiTags("Uploads")
 @ApiBearerAuth("JWT")

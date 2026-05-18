@@ -1,6 +1,6 @@
 import type { IncomingMessage } from "node:http";
-import { ConfigService } from "@nestjs/config";
-import { JwtService } from "@nestjs/jwt";
+import type { ConfigService } from "@nestjs/config";
+import type { JwtService } from "@nestjs/jwt";
 import {
   type OnGatewayConnection,
   type OnGatewayDisconnect,
@@ -11,8 +11,8 @@ import {
 import type WebSocket from "ws";
 import type { Server } from "ws";
 import type { UserRole } from "../../common/enums/user-role.enum.js";
-import { HeartbeatService } from "./heartbeat.service.js";
-import { RoomManager } from "./room-manager.service.js";
+import type { HeartbeatService } from "./heartbeat.service.js";
+import type { RoomManager } from "./room-manager.service.js";
 
 const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 

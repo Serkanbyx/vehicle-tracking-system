@@ -23,17 +23,13 @@ test.describe("Geofence E2E — Draw polygon + test point", () => {
     await nameInput.fill(`Test Zone ${uid}`);
 
     /* ── Select polygon shape ── */
-    const shapeSelect = page
-      .getByLabel(/shape|type/i)
-      .or(page.locator('select[name*="shape"]'));
+    const shapeSelect = page.getByLabel(/shape|type/i).or(page.locator('select[name*="shape"]'));
     if (await shapeSelect.isVisible()) {
       await shapeSelect.selectOption("polygon");
     }
 
     /* ── Select direction ── */
-    const dirSelect = page
-      .getByLabel(/direction/i)
-      .or(page.locator('select[name*="direction"]'));
+    const dirSelect = page.getByLabel(/direction/i).or(page.locator('select[name*="direction"]'));
     if (await dirSelect.isVisible()) {
       await dirSelect.selectOption("enter");
     }

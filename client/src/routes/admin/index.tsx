@@ -129,7 +129,9 @@ function AdminDashboardPage() {
                   className="rounded-md border border-gray-200 px-3 py-1.5 text-sm dark:border-gray-700"
                 >
                   <span className="font-medium">{v.plate ?? "—"}</span>
-                  <span className="ml-2 text-xs text-gray-500 dark:text-gray-400">{v.count ?? 0} violation(s)</span>
+                  <span className="ml-2 text-xs text-gray-500 dark:text-gray-400">
+                    {v.count ?? 0} violation(s)
+                  </span>
                 </div>
               ))}
             </div>

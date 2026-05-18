@@ -32,7 +32,9 @@
   body {
     font-family: var(--font-family-sans);
     @apply bg-gray-50 text-gray-900 ring-offset-gray-50 dark:bg-gray-950 dark:text-gray-100 dark:ring-offset-gray-950;
-    transition: background-color 0.2s ease, color 0.2s ease;
+    transition:
+      background-color 0.2s ease,
+      color 0.2s ease;
   }
 }
 

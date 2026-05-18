@@ -88,9 +88,7 @@ function TripRow({ trip }: { trip: Trip }) {
 
   return (
     <tr className="hover:bg-gray-50 dark:hover:bg-gray-800/50">
-      <td className="px-4 py-3">
-        {format(new Date(trip.startedAt), "dd MMM HH:mm")}
-      </td>
+      <td className="px-4 py-3">{format(new Date(trip.startedAt), "dd MMM HH:mm")}</td>
       <td className="px-4 py-3">
         {duration !== null ? `${duration} min` : <Badge variant="warning">In progress</Badge>}
       </td>

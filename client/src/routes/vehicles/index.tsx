@@ -63,11 +63,7 @@ function VehicleListPage() {
           ))}
         </div>
       ) : data.items.length === 0 ? (
-        <EmptyState
-          title="No vehicles found"
-          description="Try changing your filters"
-          icon={Car}
-        />
+        <EmptyState title="No vehicles found" description="Try changing your filters" icon={Car} />
       ) : (
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {data.items.map((vehicle) => (

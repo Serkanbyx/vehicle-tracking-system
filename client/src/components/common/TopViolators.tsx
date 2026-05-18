@@ -33,9 +33,7 @@ export function TopViolators() {
             </div>
             <hr className="border-gray-200 dark:border-gray-700" />
             <div className="flex flex-col gap-1.5">
-              <p className="text-xs font-medium uppercase tracking-wider text-gray-400">
-                By Type
-              </p>
+              <p className="text-xs font-medium uppercase tracking-wider text-gray-400">By Type</p>
               {Object.entries(data.byType).map(([type, count]) => (
                 <div key={type} className="flex items-center justify-between text-sm">
                   <span className="capitalize text-gray-600 dark:text-gray-300">

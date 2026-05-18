@@ -363,8 +363,8 @@ function AdminUsersPage() {
           <AlertDialogHeader>
             <AlertDialogTitle>Delete User</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete <span className="font-medium">{deleteUser?.name}</span>?
-              This action cannot be undone.
+              Are you sure you want to delete{" "}
+              <span className="font-medium">{deleteUser?.name}</span>? This action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

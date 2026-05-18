@@ -13,14 +13,14 @@ import {
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { Public } from "../../common/decorators/public.decorator.js";
 import { SimulatorKeyGuard } from "../../common/guards/simulator-key.guard.js";
-import { LocationIngestionService } from "../realtime/location-ingestion.service.js";
+import type { LocationIngestionService } from "../realtime/location-ingestion.service.js";
 import type {
   HistoryQueryDto,
   LatestQueryDto,
   LocationIngestDto,
   StatsQueryDto,
 } from "./dto/index.js";
-import { LocationsService } from "./locations.service.js";
+import type { LocationsService } from "./locations.service.js";
 
 @ApiTags("Locations")
 @ApiBearerAuth("JWT")

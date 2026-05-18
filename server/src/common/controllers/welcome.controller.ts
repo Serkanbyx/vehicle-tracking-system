@@ -1,9 +1,11 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { Controller, Get, Header } from "@nestjs/common";
 import { ApiExcludeController } from "@nestjs/swagger";
 import { SkipThrottle } from "@nestjs/throttler";
 import { Public } from "../decorators/public.decorator";
 
-const pkg = require("../../../package.json");
+const pkg = JSON.parse(readFileSync(join(process.cwd(), "package.json"), "utf-8"));
 
 @ApiExcludeController()
 @Controller()

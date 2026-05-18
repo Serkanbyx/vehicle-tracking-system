@@ -78,7 +78,9 @@ function SettingsNotificationsPage() {
           <CardTitle className="text-base">Severity Threshold</CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-2">
-          <Label htmlFor="severity-threshold">Only receive notifications at this level and above</Label>
+          <Label htmlFor="severity-threshold">
+            Only receive notifications at this level and above
+          </Label>
           <Select
             id="severity-threshold"
             value={notifications.severityThreshold ?? "info"}

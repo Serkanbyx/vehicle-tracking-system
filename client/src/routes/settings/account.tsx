@@ -176,7 +176,8 @@ function SettingsAccountPage() {
         </CardHeader>
         <CardContent>
           <p className="mb-4 text-sm text-gray-500">
-            When you delete your account, all your data will be permanently deleted. This action cannot be undone.
+            When you delete your account, all your data will be permanently deleted. This action
+            cannot be undone.
           </p>
           <Button variant="destructive" onClick={() => setDeleteOpen(true)}>
             Delete My Account
