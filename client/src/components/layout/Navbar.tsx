@@ -138,7 +138,7 @@ export function Navbar() {
               <Link
                 key={to}
                 to={to}
-                activeProps={{ className: "text-brand-600 font-semibold bg-brand-50" }}
+                activeProps={{ className: "text-brand-600 font-semibold bg-brand-50 dark:bg-brand-900/20" }}
                 className="flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
               >
                 <Icon className="h-4 w-4" />
@@ -176,7 +176,7 @@ export function Navbar() {
               <Link
                 key={to}
                 to={to}
-                activeProps={{ className: "text-brand-600 font-semibold bg-brand-50" }}
+                activeProps={{ className: "text-brand-600 font-semibold bg-brand-50 dark:bg-brand-900/20" }}
                 className="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
                 onClick={() => setMobileOpen(false)}
               >

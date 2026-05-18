@@ -131,7 +131,7 @@ function AdminDashboardPage() {
                   className="rounded-md border border-gray-200 px-3 py-1.5 text-sm dark:border-gray-700"
                 >
                   <span className="font-medium">{v.plate ?? "—"}</span>
-                  <span className="ml-2 text-xs text-gray-500">{v.count ?? 0} ihlal</span>
+                  <span className="ml-2 text-xs text-gray-500 dark:text-gray-400">{v.count ?? 0} ihlal</span>
                 </div>
               ))}
             </div>
@@ -156,14 +156,14 @@ function StatCard({ icon: Icon, title, value, color, items }: StatCardProps) {
       <CardContent className="pt-5">
         <div className="flex items-start justify-between">
           <div>
-            <p className="text-sm text-gray-500">{title}</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400">{title}</p>
             <p className="mt-1 text-2xl font-bold">{value}</p>
           </div>
           <Icon className={`h-5 w-5 ${color}`} />
         </div>
         <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1">
           {items.map((item) => (
-            <span key={item.label} className="text-xs text-gray-500">
+            <span key={item.label} className="text-xs text-gray-500 dark:text-gray-400">
               {item.label}:{" "}
               <span className="font-medium text-gray-700 dark:text-gray-300">{item.value}</span>
             </span>

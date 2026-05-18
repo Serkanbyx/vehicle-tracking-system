@@ -29,7 +29,7 @@ export function AlertsStats() {
           <AlertTriangle className="h-5 w-5 text-danger" />
           <div>
             <p className="text-2xl font-bold">{data.total}</p>
-            <p className="text-xs text-gray-500">Toplam</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400">Toplam</p>
           </div>
         </div>
 
@@ -37,7 +37,7 @@ export function AlertsStats() {
           <Bell className="h-5 w-5 text-warning" />
           <div>
             <p className="text-2xl font-bold">{data.unacknowledged}</p>
-            <p className="text-xs text-gray-500">Onaylanmamış</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400">Onaylanmamış</p>
           </div>
         </div>
 
@@ -56,7 +56,7 @@ export function AlertsStats() {
                   className={`w-7 rounded-t ${meta.color}`}
                   style={{ height: `${pct}%`, minHeight: "4px", maxHeight: "48px" }}
                 />
-                <span className="text-[10px] text-gray-500">{meta.label}</span>
+                <span className="text-[10px] text-gray-500 dark:text-gray-400">{meta.label}</span>
               </div>
             );
           })}

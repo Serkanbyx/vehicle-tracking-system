@@ -47,7 +47,7 @@ export const SheetContent = forwardRef<HTMLDivElement, SheetContentProps>(
       <DialogPrimitive.Content
         ref={ref}
         className={cn(
-          "fixed z-50 bg-white p-6 shadow-lg dark:bg-gray-900",
+          "fixed z-50 border-gray-200 bg-white p-6 shadow-lg dark:border-gray-700 dark:bg-gray-900",
           "data-[state=open]:animate-in data-[state=closed]:animate-out",
           "data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0",
           sideStyles[side],

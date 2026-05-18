@@ -65,7 +65,6 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const root = document.documentElement;
-    const body = document.body;
 
     if (preferences.theme === "system") {
       const mq = window.matchMedia("(prefers-color-scheme: dark)");
@@ -76,6 +75,10 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
       return () => mq.removeEventListener("change", apply);
     }
     root.setAttribute("data-theme", preferences.theme);
+  }, [preferences.theme]);
+
+  useEffect(() => {
+    const body = document.body;
 
     body.classList.remove("font-sm", "font-md", "font-lg");
     body.classList.add(`font-${preferences.fontSize}`);
@@ -84,7 +87,7 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
     body.classList.add(`density-${preferences.contentDensity}`);
 
     body.classList.toggle("no-anim", !preferences.animations);
-  }, [preferences]);
+  }, [preferences.fontSize, preferences.contentDensity, preferences.animations]);
 
   const updatePreference = useCallback(
     <K extends keyof ResolvedPreferences>(key: K, value: ResolvedPreferences[K]) => {
