@@ -125,6 +125,10 @@ jobs:
         run: npm run seed:admin:prod
         working-directory: server
 
+      - name: Seed test data
+        run: npm run seed:test:prod
+        working-directory: server
+
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
         working-directory: client

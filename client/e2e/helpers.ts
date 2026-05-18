@@ -31,7 +31,7 @@ export const VIEWER = {
 let seeded = false;
 
 export function seedTestData(): void {
-  if (seeded) return;
+  if (seeded || process.env.CI) return;
   const serverDir = path.resolve(__dirname, "../../server");
   execSync("npm run seed:test", { cwd: serverDir, stdio: "pipe" });
   seeded = true;
