@@ -130,17 +130,25 @@ jobs:
         working-directory: client
 
       - name: Start server
-        run: npm start &
+        run: npm start > /tmp/server.log 2>&1 &
         working-directory: server
 
       - name: Start client preview
-        run: npx vite preview --port 3000 &
+        run: npx vite preview --port 3000 > /tmp/client.log 2>&1 &
         working-directory: client
 
       - name: Wait for services
         run: |
-          timeout 30 bash -c 'until curl -sf http://localhost:5000/api/health; do sleep 1; done'
-          timeout 15 bash -c 'until curl -sf http://localhost:3000; do sleep 1; done'
+          timeout 60 bash -c 'until curl -sf http://localhost:5000/api/health; do sleep 2; done' || {
+            echo "=== Server failed to start. Logs: ==="
+            cat /tmp/server.log
+            exit 1
+          }
+          timeout 15 bash -c 'until curl -sf http://localhost:3000; do sleep 1; done' || {
+            echo "=== Client failed to start. Logs: ==="
+            cat /tmp/client.log
+            exit 1
+          }
 
       - name: Run Playwright tests
         run: npx playwright test --project=chromium
@@ -153,3 +161,7 @@ jobs:
           name: playwright-report
           path: client/playwright-report/
           retention-days: 7
+
+      - name: Show server logs on failure
+        if: failure()
+        run: cat /tmp/server.log || true
