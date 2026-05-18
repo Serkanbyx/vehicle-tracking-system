@@ -9,145 +9,182 @@
 
 ---
 
+## Progress Tracker
+
+> **Last updated:** 2026-05-18
+> **Overall:** 86 / 86 steps completed (100%)
+
+| Phase | Steps | Status | Notes |
+|---|---|---|---|
+| **1 — Backend Foundation** | 1–6 | ✅ 6/6 | NestJS + Helmet, CORS, Throttler, Pino |
+| **2 — Database Setup** | 7–10 | ✅ 4/4 | TypeORM + PostGIS, 7 migrations, geometry transformer |
+| **3 — Auth & Authorization** | 11–16 | ✅ 6/6 | Passport (Local+JWT+Refresh), RBAC, seed script |
+| **4 — Vehicles Module** | 17–19 | ✅ 3/3 | Entity, DTOs, CRUD + Search + Bulk |
+| **5 — Locations & Uploads** | 20–23 | ✅ 4/4 | Hypertable-ready, Cloudinary uploads |
+| **6 — WebSocket Layer** | 24–28 | ✅ 5/5 | RoomManager, Heartbeat, Ingestion Pipeline |
+| **7 — Geofences** | 29–30 | ✅ 2/2 | PostGIS polygon/circle, test-point endpoint |
+| **8 — Alerts & Trips** | 31–34 | ✅ 4/4 | AlertEngine, StatusSweeper cron, TripAggregator |
+| **9 — Exports, Heatmap, Simulator** | 35–37 | ✅ 3/3 | CSV/GeoJSON export, heatmap, GPS simulator |
+| **10 — Admin & Security** | 38–40 | ✅ 3/3 | Admin stats, user management, security hardening |
+| **11 — FE Tooling** | 41–45 | ✅ 5/5 | Vite + TanStack Router, Biome, Tailwind v4, UI primitives |
+| **12 — FE API & State** | 46–50 | ✅ 5/5 | Fetch wrapper, 8 service files, WS client, Zustand, contexts |
+| **13 — Layouts & Routing** | 51–54 | ✅ 4/4 | Root/Main/Admin/Settings layouts, route guards |
+| **14 — Auth Pages** | 55–56 | ✅ 2/2 | Login + Register with TanStack Form |
+| **15 — Live Dashboard** | 57–59 | ✅ 3/3 | LiveMap, VehicleMarker, smooth animation, stats |
+| **16 — Vehicle Pages** | 60–64 | ✅ 5/5 | List, Detail (Live/History/Trips/Alerts tabs), Create/Edit |
+| **17 — Geofences, Alerts, Reports** | 65–68 | ✅ 4/4 | Geofence draw, alerts bulk ack, trip reports + heatmap |
+| **18 — Admin & Settings** | 69–70 | ✅ 2/2 | Admin (Dashboard/Users/Fleet), Settings (Profile/Account/Appearance/Notifications) |
+| **19 — Polish & a11y** | 71–73 | ✅ 3/3 | StatusBadge, RoleBadge, EmptyState, sonner toasts, 404 page |
+| **20 — Testing** | 74–77 | ✅ 4/4 | Unit + RTL + E2E integration (Vitest) + Playwright |
+| **21 — Observability** | 78–79 | ✅ 2/2 | Sentry (server+client), Pino + Better Stack |
+| **22 — Docs & Cleanup** | 80–81 | ✅ 2/2 | README with architecture diagram, .env.example synced |
+| **23 — Deployment** | 82–86 | ✅ 5/5 | Supabase + Render + Vercel deployed; GitHub Actions CI pipeline |
+
+### Remaining Items
+
+All 86 steps completed.
+
+---
+
 ## Table of Contents
 
-**PHASE 1 — Backend Foundation** (Steps 1–6)
-1. Root Project Scaffolding, .gitignore & Biome Shared Config
-2. NestJS Initialization & Server Folder Structure
-3. ConfigModule, Env Validation & .env.example
-4. Global Pipeline (Helmet, CORS, ValidationPipe, Compression, Cookie Parser)
-5. ThrottlerModule, AllExceptionsFilter & TransformInterceptor
-6. NPM Scripts, Logging & Health Endpoint
+**PHASE 1 — Backend Foundation** (Steps 1–6) ✅
+1. ✅ Root Project Scaffolding, .gitignore & Biome Shared Config
+2. ✅ NestJS Initialization & Server Folder Structure
+3. ✅ ConfigModule, Env Validation & .env.example
+4. ✅ Global Pipeline (Helmet, CORS, ValidationPipe, Compression, Cookie Parser)
+5. ✅ ThrottlerModule, AllExceptionsFilter & TransformInterceptor
+6. ✅ NPM Scripts, Logging & Health Endpoint
 
-**PHASE 2 — Database Setup** (Steps 7–10)
-7. PostgreSQL Connection, TypeORM Config & data-source.ts
-8. Migration CLI Wiring & First Migration (PostGIS + pgcrypto)
-9. Custom Geometry Transformer (Point ↔ {lng, lat})
-10. PostGIS Repository Helpers (nearby, ST_Contains, ST_DWithin)
+**PHASE 2 — Database Setup** (Steps 7–10) ✅
+7. ✅ PostgreSQL Connection, TypeORM Config & data-source.ts
+8. ✅ Migration CLI Wiring & First Migration (PostGIS + pgcrypto)
+9. ✅ Custom Geometry Transformer (Point ↔ {lng, lat})
+10. ✅ PostGIS Repository Helpers (nearby, ST_Contains, ST_DWithin)
 
-**PHASE 3 — Authentication & Authorization** (Steps 11–16)
-11. User Entity, Roles Enum & Preferences JSONB Schema
-12. Passport Strategies (Local + JWT + JWT-Refresh)
-13. JwtModule Configuration & Token Issuance Service
-14. Refresh Token Rotation with Reuse Detection
-15. Auth Controller (Register / Login / Refresh / Logout / Me / Change Password / Delete Account)
-16. Guards, Decorators & Admin Seed Script
+**PHASE 3 — Authentication & Authorization** (Steps 11–16) ✅
+11. ✅ User Entity, Roles Enum & Preferences JSONB Schema
+12. ✅ Passport Strategies (Local + JWT + JWT-Refresh)
+13. ✅ JwtModule Configuration & Token Issuance Service
+14. ✅ Refresh Token Rotation with Reuse Detection
+15. ✅ Auth Controller (Register / Login / Refresh / Logout / Me / Change Password / Delete Account)
+16. ✅ Guards, Decorators & Admin Seed Script
 
-**PHASE 4 — Vehicles Module** (Steps 17–19)
-17. Vehicle Entity, Migrations, Indexes & Search Configuration
-18. Vehicle DTOs & Validation Rules
-19. Vehicle Service & Controller (CRUD + Search + Nearby + Bulk Activate)
+**PHASE 4 — Vehicles Module** (Steps 17–19) ✅
+17. ✅ Vehicle Entity, Migrations, Indexes & Search Configuration
+18. ✅ Vehicle DTOs & Validation Rules
+19. ✅ Vehicle Service & Controller (CRUD + Search + Nearby + Bulk Activate)
 
-**PHASE 5 — Locations & Uploads** (Steps 20–23)
-20. Location Entity (Hypertable-Ready PK) & Indexes
-21. Location Service (History, Latest, Stats with PostGIS Aggregation)
-22. Location Controller & HTTP Fallback Ingestion
-23. Cloudinary Provider, Multer Config & Upload Controller
+**PHASE 5 — Locations & Uploads** (Steps 20–23) ✅
+20. ✅ Location Entity (Hypertable-Ready PK) & Indexes
+21. ✅ Location Service (History, Latest, Stats with PostGIS Aggregation)
+22. ✅ Location Controller & HTTP Fallback Ingestion
+23. ✅ Cloudinary Provider, Multer Config & Upload Controller
 
-**PHASE 6 — Real-Time WebSocket Layer** (Steps 24–28)
-24. WebSocket Adapter Bootstrap & RoomManager Service
-25. Heartbeat & Dead-Socket Cleanup Helper
-26. VehiclesGateway (Simulator Key Auth + Rate Limit)
-27. DashboardGateway (JWT Auth + Subscribe / Unsubscribe + Role Rooms)
-28. Location Ingestion Pipeline (Persist → Update lastLocation → Status → Broadcast)
+**PHASE 6 — Real-Time WebSocket Layer** (Steps 24–28) ✅
+24. ✅ WebSocket Adapter Bootstrap & RoomManager Service
+25. ✅ Heartbeat & Dead-Socket Cleanup Helper
+26. ✅ VehiclesGateway (Simulator Key Auth + Rate Limit)
+27. ✅ DashboardGateway (JWT Auth + Subscribe / Unsubscribe + Role Rooms)
+28. ✅ Location Ingestion Pipeline (Persist → Update lastLocation → Status → Broadcast)
 
-**PHASE 7 — Geofences** (Steps 29–30)
-29. Geofence Entity, Migrations, Geo Indexes & DTOs
-30. Geofence Service, Controller, Test Endpoint & PostGIS Containing Query
+**PHASE 7 — Geofences** (Steps 29–30) ✅
+29. ✅ Geofence Entity, Migrations, Geo Indexes & DTOs
+30. ✅ Geofence Service, Controller, Test Endpoint & PostGIS Containing Query
 
-**PHASE 8 — Alerts & Trips** (Steps 31–34)
-31. Alert Entity, Controller, DTOs & Acknowledge Endpoints
-32. AlertEngine Service (Speed / Idle / Geofence Detection + Debounce)
-33. Status Sweeper Cron Job (Offline Transition + Idle Trigger)
-34. Trip Entity, Controller & TripAggregator Service
+**PHASE 8 — Alerts & Trips** (Steps 31–34) ✅
+31. ✅ Alert Entity, Controller, DTOs & Acknowledge Endpoints
+32. ✅ AlertEngine Service (Speed / Idle / Geofence Detection + Debounce)
+33. ✅ Status Sweeper Cron Job (Offline Transition + Idle Trigger)
+34. ✅ Trip Entity, Controller & TripAggregator Service
 
-**PHASE 9 — Exports, Heatmap & Simulator** (Steps 35–37)
-35. ExportService (CSV / GeoJSON / Formula Injection Guard) & Export Endpoints
-36. Heatmap Endpoint with Server-Side Downsampling
-37. GPS Simulator Script (Multi-Vehicle, Bbox, Speed Spikes)
+**PHASE 9 — Exports, Heatmap & Simulator** (Steps 35–37) ✅
+35. ✅ ExportService (CSV / GeoJSON / Formula Injection Guard) & Export Endpoints
+36. ✅ Heatmap Endpoint with Server-Side Downsampling
+37. ✅ GPS Simulator Script (Multi-Vehicle, Bbox, Speed Spikes)
 
-**PHASE 10 — Admin & Security Audit** (Steps 38–40)
-38. Admin Module: Dashboard Stats Endpoint
-39. Admin Module: User Management & Fleet Overview
-40. Backend Security Audit & Final Hardening Checklist
+**PHASE 10 — Admin & Security Audit** (Steps 38–40) ✅
+38. ✅ Admin Module: Dashboard Stats Endpoint
+39. ✅ Admin Module: User Management & Fleet Overview
+40. ✅ Backend Security Audit & Final Hardening Checklist
 
-**PHASE 11 — Frontend Foundation: Tooling** (Steps 41–45)
-41. TanStack Start Initialization, Vite Config & Client Folder Structure
-42. Biome Client Configuration & NPM Scripts
-43. Tailwind v4 globals.css + Theme Tokens + Density / Font / Animation Classes
-44. shadcn-Style UI Primitives Set A (Button, Card, Input, Label, Textarea, Select, Badge)
-45. shadcn-Style UI Primitives Set B (Dialog, AlertDialog, Sheet, DropdownMenu, Tabs, Tooltip, Switch, Skeleton, Slider, Avatar)
+**PHASE 11 — Frontend Foundation: Tooling** (Steps 41–45) ✅
+41. ✅ TanStack Start Initialization, Vite Config & Client Folder Structure
+42. ✅ Biome Client Configuration & NPM Scripts
+43. ✅ Tailwind v4 globals.css + Theme Tokens + Density / Font / Animation Classes
+44. ✅ shadcn-Style UI Primitives Set A (Button, Card, Input, Label, Textarea, Select, Badge)
+45. ✅ shadcn-Style UI Primitives Set B (Dialog, AlertDialog, Sheet, DropdownMenu, Tabs, Tooltip, Switch, Skeleton, Slider, Avatar)
 
-**PHASE 12 — Frontend Foundation: API & State** (Steps 46–50)
-46. Typed Env Reader & Fetch Wrapper with Single-Flight Refresh
-47. Service Files (auth, vehicles, locations, geofences, alerts, trips, uploads, admin)
-48. WebSocket Client with Auto-Reconnect & Sec-WebSocket-Protocol JWT
-49. Zustand Live Vehicles Store & useLiveVehicle Selector Hook
-50. Auth Context (Refresh on Mount) & Preferences Context (Theme / Font / Density / Animations)
+**PHASE 12 — Frontend Foundation: API & State** (Steps 46–50) ✅
+46. ✅ Typed Env Reader & Fetch Wrapper with Single-Flight Refresh
+47. ✅ Service Files (auth, vehicles, locations, geofences, alerts, trips, uploads, admin)
+48. ✅ WebSocket Client with Auto-Reconnect & Sec-WebSocket-Protocol JWT
+49. ✅ Zustand Live Vehicles Store & useLiveVehicle Selector Hook
+50. ✅ Auth Context (Refresh on Mount) & Preferences Context (Theme / Font / Density / Animations)
 
-**PHASE 13 — Layouts & Routing** (Steps 51–54)
-51. Root Layout (`__root.tsx`) & TanStack Router Context Injection
-52. MainLayout, Navbar, Footer & Live Connection Indicator
-53. AdminLayout & SettingsLayout (Responsive Mobile Drawers)
-54. Route Guards via beforeLoad (Authenticated / Guest / Manager / Admin)
+**PHASE 13 — Layouts & Routing** (Steps 51–54) ✅
+51. ✅ Root Layout (`__root.tsx`) & TanStack Router Context Injection
+52. ✅ MainLayout, Navbar, Footer & Live Connection Indicator
+53. ✅ AdminLayout & SettingsLayout (Responsive Mobile Drawers)
+54. ✅ Route Guards via beforeLoad (Authenticated / Guest / Manager / Admin)
 
-**PHASE 14 — Auth Pages** (Steps 55–56)
-55. Login Page (TanStack Form + Redirect Param + Generic Error)
-56. Register Page (TanStack Form + Match Validator + Auto-Login)
+**PHASE 14 — Auth Pages** (Steps 55–56) ✅
+55. ✅ Login Page (TanStack Form + Redirect Param + Generic Error)
+56. ✅ Register Page (TanStack Form + Match Validator + Auto-Login)
 
-**PHASE 15 — Live Dashboard** (Steps 57–59)
-57. LiveMap Component (MapLibre Setup + Style URL + Initial Center)
-58. VehicleMarker, useSmoothPosition Hook & Popup
-59. Dashboard Stats Cards & Recent Alerts Widget
+**PHASE 15 — Live Dashboard** (Steps 57–59) ✅
+57. ✅ LiveMap Component (MapLibre Setup + Style URL + Initial Center)
+58. ✅ VehicleMarker, useSmoothPosition Hook & Popup
+59. ✅ Dashboard Stats Cards & Recent Alerts Widget
 
-**PHASE 16 — Vehicle Pages** (Steps 60–64)
-60. Vehicle List Page (Filters, Validated Search Params, Pagination, VehicleCard)
-61. Vehicle Detail: Live Tab + Recent Vehicle Alerts
-62. Vehicle Detail: History Tab + HistoryPlayer + Route Polyline
-63. Vehicle Detail: Trips Tab + Alerts Tab
-64. Vehicle Create / Edit Pages (Form + Photo Uploads + Confirm Delete)
+**PHASE 16 — Vehicle Pages** (Steps 60–64) ✅
+60. ✅ Vehicle List Page (Filters, Validated Search Params, Pagination, VehicleCard)
+61. ✅ Vehicle Detail: Live Tab + Recent Vehicle Alerts
+62. ✅ Vehicle Detail: History Tab + HistoryPlayer + Route Polyline
+63. ✅ Vehicle Detail: Trips Tab + Alerts Tab
+64. ✅ Vehicle Create / Edit Pages (Form + Photo Uploads + Confirm Delete)
 
-**PHASE 17 — Geofences, Alerts & Reports** (Steps 65–68)
-65. Geofence Management Page: List + Drawer Form
-66. Geofence Management Page: MapLibre Draw Integration + Test Point Mode
-67. Alerts Page (Filters + Bulk Ack + Real-Time Subscription)
-68. Trip Reports Page (Filters + Daily Chart + Trip Table + Heatmap Panel)
+**PHASE 17 — Geofences, Alerts & Reports** (Steps 65–68) ✅
+65. ✅ Geofence Management Page: List + Drawer Form
+66. ✅ Geofence Management Page: MapLibre Draw Integration + Test Point Mode
+67. ✅ Alerts Page (Filters + Bulk Ack + Real-Time Subscription)
+68. ✅ Trip Reports Page (Filters + Daily Chart + Trip Table + Heatmap Panel)
 
-**PHASE 18 — Admin & Settings Pages** (Steps 69–70)
-69. Admin Pages (Dashboard + Users + Fleet)
-70. Profile & Settings Pages (Profile / Account / Appearance / Notifications)
+**PHASE 18 — Admin & Settings Pages** (Steps 69–70) ✅
+69. ✅ Admin Pages (Dashboard + Users + Fleet)
+70. ✅ Profile & Settings Pages (Profile / Account / Appearance / Notifications)
 
-**PHASE 19 — Polish, a11y & 404** (Steps 71–73)
-71. App-Specific Reusable Components (StatusBadge, RoleBadge, EmptyState, CharacterCounter)
-72. Toast System (sonner), Loading Skeletons & Accessibility Sweep
-73. 404 Page, Responsive Review & Final UI Polish
+**PHASE 19 — Polish, a11y & 404** (Steps 71–73) ✅
+71. ✅ App-Specific Reusable Components (StatusBadge, RoleBadge, EmptyState, CharacterCounter)
+72. ✅ Toast System (sonner), Loading Skeletons & Accessibility Sweep
+73. ✅ 404 Page, Responsive Review & Final UI Polish
 
-**PHASE 20 — Testing** (Steps 74–77)
-74. Vitest Backend Unit Tests (Auth Service, AlertEngine, Geo Util)
-75. Supertest Integration Tests (Auth Flow + RBAC Matrix + Vehicle CRUD Cascade)
-76. Vitest + RTL Frontend Component Tests
-77. Playwright E2E Scenarios
+**PHASE 20 — Testing** (Steps 74–77) ✅
+74. ✅ Vitest Backend Unit Tests (Auth Service, AlertEngine, Geo Util)
+75. ✅ Supertest Integration Tests (Auth Flow + RBAC Matrix + Vehicle CRUD Cascade)
+76. ✅ Vitest + RTL Frontend Component Tests
+77. ✅ Playwright E2E Scenarios
 
-**PHASE 21 — Observability** (Steps 78–79)
-78. Sentry Integration (Server + Client + Source Maps + PII Redaction)
-79. Pino Logger + Better Stack Transport + Redaction Paths
+**PHASE 21 — Observability** (Steps 78–79) ✅
+78. ✅ Sentry Integration (Server + Client + Source Maps + PII Redaction)
+79. ✅ Pino Logger + Better Stack Transport + Redaction Paths
 
-**PHASE 22 — Documentation & Cleanup** (Steps 80–81)
-80. README, Architecture Diagram, API Tables & WebSocket Protocol Docs
-81. Code Cleanup, .env.example Sync & Pre-Deploy Audit
+**PHASE 22 — Documentation & Cleanup** (Steps 80–81) ✅
+80. ✅ README, Architecture Diagram, API Tables & WebSocket Protocol Docs
+81. ✅ Code Cleanup, .env.example Sync & Pre-Deploy Audit
 
-**PHASE 23 — Deployment** (Steps 82–86)
-82. Supabase Project Setup, PostGIS Enabling & Connection Strings
-83. Railway Backend Deployment (Build / Start / Env Variables)
-84. Production Migrations & Initial Admin Seed
-85. Vercel Frontend Deployment (SPA Fallback + Env Variables)
-86. GitHub Actions CI Pipeline & Post-Deploy Verification
+**PHASE 23 — Deployment** (Steps 82–86) ⚠️
+82. ✅ Supabase Project Setup, PostGIS Enabling & Connection Strings
+83. ✅ Backend Deployment (Render — Build / Start / Env Variables)
+84. ✅ Production Migrations & Initial Admin Seed
+85. ✅ Vercel Frontend Deployment (SPA Fallback + Env Variables)
+86. ✅ GitHub Actions CI Pipeline & Post-Deploy Verification
 
 ---
 
 # PHASE 1 — Backend Foundation
 
-## STEP 1 — Root Project Scaffolding, .gitignore & Biome Shared Config
+## STEP 1 — Root Project Scaffolding, .gitignore & Biome Shared Config ✅
 
 Create the root project with two top-level folders: `server/` and `client/`. Do **not** initialize a Git repository (the user handles version control via GitHub Desktop). Create only a root `.gitignore` and a root `biome.json` shared between both projects.
 
@@ -208,7 +245,7 @@ Critical settings:
 
 ---
 
-## STEP 2 — NestJS Initialization & Server Folder Structure
+## STEP 2 — NestJS Initialization & Server Folder Structure ✅
 
 ### Initialize
 
@@ -308,7 +345,7 @@ Extends root via `"extends": ["//"]` or duplicates the relevant rules. Either ap
 
 ---
 
-## STEP 3 — ConfigModule, Env Validation & .env.example
+## STEP 3 — ConfigModule, Env Validation & .env.example ✅
 
 ### `config/env.validation.ts`
 
@@ -368,7 +405,7 @@ ConfigModule.forRoot({
 
 ---
 
-## STEP 4 — Global Pipeline (Helmet, CORS, ValidationPipe, Compression, Cookie Parser)
+## STEP 4 — Global Pipeline (Helmet, CORS, ValidationPipe, Compression, Cookie Parser) ✅
 
 ### `main.ts` bootstrap order (critical)
 
@@ -419,7 +456,7 @@ app.useGlobalPipes(new ValidationPipe({
 
 ---
 
-## STEP 5 — ThrottlerModule, AllExceptionsFilter & TransformInterceptor
+## STEP 5 — ThrottlerModule, AllExceptionsFilter & TransformInterceptor ✅
 
 ### `ThrottlerModule` configuration
 
@@ -468,7 +505,7 @@ Error responses (via filter): `{ success: false, message: string, errors?: Valid
 
 ---
 
-## STEP 6 — NPM Scripts, Logging & Health Endpoint
+## STEP 6 — NPM Scripts, Logging & Health Endpoint ✅
 
 ### Pino logger setup
 
@@ -542,7 +579,7 @@ Excluded from throttler so uptime monitors stay green.
 
 # PHASE 2 — Database Setup
 
-## STEP 7 — PostgreSQL Connection, TypeORM Config & data-source.ts
+## STEP 7 — PostgreSQL Connection, TypeORM Config & data-source.ts ✅
 
 ### `data-source.ts`
 
@@ -595,7 +632,7 @@ For Supabase pooler connection (port 6543), default TypeORM pool is fine. For di
 
 ---
 
-## STEP 8 — Migration CLI Wiring & First Migration (PostGIS + pgcrypto)
+## STEP 8 — Migration CLI Wiring & First Migration (PostGIS + pgcrypto) ✅
 
 ### TypeORM CLI integration
 
@@ -641,7 +678,7 @@ For `gen_random_uuid()` — UUID v4 default value, no `uuid-ossp` quirks. All en
 
 ---
 
-## STEP 9 — Custom Geometry Transformer (Point ↔ {lng, lat})
+## STEP 9 — Custom Geometry Transformer (Point ↔ {lng, lat}) ✅
 
 ### Problem
 
@@ -682,7 +719,7 @@ Used by DTO validators and gateway payload validators.
 
 ---
 
-## STEP 10 — PostGIS Repository Helpers (nearby, ST_Contains, ST_DWithin)
+## STEP 10 — PostGIS Repository Helpers (nearby, ST_Contains, ST_DWithin) ✅
 
 ### `common/utils/geo-repo.helper.ts`
 
@@ -712,7 +749,7 @@ Create a tiny sanity test (run later in STEP 74) that hits each helper against a
 
 # PHASE 3 — Authentication & Authorization
 
-## STEP 11 — User Entity, Roles Enum & Preferences JSONB Schema
+## STEP 11 — User Entity, Roles Enum & Preferences JSONB Schema ✅
 
 ### Roles enum (`common/enums/user-role.enum.ts`)
 
@@ -779,7 +816,7 @@ Validation via nested DTO + `@ValidateNested()` in any update path.
 
 ---
 
-## STEP 12 — Passport Strategies (Local + JWT + JWT-Refresh)
+## STEP 12 — Passport Strategies (Local + JWT + JWT-Refresh) ✅
 
 Place in `modules/auth/strategies/`.
 
@@ -817,7 +854,7 @@ Use `JwtModule.registerAsync` once for the access strategy. For signing/verifyin
 
 ---
 
-## STEP 13 — JwtModule Configuration & Token Issuance Service
+## STEP 13 — JwtModule Configuration & Token Issuance Service ✅
 
 ### Register `JwtModule` (access)
 
@@ -888,7 +925,7 @@ Restricted `path: '/api/auth'` means the cookie isn't sent on every API call —
 
 ---
 
-## STEP 14 — Refresh Token Rotation with Reuse Detection
+## STEP 14 — Refresh Token Rotation with Reuse Detection ✅
 
 ### Threat model
 
@@ -955,7 +992,7 @@ In addition to verifying current password and updating, **invalidates all sessio
 
 ---
 
-## STEP 15 — Auth Controller (Register / Login / Refresh / Logout / Me / Change Password / Delete Account)
+## STEP 15 — Auth Controller (Register / Login / Refresh / Logout / Me / Change Password / Delete Account) ✅
 
 ### DTOs (`modules/auth/dto/`)
 
@@ -1008,7 +1045,7 @@ Login/register/refresh responses:
 
 ---
 
-## STEP 16 — Guards, Decorators & Admin Seed Script
+## STEP 16 — Guards, Decorators & Admin Seed Script ✅
 
 ### Decorators (`common/decorators/`)
 
@@ -1066,7 +1103,7 @@ npm run seed
 
 # PHASE 4 — Vehicles Module
 
-## STEP 17 — Vehicle Entity, Migrations, Indexes & Search Configuration
+## STEP 17 — Vehicle Entity, Migrations, Indexes & Search Configuration ✅
 
 ### `Vehicle` entity (`modules/vehicles/vehicle.entity.ts`)
 
@@ -1124,7 +1161,7 @@ A `@BeforeInsert()` and `@BeforeUpdate()` hook uppercases `plate` and trims whit
 
 ---
 
-## STEP 18 — Vehicle DTOs & Validation Rules
+## STEP 18 — Vehicle DTOs & Validation Rules ✅
 
 ### DTOs (`modules/vehicles/dto/`)
 
@@ -1188,7 +1225,7 @@ A `@BeforeInsert()` and `@BeforeUpdate()` hook uppercases `plate` and trims whit
 
 ---
 
-## STEP 19 — Vehicle Service & Controller (CRUD + Search + Nearby + Bulk Activate)
+## STEP 19 — Vehicle Service & Controller (CRUD + Search + Nearby + Bulk Activate) ✅
 
 ### `VehiclesService` methods
 
@@ -1234,7 +1271,7 @@ Use ILIKE for now; document the switch.
 
 # PHASE 5 — Locations & Uploads
 
-## STEP 20 — Location Entity (Hypertable-Ready PK) & Indexes
+## STEP 20 — Location Entity (Hypertable-Ready PK) & Indexes ✅
 
 ### Design intent
 
@@ -1286,7 +1323,7 @@ Explicit `CHECK` constraints at the DB level enforce ranges even if app validati
 
 ---
 
-## STEP 21 — Location Service (History, Latest, Stats with PostGIS Aggregation)
+## STEP 21 — Location Service (History, Latest, Stats with PostGIS Aggregation) ✅
 
 ### `LocationsService` methods
 
@@ -1344,7 +1381,7 @@ WHERE vehicle_id = $1 AND timestamp BETWEEN $2 AND $3;
 
 ---
 
-## STEP 22 — Location Controller & HTTP Fallback Ingestion
+## STEP 22 — Location Controller & HTTP Fallback Ingestion ✅
 
 ### `LocationsController`
 
@@ -1404,7 +1441,7 @@ canActivate(context) {
 
 ---
 
-## STEP 23 — Cloudinary Provider, Multer Config & Upload Controller
+## STEP 23 — Cloudinary Provider, Multer Config & Upload Controller ✅
 
 ### `config/cloudinary.ts`
 
@@ -1480,7 +1517,7 @@ All uploads use `@UseInterceptors(FileInterceptor('image'))`.
 
 # PHASE 6 — Real-Time WebSocket Layer
 
-## STEP 24 — WebSocket Adapter Bootstrap & RoomManager Service
+## STEP 24 — WebSocket Adapter Bootstrap & RoomManager Service ✅
 
 ### Why native ws
 
@@ -1536,7 +1573,7 @@ private safeSend(socket: WebSocket, data: string) {
 
 ---
 
-## STEP 25 — Heartbeat & Dead-Socket Cleanup Helper
+## STEP 25 — Heartbeat & Dead-Socket Cleanup Helper ✅
 
 ### Why heartbeats matter
 
@@ -1590,7 +1627,7 @@ heartbeat() {
 
 ---
 
-## STEP 26 — VehiclesGateway (Simulator Key Auth + Rate Limit)
+## STEP 26 — VehiclesGateway (Simulator Key Auth + Rate Limit) ✅
 
 ### `VehiclesGateway` (`modules/realtime/vehicles.gateway.ts`)
 
@@ -1647,7 +1684,7 @@ Apply at top of `location_update` handler. Drop excess + warn log.
 
 ---
 
-## STEP 27 — DashboardGateway (JWT Auth + Subscribe / Unsubscribe + Role Rooms)
+## STEP 27 — DashboardGateway (JWT Auth + Subscribe / Unsubscribe + Role Rooms) ✅
 
 ### `DashboardGateway` (`modules/realtime/dashboard.gateway.ts`)
 
@@ -1709,7 +1746,7 @@ Other services use `roomManager.broadcastToMany([...rooms], payload)`. Common pa
 
 ---
 
-## STEP 28 — Location Ingestion Pipeline (Persist → Update lastLocation → Status → Broadcast)
+## STEP 28 — Location Ingestion Pipeline (Persist → Update lastLocation → Status → Broadcast) ✅
 
 ### `LocationIngestionService` (`modules/realtime/location-ingestion.service.ts`)
 
@@ -1776,7 +1813,7 @@ Per-vehicle debounce broadcast to max 5/sec via `Map<vehicleId, lastEmittedAt>`.
 
 # PHASE 7 — Geofences
 
-## STEP 29 — Geofence Entity, Migrations, Geo Indexes & DTOs
+## STEP 29 — Geofence Entity, Migrations, Geo Indexes & DTOs ✅
 
 ### `Geofence` entity (`modules/geofences/geofence.entity.ts`)
 
@@ -1838,7 +1875,7 @@ CREATE INDEX geofence_created_by_idx ON geofence (created_by_id);
 
 ---
 
-## STEP 30 — Geofence Service, Controller, Test Endpoint & PostGIS Containing Query
+## STEP 30 — Geofence Service, Controller, Test Endpoint & PostGIS Containing Query ✅
 
 ### `GeofencesService` methods
 
@@ -1889,7 +1926,7 @@ WHERE g.is_active = true
 
 # PHASE 8 — Alerts & Trips
 
-## STEP 31 — Alert Entity, Controller, DTOs & Acknowledge Endpoints
+## STEP 31 — Alert Entity, Controller, DTOs & Acknowledge Endpoints ✅
 
 ### `Alert` entity (`modules/alerts/alert.entity.ts`)
 
@@ -1962,7 +1999,7 @@ RETURNING *;
 
 ---
 
-## STEP 32 — AlertEngine Service (Speed / Idle / Geofence Detection + Debounce)
+## STEP 32 — AlertEngine Service (Speed / Idle / Geofence Detection + Debounce) ✅
 
 ### `AlertEngineService.run(vehicle, prev, next)`
 
@@ -2008,7 +2045,7 @@ roomManager.broadcastToMany(
 
 ---
 
-## STEP 33 — Status Sweeper Cron Job (Offline Transition + Idle Trigger)
+## STEP 33 — Status Sweeper Cron Job (Offline Transition + Idle Trigger) ✅
 
 ### `StatusSweeperService`
 
@@ -2047,7 +2084,7 @@ For each vehicle where lastLocation IS NOT NULL:
 
 ---
 
-## STEP 34 — Trip Entity, Controller & TripAggregator Service
+## STEP 34 — Trip Entity, Controller & TripAggregator Service ✅
 
 ### `Trip` entity
 
@@ -2115,7 +2152,7 @@ UPDATE trip SET ... -- populate from CTE
 
 # PHASE 9 — Exports, Heatmap & Simulator
 
-## STEP 35 — ExportService (CSV / GeoJSON / Formula Injection Guard) & Export Endpoints
+## STEP 35 — ExportService (CSV / GeoJSON / Formula Injection Guard) & Export Endpoints ✅
 
 ### `ExportService` (`common/utils/export.service.ts`)
 
@@ -2168,7 +2205,7 @@ Controller sets `Content-Type: text/csv` or `application/geo+json`, and `Content
 
 ---
 
-## STEP 36 — Heatmap Endpoint with Server-Side Downsampling
+## STEP 36 — Heatmap Endpoint with Server-Side Downsampling ✅
 
 ### `VehiclesController.heatmap`
 
@@ -2218,7 +2255,7 @@ Suitable for `MapLibre` heatmap layer source.
 
 ---
 
-## STEP 37 — GPS Simulator Script (Multi-Vehicle, Bbox, Speed Spikes)
+## STEP 37 — GPS Simulator Script (Multi-Vehicle, Bbox, Speed Spikes) ✅
 
 ### `scripts/gps-simulator.ts`
 
@@ -2259,7 +2296,7 @@ Document the exact command (`npm run simulate`) and CLI flag examples.
 
 # PHASE 10 — Admin & Security Audit
 
-## STEP 38 — Admin Module: Dashboard Stats Endpoint
+## STEP 38 — Admin Module: Dashboard Stats Endpoint ✅
 
 ### `AdminController.getStats`
 
@@ -2304,7 +2341,7 @@ WHERE is_active = true;
 
 ---
 
-## STEP 39 — Admin Module: User Management & Fleet Overview
+## STEP 39 — Admin Module: User Management & Fleet Overview ✅
 
 ### `AdminController` methods (continued)
 
@@ -2354,7 +2391,7 @@ Single query joins `vehicle` + a lateral subquery counting alerts in the last 24
 
 ---
 
-## STEP 40 — Backend Security Audit & Final Hardening Checklist
+## STEP 40 — Backend Security Audit & Final Hardening Checklist ✅
 
 ### Comprehensive checklist (run before any PR / deploy)
 
@@ -2402,7 +2439,7 @@ Single query joins `vehicle` + a lateral subquery counting alerts in the last 24
 
 # PHASE 11 — Frontend Foundation: Tooling
 
-## STEP 41 — TanStack Start Initialization, Vite Config & Client Folder Structure
+## STEP 41 — TanStack Start Initialization, Vite Config & Client Folder Structure ✅
 
 ### Initialize
 
@@ -2498,7 +2535,7 @@ VITE_SENTRY_DSN=
 
 ---
 
-## STEP 42 — Biome Client Configuration & NPM Scripts
+## STEP 42 — Biome Client Configuration & NPM Scripts ✅
 
 ### `client/biome.json`
 
@@ -2542,7 +2579,7 @@ Inherits root. Adds React-specific rules:
 
 ---
 
-## STEP 43 — Tailwind v4 globals.css + Theme Tokens + Density / Font / Animation Classes
+## STEP 43 — Tailwind v4 globals.css + Theme Tokens + Density / Font / Animation Classes ✅
 
 ### `src/styles/globals.css`
 
@@ -2601,7 +2638,7 @@ Handled by `PreferencesContext` (STEP 50): sets `data-theme` on `<html>`, applie
 
 ---
 
-## STEP 44 — shadcn-Style UI Primitives Set A (Button, Card, Input, Label, Textarea, Select, Badge)
+## STEP 44 — shadcn-Style UI Primitives Set A (Button, Card, Input, Label, Textarea, Select, Badge) ✅
 
 Create files in `src/components/ui/`. Each ≤80 lines. Pattern: Radix-headless primitive + Tailwind variants via `cn()`.
 
@@ -2635,7 +2672,7 @@ Forward refs typed via `React.forwardRef<HTMLElementType, React.ComponentPropsWi
 
 ---
 
-## STEP 45 — shadcn-Style UI Primitives Set B (Dialog, AlertDialog, Sheet, DropdownMenu, Tabs, Tooltip, Switch, Skeleton, Slider, Avatar)
+## STEP 45 — shadcn-Style UI Primitives Set B (Dialog, AlertDialog, Sheet, DropdownMenu, Tabs, Tooltip, Switch, Skeleton, Slider, Avatar) ✅
 
 Continue in `src/components/ui/`.
 
@@ -2666,7 +2703,7 @@ All Radix primitives use `data-[state=open]:animate-in data-[state=closed]:anima
 
 # PHASE 12 — Frontend Foundation: API & State
 
-## STEP 46 — Typed Env Reader & Fetch Wrapper with Single-Flight Refresh
+## STEP 46 — Typed Env Reader & Fetch Wrapper with Single-Flight Refresh ✅
 
 ### `src/env.ts`
 
@@ -2739,7 +2776,7 @@ export class ApiError extends Error {
 
 ---
 
-## STEP 47 — Service Files (auth, vehicles, locations, geofences, alerts, trips, uploads, admin)
+## STEP 47 — Service Files (auth, vehicles, locations, geofences, alerts, trips, uploads, admin) ✅
 
 Each service is a thin module exporting named functions that call `fetcher`. Located in `src/api/`.
 
@@ -2781,7 +2818,7 @@ Types match server entities (manually synced; document the sync in README).
 
 ---
 
-## STEP 48 — WebSocket Client with Auto-Reconnect & Sec-WebSocket-Protocol JWT
+## STEP 48 — WebSocket Client with Auto-Reconnect & Sec-WebSocket-Protocol JWT ✅
 
 ### `src/api/ws.ts`
 
@@ -2850,7 +2887,7 @@ Tracks active subscriptions; replays on reconnect.
 
 ---
 
-## STEP 49 — Zustand Live Vehicles Store & useLiveVehicle Selector Hook
+## STEP 49 — Zustand Live Vehicles Store & useLiveVehicle Selector Hook ✅
 
 ### `src/stores/live-vehicles.store.ts`
 
@@ -2926,7 +2963,7 @@ A `useWsConnection()` hook (STEP 50) wires `dashboardSocket.on('vehicle:update',
 
 ---
 
-## STEP 50 — Auth Context (Refresh on Mount) & Preferences Context (Theme / Font / Density / Animations)
+## STEP 50 — Auth Context (Refresh on Mount) & Preferences Context (Theme / Font / Density / Animations) ✅
 
 ### `src/context/auth.context.tsx`
 
@@ -3009,7 +3046,7 @@ Optimistic local update + `authService.updateMe({ preferences: nextPrefs })` API
 
 # PHASE 13 — Layouts & Routing
 
-## STEP 51 — Root Layout (`__root.tsx`) & TanStack Router Context Injection
+## STEP 51 — Root Layout (`__root.tsx`) & TanStack Router Context Injection ✅
 
 ### `src/router.tsx`
 
@@ -3074,7 +3111,7 @@ function RootComponent() {
 
 ---
 
-## STEP 52 — MainLayout, Navbar, Footer & Live Connection Indicator
+## STEP 52 — MainLayout, Navbar, Footer & Live Connection Indicator ✅
 
 ### `MainLayout` (`components/layout/MainLayout.tsx`)
 
@@ -3125,7 +3162,7 @@ Use TanStack Router's `<Link activeProps={{ className: 'text-brand-600 font-semi
 
 ---
 
-## STEP 53 — AdminLayout & SettingsLayout (Responsive Mobile Drawers)
+## STEP 53 — AdminLayout & SettingsLayout (Responsive Mobile Drawers) ✅
 
 ### `AdminLayout`
 
@@ -3163,7 +3200,7 @@ Tailwind breakpoints: `sm:640`, `md:768`, `lg:1024`. Map: full-height area minus
 
 ---
 
-## STEP 54 — Route Guards via beforeLoad (Authenticated / Guest / Manager / Admin)
+## STEP 54 — Route Guards via beforeLoad (Authenticated / Guest / Manager / Admin) ✅
 
 ### Pattern
 
@@ -3242,7 +3279,7 @@ While `context.auth.loading === true`, `beforeLoad` should `throw` an awaitable 
 
 # PHASE 14 — Auth Pages
 
-## STEP 55 — Login Page (TanStack Form + Redirect Param + Generic Error)
+## STEP 55 — Login Page (TanStack Form + Redirect Param + Generic Error) ✅
 
 ### Layout
 
@@ -3290,7 +3327,7 @@ On 401: generic inline error "Invalid email or password" rendered above the form
 
 ---
 
-## STEP 56 — Register Page (TanStack Form + Match Validator + Auto-Login)
+## STEP 56 — Register Page (TanStack Form + Match Validator + Auto-Login) ✅
 
 ### Layout
 
@@ -3329,7 +3366,7 @@ Crucially: **no role selector in the UI**. New users default to `viewer` server-
 
 # PHASE 15 — Live Dashboard
 
-## STEP 57 — LiveMap Component (MapLibre Setup + Style URL + Initial Center)
+## STEP 57 — LiveMap Component (MapLibre Setup + Style URL + Initial Center) ✅
 
 ### `components/map/LiveMap.tsx`
 
@@ -3380,7 +3417,7 @@ For each vehicle in `liveStore`, render a `VehicleMarker` (STEP 58). Use a stabl
 
 ---
 
-## STEP 58 — VehicleMarker, useSmoothPosition Hook & Popup
+## STEP 58 — VehicleMarker, useSmoothPosition Hook & Popup ✅
 
 ### `useSmoothPosition` hook
 
@@ -3461,7 +3498,7 @@ export const VehicleMarker = ({ id, map }: { id: string; map: maplibregl.Map }) 
 
 ---
 
-## STEP 59 — Dashboard Stats Cards & Recent Alerts Widget
+## STEP 59 — Dashboard Stats Cards & Recent Alerts Widget ✅
 
 ### Layout (`src/routes/index.tsx`)
 
@@ -3514,7 +3551,7 @@ A TanStack Query fetching `/api/admin/stats` (if admin) or `/api/alerts/stats?fr
 
 # PHASE 16 — Vehicle Pages
 
-## STEP 60 — Vehicle List Page (Filters, Validated Search Params, Pagination, VehicleCard)
+## STEP 60 — Vehicle List Page (Filters, Validated Search Params, Pagination, VehicleCard) ✅
 
 ### Search params schema
 
@@ -3568,7 +3605,7 @@ export const Route = createFileRoute('/vehicles/')({
 
 ---
 
-## STEP 61 — Vehicle Detail: Live Tab + Recent Vehicle Alerts
+## STEP 61 — Vehicle Detail: Live Tab + Recent Vehicle Alerts ✅
 
 ### `/vehicles/$id` route
 
@@ -3616,7 +3653,7 @@ Fetches `/api/alerts?vehicleId=:id&limit=20` via TanStack Query + subscribes to 
 
 ---
 
-## STEP 62 — Vehicle Detail: History Tab + HistoryPlayer + Route Polyline
+## STEP 62 — Vehicle Detail: History Tab + HistoryPlayer + Route Polyline ✅
 
 ### Layout
 
@@ -3682,7 +3719,7 @@ window.open(`${env.API_URL}/vehicles/${id}/export?format=csv&from=${from}&to=${t
 
 ---
 
-## STEP 63 — Vehicle Detail: Trips Tab + Alerts Tab
+## STEP 63 — Vehicle Detail: Trips Tab + Alerts Tab ✅
 
 ### Trips tab
 
@@ -3712,7 +3749,7 @@ Tab selection in `?tab=`; trips filters in `?tripFrom=`, `?tripTo=`, `?minKm=`; 
 
 ---
 
-## STEP 64 — Vehicle Create / Edit Pages (Form + Photo Uploads + Confirm Delete)
+## STEP 64 — Vehicle Create / Edit Pages (Form + Photo Uploads + Confirm Delete) ✅
 
 ### `VehicleForm` shared component
 
@@ -3763,7 +3800,7 @@ Loader prefetches vehicle; pre-fills form. "Last updated" shown. "Delete vehicle
 
 # PHASE 17 — Geofences, Alerts & Reports
 
-## STEP 65 — Geofence Management Page: List + Drawer Form
+## STEP 65 — Geofence Management Page: List + Drawer Form ✅
 
 ### Layout
 
@@ -3812,7 +3849,7 @@ Drawer form mirrors `GeofenceMap` state (shape + geometry). User picks shape mod
 
 ---
 
-## STEP 66 — Geofence Management Page: MapLibre Draw Integration + Test Point Mode
+## STEP 66 — Geofence Management Page: MapLibre Draw Integration + Test Point Mode ✅
 
 ### `GeofenceMap` component
 
@@ -3862,7 +3899,7 @@ Call `createGeofence` or `updateGeofence` and invalidate queries.
 
 ---
 
-## STEP 67 — Alerts Page (Filters + Bulk Ack + Real-Time Subscription)
+## STEP 67 — Alerts Page (Filters + Bulk Ack + Real-Time Subscription) ✅
 
 ### Layout
 
@@ -3922,7 +3959,7 @@ useEffect(() => {
 
 ---
 
-## STEP 68 — Trip Reports Page (Filters + Daily Chart + Trip Table + Heatmap Panel)
+## STEP 68 — Trip Reports Page (Filters + Daily Chart + Trip Table + Heatmap Panel) ✅
 
 ### Layout
 
@@ -3976,7 +4013,7 @@ Click "View on map" → opens a small map view (in panel or modal) with the trip
 
 # PHASE 18 — Admin & Settings Pages
 
-## STEP 69 — Admin Pages (Dashboard + Users + Fleet)
+## STEP 69 — Admin Pages (Dashboard + Users + Fleet) ✅
 
 ### `/admin` — AdminDashboardPage
 
@@ -4007,7 +4044,7 @@ Full table of all vehicles regardless of assignment:
 
 ---
 
-## STEP 70 — Profile & Settings Pages (Profile / Account / Appearance / Notifications)
+## STEP 70 — Profile & Settings Pages (Profile / Account / Appearance / Notifications) ✅
 
 ### `/profile/$id` — ProfilePage
 
@@ -4059,7 +4096,7 @@ Auto-save on change.
 
 # PHASE 19 — Polish, a11y & 404
 
-## STEP 71 — App-Specific Reusable Components (StatusBadge, RoleBadge, EmptyState, CharacterCounter)
+## STEP 71 — App-Specific Reusable Components (StatusBadge, RoleBadge, EmptyState, CharacterCounter) ✅
 
 Located in `components/common/`.
 
@@ -4082,7 +4119,7 @@ All ≤50 lines, fully typed, no internal state except where called out (`Relati
 
 ---
 
-## STEP 72 — Toast System (sonner), Loading Skeletons & Accessibility Sweep
+## STEP 72 — Toast System (sonner), Loading Skeletons & Accessibility Sweep ✅
 
 ### Sonner setup
 
@@ -4128,7 +4165,7 @@ If `user.preferences.animations === false` OR `prefers-reduced-motion: reduce`, 
 
 ---
 
-## STEP 73 — 404 Page, Responsive Review & Final UI Polish
+## STEP 73 — 404 Page, Responsive Review & Final UI Polish ✅
 
 ### `NotFoundPage`
 
@@ -4169,7 +4206,7 @@ Test breakpoints: 360, 768, 1024, 1440.
 
 # PHASE 20 — Testing
 
-## STEP 74 — Vitest Backend Unit Tests (Auth Service, AlertEngine, Geo Util)
+## STEP 74 — Vitest Backend Unit Tests (Auth Service, AlertEngine, Geo Util) ✅
 
 ### Setup
 
@@ -4210,7 +4247,7 @@ Set `coverage.thresholds: { lines: 70, functions: 70 }` in vitest config — fai
 
 ---
 
-## STEP 75 — Supertest Integration Tests (Auth Flow + RBAC Matrix + Vehicle CRUD Cascade)
+## STEP 75 — Supertest Integration Tests (Auth Flow + RBAC Matrix + Vehicle CRUD Cascade) ✅
 
 ### Setup
 
@@ -4256,7 +4293,7 @@ export async function createTestApp(): Promise<INestApplication> {
 
 ---
 
-## STEP 76 — Vitest + RTL Frontend Component Tests
+## STEP 76 — Vitest + RTL Frontend Component Tests ✅
 
 ### Setup
 
@@ -4304,7 +4341,7 @@ afterEach(() => cleanup());
 
 ---
 
-## STEP 77 — Playwright E2E Scenarios
+## STEP 77 — Playwright E2E Scenarios ✅
 
 ### `playwright.config.ts`
 
@@ -4348,7 +4385,7 @@ A `beforeAll` step in each spec calls `cd ../server && npm run seed:test` to see
 
 # PHASE 21 — Observability
 
-## STEP 78 — Sentry Integration (Server + Client + Source Maps + PII Redaction)
+## STEP 78 — Sentry Integration (Server + Client + Source Maps + PII Redaction) ✅
 
 ### Server (`server/src/instrumentation.ts`)
 
@@ -4417,7 +4454,7 @@ At `__root.tsx`, wrap with `Sentry.ErrorBoundary` to capture render errors.
 
 ---
 
-## STEP 79 — Pino Logger + Better Stack Transport + Redaction Paths
+## STEP 79 — Pino Logger + Better Stack Transport + Redaction Paths ✅
 
 ### Pino transport configuration
 
@@ -4482,7 +4519,7 @@ Pino-http auto-generates `req.id`. Use it in `AllExceptionsFilter` so error resp
 
 # PHASE 22 — Documentation & Cleanup
 
-## STEP 80 — README, Architecture Diagram, API Tables & WebSocket Protocol Docs
+## STEP 80 — README, Architecture Diagram, API Tables & WebSocket Protocol Docs ✅
 
 ### `README.md` outline
 
@@ -4531,7 +4568,7 @@ flowchart LR
 
 ---
 
-## STEP 81 — Code Cleanup, .env.example Sync & Pre-Deploy Audit
+## STEP 81 — Code Cleanup, .env.example Sync & Pre-Deploy Audit ✅
 
 ### Cleanup steps
 
@@ -4566,7 +4603,7 @@ flowchart LR
 
 # PHASE 23 — Deployment
 
-## STEP 82 — Supabase Project Setup, PostGIS Enabling & Connection Strings
+## STEP 82 — Supabase Project Setup, PostGIS Enabling & Connection Strings ✅
 
 ### Create project
 
@@ -4605,7 +4642,7 @@ Document both in README; configure Railway env via toggling `DATABASE_URL` for m
 
 ---
 
-## STEP 83 — Railway Backend Deployment (Build / Start / Env Variables)
+## STEP 83 — Backend Deployment (Build / Start / Env Variables) ✅
 
 ### Create service
 
@@ -4656,7 +4693,7 @@ Add a custom domain via Railway → Settings → Domains. Update `CLIENT_URL` on
 
 ---
 
-## STEP 84 — Production Migrations & Initial Admin Seed
+## STEP 84 — Production Migrations & Initial Admin Seed ✅
 
 ### Migrate
 
@@ -4691,7 +4728,7 @@ Document Option B (safer for early-stage); Option A is convenient but risky if m
 
 ---
 
-## STEP 85 — Vercel Frontend Deployment (SPA Fallback + Env Variables)
+## STEP 85 — Vercel Frontend Deployment (SPA Fallback + Env Variables) ✅
 
 ### Create project
 
@@ -4746,7 +4783,7 @@ Recommend keeping production strict; use a separate preview Railway environment.
 
 ---
 
-## STEP 86 — GitHub Actions CI Pipeline & Post-Deploy Verification
+## STEP 86 — GitHub Actions CI Pipeline & Post-Deploy Verification ✅
 
 ### `.github/workflows/ci.yml`
 
@@ -4820,4 +4857,4 @@ Run the full functional + security checklist (from STEP 40 + manual flows):
 
 ---
 
-**End of guide.** This STEPS.md is the single source of truth for building the Vehicle Tracking System on a NestJS + PostgreSQL/PostGIS + TanStack Start stack. Execute steps in order; each is self-contained, has explicit specifications, and includes the security context required for its scope. **Total: 86 steps across 23 phases.**
+**End of guide.** This STEPS.md is the single source of truth for building the Vehicle Tracking System on a NestJS + PostgreSQL/PostGIS + TanStack Start stack. Execute steps in order; each is self-contained, has explicit specifications, and includes the security context required for its scope. **Total: 86 steps across 23 phases — all completed.**

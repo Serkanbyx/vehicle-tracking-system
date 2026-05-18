@@ -1,0 +1,155 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  server-lint-test:
+    name: Server — Lint & Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: server/package-lock.json
+
+      - run: npm ci
+        working-directory: server
+
+      - run: npm run lint
+        working-directory: server
+
+      - run: npm test
+        working-directory: server
+
+  client-lint-test:
+    name: Client — Lint & Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: client/package-lock.json
+
+      - run: npm ci
+        working-directory: client
+
+      - run: npm run lint
+        working-directory: client
+
+      - run: npm test
+        working-directory: client
+
+  e2e:
+    name: E2E — Playwright
+    runs-on: ubuntu-latest
+    needs: [server-lint-test, client-lint-test]
+    services:
+      postgres:
+        image: postgis/postgis:16-3.4
+        env:
+          POSTGRES_USER: test
+          POSTGRES_PASSWORD: test
+          POSTGRES_DB: vtracker_test
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      NODE_ENV: test
+      PORT: 5000
+      DATABASE_URL: postgres://test:test@localhost:5432/vtracker_test
+      JWT_ACCESS_SECRET: ci-test-access-secret-min-32-chars!!
+      JWT_ACCESS_TTL: 15m
+      JWT_REFRESH_SECRET: ci-test-refresh-secret-min-32-chars!
+      JWT_REFRESH_TTL: 7d
+      CLIENT_URL: http://localhost:3000
+      SIMULATOR_API_KEY: ci-test-simulator-key-min-32-chars!!!
+      SPEED_LIMIT_KMH: 90
+      IDLE_THRESHOLD_MIN: 10
+      TRIP_END_MIN: 5
+      ADMIN_EMAIL: admin@ci.test
+      ADMIN_PASSWORD: CiTestPassword123!
+      ADMIN_NAME: CI Admin
+      VITE_API_URL: http://localhost:5000/api
+      VITE_WS_URL: ws://localhost:5000
+      E2E_BASE_URL: http://localhost:3000
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install server dependencies
+        run: npm ci
+        working-directory: server
+
+      - name: Install client dependencies
+        run: npm ci
+        working-directory: client
+
+      - name: Run database migrations
+        run: npm run mig:run
+        working-directory: server
+
+      - name: Seed admin user
+        run: npm run seed:admin
+        working-directory: server
+
+      - name: Build server
+        run: npm run build
+        working-directory: server
+
+      - name: Build client
+        run: npm run build
+        working-directory: client
+        env:
+          VITE_API_URL: http://localhost:5000/api
+          VITE_WS_URL: ws://localhost:5000
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+        working-directory: client
+
+      - name: Start server
+        run: npm start &
+        working-directory: server
+
+      - name: Start client preview
+        run: npx vite preview --port 3000 &
+        working-directory: client
+
+      - name: Wait for services
+        run: |
+          timeout 30 bash -c 'until curl -sf http://localhost:5000/api/health; do sleep 1; done'
+          timeout 15 bash -c 'until curl -sf http://localhost:3000; do sleep 1; done'
+
+      - name: Run Playwright tests
+        run: npx playwright test --project=chromium
+        working-directory: client
+
+      - name: Upload Playwright report
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: client/playwright-report/
+          retention-days: 7
