@@ -1,11 +1,11 @@
 import { Injectable } from "@nestjs/common";
-import type { ConfigService } from "@nestjs/config";
+import { ConfigService } from "@nestjs/config";
 import { InjectRepository } from "@nestjs/typeorm";
 import type { Repository } from "typeorm";
 import { AlertSeverity, AlertType } from "../../common/enums/alert.enum.js";
 import { GeofenceDirection } from "../../common/enums/geofence.enum.js";
-import type { GeofencesService } from "../geofences/geofences.service.js";
-import type { RoomManager } from "../realtime/room-manager.service.js";
+import { GeofencesService } from "../geofences/geofences.service.js";
+import { RoomManager } from "../realtime/room-manager.service.js";
 import type { Vehicle } from "../vehicles/vehicle.entity.js";
 import { Alert } from "./alert.entity.js";
 

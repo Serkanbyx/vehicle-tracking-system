@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { Interval } from "@nestjs/schedule";
 import type WebSocket from "ws";
-import type { RoomManager } from "./room-manager.service.js";
+import { RoomManager } from "./room-manager.service.js";
 
 const HEARTBEAT_INTERVAL_MS = 30_000;
 

@@ -1,6 +1,6 @@
 import type { IncomingMessage } from "node:http";
 import { Logger } from "@nestjs/common";
-import type { ConfigService } from "@nestjs/config";
+import { ConfigService } from "@nestjs/config";
 import {
   type OnGatewayConnection,
   type OnGatewayDisconnect,
@@ -14,9 +14,9 @@ import type WebSocket from "ws";
 import type { Server } from "ws";
 import { timingSafeEqual } from "../../common/utils/timing-safe-equal.js";
 import { LocationUpdatePayloadDto } from "./dto/location-update.dto.js";
-import type { HeartbeatService } from "./heartbeat.service.js";
-import type { LocationIngestionService } from "./location-ingestion.service.js";
-import type { RoomManager } from "./room-manager.service.js";
+import { HeartbeatService } from "./heartbeat.service.js";
+import { LocationIngestionService } from "./location-ingestion.service.js";
+import { RoomManager } from "./room-manager.service.js";
 
 const MAX_EVENTS_PER_SECOND = 5;
 
