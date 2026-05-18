@@ -15,26 +15,26 @@ export function TopViolators() {
       <CardHeader className="pb-3">
         <CardTitle className="flex items-center gap-2 text-base">
           <AlertTriangle className="h-4 w-4" />
-          Uyarı Özeti
+          Alert Summary
         </CardTitle>
       </CardHeader>
       <CardContent>
         {!data ? (
-          <p className="py-4 text-center text-sm text-gray-400">Yükleniyor…</p>
+          <p className="py-4 text-center text-sm text-gray-400">Loading…</p>
         ) : (
           <div className="flex flex-col gap-3">
             <div className="flex items-center justify-between text-sm">
-              <span className="text-gray-500">Toplam Uyarı</span>
+              <span className="text-gray-500">Total Alerts</span>
               <span className="font-semibold">{data.total}</span>
             </div>
             <div className="flex items-center justify-between text-sm">
-              <span className="text-gray-500">Onaylanmamış</span>
+              <span className="text-gray-500">Unacknowledged</span>
               <span className="font-semibold text-danger">{data.unacknowledged}</span>
             </div>
             <hr className="border-gray-200 dark:border-gray-700" />
             <div className="flex flex-col gap-1.5">
               <p className="text-xs font-medium uppercase tracking-wider text-gray-400">
-                Türe Göre
+                By Type
               </p>
               {Object.entries(data.byType).map(([type, count]) => (
                 <div key={type} className="flex items-center justify-between text-sm">

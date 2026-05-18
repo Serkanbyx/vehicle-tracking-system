@@ -98,7 +98,7 @@ function SettingsAppearancePage() {
                     : "border-gray-200 hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-gray-800"
                 }`}
               >
-                {size === "sm" ? "Küçük" : size === "md" ? "Orta" : "Büyük"}
+                {size === "sm" ? "Small" : size === "md" ? "Medium" : "Large"}
               </button>
             ))}
           </div>
@@ -107,7 +107,7 @@ function SettingsAppearancePage() {
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">İçerik Yoğunluğu</CardTitle>
+          <CardTitle className="text-base">Content Density</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex flex-wrap gap-3">
@@ -122,7 +122,7 @@ function SettingsAppearancePage() {
                     : "border-gray-200 hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-gray-800"
                 }`}
               >
-                {d === "compact" ? "Sıkışık" : d === "comfortable" ? "Rahat" : "Geniş"}
+                {d === "compact" ? "Compact" : d === "comfortable" ? "Comfortable" : "Spacious"}
               </button>
             ))}
           </div>
@@ -131,7 +131,7 @@ function SettingsAppearancePage() {
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Animasyonlar</CardTitle>
+          <CardTitle className="text-base">Animations</CardTitle>
         </CardHeader>
         <CardContent>
           <label htmlFor="pref-animations" className="flex items-center gap-3">
@@ -140,19 +140,19 @@ function SettingsAppearancePage() {
               checked={preferences.animations}
               onCheckedChange={(v) => updatePreference("animations", v)}
             />
-            <span className="text-sm">Animasyonları etkinleştir</span>
+            <span className="text-sm">Enable animations</span>
           </label>
         </CardContent>
       </Card>
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Harita Varsayılan Merkez</CardTitle>
+          <CardTitle className="text-base">Default Map Center</CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="flex flex-col gap-1.5">
-              <Label htmlFor="map-lat">Enlem</Label>
+              <Label htmlFor="map-lat">Latitude</Label>
               <Input
                 id="map-lat"
                 type="number"
@@ -166,7 +166,7 @@ function SettingsAppearancePage() {
               />
             </div>
             <div className="flex flex-col gap-1.5">
-              <Label htmlFor="map-lng">Boylam</Label>
+              <Label htmlFor="map-lng">Longitude</Label>
               <Input
                 id="map-lng"
                 type="number"
@@ -181,7 +181,7 @@ function SettingsAppearancePage() {
             </div>
           </div>
           <div className="flex flex-col gap-1.5">
-            <Label>Yakınlaştırma: {mapDefaults.zoom ?? 6}</Label>
+            <Label>Zoom: {mapDefaults.zoom ?? 6}</Label>
             <Slider
               value={[mapDefaults.zoom ?? 6]}
               onValueChange={(v) => {

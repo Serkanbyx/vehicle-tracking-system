@@ -32,11 +32,11 @@ export function GeofenceList({ onSelect, onNew, selectedId }: GeofenceListProps)
   return (
     <div className="flex flex-col gap-3">
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold">Bölgeler</h2>
+        <h2 className="text-lg font-semibold">Geofences</h2>
         {hasRole("manager", "admin") && (
           <Button size="sm" onClick={onNew}>
             <Plus className="mr-1 h-4 w-4" />
-            Yeni
+            New
           </Button>
         )}
       </div>
@@ -44,7 +44,7 @@ export function GeofenceList({ onSelect, onNew, selectedId }: GeofenceListProps)
       <div className="relative">
         <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
         <Input
-          placeholder="İsimle ara…"
+          placeholder="Search by name…"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className="pl-9"
@@ -57,9 +57,9 @@ export function GeofenceList({ onSelect, onNew, selectedId }: GeofenceListProps)
           onChange={(e) => setShapeFilter(e.target.value)}
           className="w-32"
         >
-          <option value="">Tümü</option>
-          <option value="polygon">Poligon</option>
-          <option value="circle">Daire</option>
+          <option value="">All</option>
+          <option value="polygon">Polygon</option>
+          <option value="circle">Circle</option>
         </Select>
 
         <label
@@ -71,7 +71,7 @@ export function GeofenceList({ onSelect, onNew, selectedId }: GeofenceListProps)
             checked={activeFilter === true}
             onCheckedChange={(checked) => setActiveFilter(checked ? true : undefined)}
           />
-          Aktif
+          Active
         </label>
       </div>
 
@@ -80,7 +80,7 @@ export function GeofenceList({ onSelect, onNew, selectedId }: GeofenceListProps)
         style={{ maxHeight: "calc(100vh - 320px)" }}
       >
         {!data || data.items.length === 0 ? (
-          <p className="py-6 text-center text-sm text-gray-400">Bölge bulunamadı</p>
+          <p className="py-6 text-center text-sm text-gray-400">No geofences found</p>
         ) : (
           data.items.map((gf) => (
             <button
@@ -111,7 +111,7 @@ export function GeofenceList({ onSelect, onNew, selectedId }: GeofenceListProps)
               </div>
               {!gf.isActive && (
                 <Badge variant="secondary" className="text-xs">
-                  Pasif
+                  Inactive
                 </Badge>
               )}
             </button>

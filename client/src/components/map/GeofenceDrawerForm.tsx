@@ -20,9 +20,9 @@ import {
 } from "@/components/ui";
 
 const DIRECTION_OPTIONS: { value: GeofenceDirection; label: string }[] = [
-  { value: "enter", label: "Giriş" },
-  { value: "exit", label: "Çıkış" },
-  { value: "both", label: "Her İkisi" },
+  { value: "enter", label: "Enter" },
+  { value: "exit", label: "Exit" },
+  { value: "both", label: "Both" },
 ];
 
 const COLOR_SWATCHES = [
@@ -107,7 +107,7 @@ export function GeofenceDrawerForm({
         await queryClient.invalidateQueries({ queryKey: ["geofences"] });
         onOpenChange(false);
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Bir hata oluştu");
+        setError(err instanceof Error ? err.message : "An error occurred");
       }
     },
   });
@@ -118,7 +118,7 @@ export function GeofenceDrawerForm({
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="right" className="w-80 overflow-y-auto sm:w-96">
         <SheetHeader>
-          <SheetTitle>{editing ? "Bölge Düzenle" : "Yeni Bölge"}</SheetTitle>
+          <SheetTitle>{editing ? "Edit Geofence" : "New Geofence"}</SheetTitle>
         </SheetHeader>
 
         <form
@@ -138,12 +138,12 @@ export function GeofenceDrawerForm({
           <form.Field name="name">
             {(field) => (
               <div className="flex flex-col gap-1.5">
-                <Label htmlFor="gf-name">İsim *</Label>
+                <Label htmlFor="gf-name">Name *</Label>
                 <Input
                   id="gf-name"
                   value={field.state.value}
                   onChange={(e) => field.handleChange(e.target.value)}
-                  placeholder="Depo Alanı"
+                  placeholder="Warehouse Area"
                   maxLength={80}
                 />
               </div>
@@ -153,12 +153,12 @@ export function GeofenceDrawerForm({
           <form.Field name="description">
             {(field) => (
               <div className="flex flex-col gap-1.5">
-                <Label htmlFor="gf-desc">Açıklama</Label>
+                <Label htmlFor="gf-desc">Description</Label>
                 <Textarea
                   id="gf-desc"
                   value={field.state.value}
                   onChange={(e) => field.handleChange(e.target.value)}
-                  placeholder="Opsiyonel açıklama"
+                  placeholder="Optional description"
                   maxLength={300}
                   rows={2}
                 />
@@ -167,7 +167,7 @@ export function GeofenceDrawerForm({
           </form.Field>
 
           <div className="flex flex-col gap-1.5">
-            <Label>Şekil</Label>
+            <Label>Shape</Label>
             <div className="flex gap-2">
               <Button
                 type="button"
@@ -175,7 +175,7 @@ export function GeofenceDrawerForm({
                 size="sm"
                 onClick={() => onShapeModeChange("polygon")}
               >
-                Poligon
+                Polygon
               </Button>
               <Button
                 type="button"
@@ -183,13 +183,13 @@ export function GeofenceDrawerForm({
                 size="sm"
                 onClick={() => onShapeModeChange("circle")}
               >
-                Daire
+                Circle
               </Button>
             </div>
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <Label>Geometri</Label>
+            <Label>Geometry</Label>
             <div className="flex gap-2">
               <Button
                 type="button"
@@ -199,7 +199,7 @@ export function GeofenceDrawerForm({
                 onClick={() => onStartDraw(shapeMode)}
               >
                 <Pencil className="mr-1.5 h-3.5 w-3.5" />
-                {hasGeometry ? "Yeniden Çiz" : "Haritada Çiz"}
+                {hasGeometry ? "Redraw" : "Draw on Map"}
               </Button>
               {hasGeometry && (
                 <Button type="button" variant="ghost" size="sm" onClick={onCancelDraw}>
@@ -210,8 +210,8 @@ export function GeofenceDrawerForm({
             {hasGeometry && (
               <p className="text-xs text-success">
                 {geometry.type === "polygon"
-                  ? `Poligon çizildi (${(geometry.polygon?.coordinates[0]?.length ?? 1) - 1} köşe)`
-                  : `Daire çizildi (${geometry.circle?.radiusMeters} m)`}
+                  ? `Polygon drawn (${(geometry.polygon?.coordinates[0]?.length ?? 1) - 1} vertices)`
+                  : `Circle drawn (${geometry.circle?.radiusMeters} m)`}
               </p>
             )}
           </div>
@@ -220,7 +220,7 @@ export function GeofenceDrawerForm({
             <form.Field name="radiusMeters">
               {(field) => (
                 <div className="flex flex-col gap-1.5">
-                  <Label>Yarıçap: {field.state.value} m</Label>
+                  <Label>Radius: {field.state.value} m</Label>
                   <Slider
                     value={[field.state.value]}
                     onValueChange={(v) => {
@@ -239,7 +239,7 @@ export function GeofenceDrawerForm({
           <form.Field name="direction">
             {(field) => (
               <div className="flex flex-col gap-1.5">
-                <Label htmlFor="gf-direction">Yön</Label>
+                <Label htmlFor="gf-direction">Direction</Label>
                 <Select
                   id="gf-direction"
                   value={field.state.value}
@@ -258,7 +258,7 @@ export function GeofenceDrawerForm({
           <form.Field name="appliesTo">
             {(field) => (
               <div className="flex flex-col gap-1.5">
-                <Label>Uygulanacak Araçlar</Label>
+                <Label>Applicable Vehicles</Label>
                 <div className="flex gap-3">
                   <label className="flex items-center gap-1.5 text-sm">
                     <input
@@ -269,7 +269,7 @@ export function GeofenceDrawerForm({
                       onChange={() => field.handleChange("all")}
                       className="accent-brand-600"
                     />
-                    Tümü
+                    All
                   </label>
                   <label className="flex items-center gap-1.5 text-sm">
                     <input
@@ -280,7 +280,7 @@ export function GeofenceDrawerForm({
                       onChange={() => field.handleChange("specific")}
                       className="accent-brand-600"
                     />
-                    Belirli
+                    Specific
                   </label>
                 </div>
               </div>
@@ -290,7 +290,7 @@ export function GeofenceDrawerForm({
           <form.Field name="color">
             {(field) => (
               <div className="flex flex-col gap-1.5">
-                <Label>Renk</Label>
+                <Label>Color</Label>
                 <div className="flex flex-wrap gap-2">
                   {COLOR_SWATCHES.map((c) => (
                     <button
@@ -321,7 +321,7 @@ export function GeofenceDrawerForm({
                   checked={field.state.value}
                   onCheckedChange={(v) => field.handleChange(v)}
                 />
-                <span className="text-sm">Aktif</span>
+                <span className="text-sm">Active</span>
               </label>
             )}
           </form.Field>
@@ -333,11 +333,11 @@ export function GeofenceDrawerForm({
               className="flex-1"
               onClick={() => onOpenChange(false)}
             >
-              İptal
+              Cancel
             </Button>
             <Button type="submit" className="flex-1" disabled={form.state.isSubmitting}>
               {form.state.isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              {editing ? "Güncelle" : "Oluştur"}
+              {editing ? "Update" : "Create"}
             </Button>
           </div>
         </form>

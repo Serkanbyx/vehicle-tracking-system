@@ -8,20 +8,20 @@ export function StatsRow() {
   return (
     <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
       <StatCard
-        label="Toplam Filo"
+        label="Total Fleet"
         value={total}
         icon={<Truck className="h-5 w-5" />}
         color="brand"
       />
       <StatCard
-        label="Hareket Halinde"
+        label="Moving"
         value={moving}
         icon={<Activity className="h-5 w-5" />}
         color="success"
       />
-      <StatCard label="Boşta" value={idle} icon={<Pause className="h-5 w-5" />} color="warning" />
+      <StatCard label="Idle" value={idle} icon={<Pause className="h-5 w-5" />} color="warning" />
       <StatCard
-        label="Çevrimdışı"
+        label="Offline"
         value={offline}
         icon={<WifiOff className="h-5 w-5" />}
         color="neutral"

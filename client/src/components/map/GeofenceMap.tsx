@@ -172,7 +172,7 @@ export const GeofenceMap = forwardRef<GeofenceMapHandle, GeofenceMapProps>(funct
       if (mode === "draw_polygon") {
         const verts = polygonVerticesRef.current;
         if (verts.length >= MAX_VERTICES) {
-          toast.error(`Maksimum ${MAX_VERTICES} köşe noktası eklenebilir.`);
+          toast.error(`Maximum ${MAX_VERTICES} vertices can be added.`);
           return;
         }
         verts.push(lngLat);
@@ -186,7 +186,7 @@ export const GeofenceMap = forwardRef<GeofenceMapHandle, GeofenceMapProps>(funct
           previewMarkerRef.current = new maplibregl.Marker({ element: el })
             .setLngLat(lngLat)
             .addTo(mapRef.current!);
-          toast.info("Yarıçapı belirlemek için ikinci noktayı tıklayın.");
+          toast.info("Click second point to define radius.");
         } else {
           const center = circleCenterRef.current;
           const radiusM = Math.min(haversineDistance(center, lngLat), MAX_RADIUS_M);
@@ -197,7 +197,7 @@ export const GeofenceMap = forwardRef<GeofenceMapHandle, GeofenceMapProps>(funct
           onGeometryChange?.(circleGeom);
           modeRef.current = "idle";
           updateCanvasCursor();
-          toast.success(`Daire çizildi (${Math.round(radiusM)} m)`);
+          toast.success(`Circle drawn (${Math.round(radiusM)} m)`);
         }
       } else if (mode === "test_point" && testGeofenceId) {
         testGeofence(testGeofenceId, {
@@ -205,12 +205,12 @@ export const GeofenceMap = forwardRef<GeofenceMapHandle, GeofenceMapProps>(funct
           lat: lngLat[1],
         })
           .then((res) => {
-            toast(res.inside ? "İçinde: Evet ✓" : "İçinde: Hayır ✗", {
+            toast(res.inside ? "Inside: Yes ✓" : "Inside: No ✗", {
               duration: 3000,
             });
           })
           .catch(() => {
-            toast.error("Test noktası sorgulanamadı.");
+            toast.error("Could not query test point.");
           });
       }
     },
@@ -236,12 +236,12 @@ export const GeofenceMap = forwardRef<GeofenceMapHandle, GeofenceMapProps>(funct
 
       const verts = polygonVerticesRef.current;
       if (verts.length < 3) {
-        toast.error("En az 3 köşe noktası gereklidir.");
+        toast.error("At least 3 vertices are required.");
         return;
       }
 
       if (verts.length > MAX_VERTICES) {
-        toast.error(`Maksimum ${MAX_VERTICES} köşe noktası aşıldı.`);
+        toast.error(`Maximum ${MAX_VERTICES} vertices exceeded.`);
         return;
       }
 
@@ -254,7 +254,7 @@ export const GeofenceMap = forwardRef<GeofenceMapHandle, GeofenceMapProps>(funct
       onGeometryChange?.({ type: "polygon", polygon });
       modeRef.current = "idle";
       updateCanvasCursor();
-      toast.success(`Poligon çizildi (${verts.length} köşe)`);
+      toast.success(`Polygon drawn (${verts.length} vertices)`);
     },
     [onGeometryChange],
   );
@@ -281,8 +281,8 @@ export const GeofenceMap = forwardRef<GeofenceMapHandle, GeofenceMapProps>(funct
         updateCanvasCursor();
         toast.info(
           shape === "polygon"
-            ? "Köşe noktalarını tıklayın, bitirmek için çift tıklayın."
-            : "Merkez noktayı tıklayın.",
+            ? "Click to place vertices, double-click to finish."
+            : "Click to set center point.",
         );
       },
       cancelDrawing() {

@@ -49,22 +49,22 @@ describe("LoginPage", () => {
   it("should render the login form with email and password fields", () => {
     render(React.createElement(LoginPage));
 
-    expect(screen.getByLabelText("E-posta")).toBeInTheDocument();
-    expect(screen.getByLabelText("Şifre")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /giriş yap/i })).toBeInTheDocument();
+    expect(screen.getByLabelText("Email")).toBeInTheDocument();
+    expect(screen.getByLabelText("Password")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /sign in/i })).toBeInTheDocument();
   });
 
   it("should show validation error for invalid email", async () => {
     const user = userEvent.setup();
     render(React.createElement(LoginPage));
 
-    const emailInput = screen.getByLabelText("E-posta");
+    const emailInput = screen.getByLabelText("Email");
     await user.click(emailInput);
     await user.type(emailInput, "not-an-email");
     await user.tab();
 
     await waitFor(() => {
-      expect(screen.getByText("Geçerli bir e-posta girin")).toBeInTheDocument();
+      expect(screen.getByText("Enter a valid email")).toBeInTheDocument();
     });
   });
 
@@ -72,12 +72,12 @@ describe("LoginPage", () => {
     const user = userEvent.setup();
     render(React.createElement(LoginPage));
 
-    const passwordInput = screen.getByLabelText("Şifre");
+    const passwordInput = screen.getByLabelText("Password");
     await user.click(passwordInput);
     await user.tab();
 
     await waitFor(() => {
-      expect(screen.getByText("Şifre gerekli")).toBeInTheDocument();
+      expect(screen.getByText("Password is required")).toBeInTheDocument();
     });
   });
 
@@ -86,9 +86,9 @@ describe("LoginPage", () => {
     const user = userEvent.setup();
     render(React.createElement(LoginPage));
 
-    await user.type(screen.getByLabelText("E-posta"), "test@test.com");
-    await user.type(screen.getByLabelText("Şifre"), "Password123");
-    await user.click(screen.getByRole("button", { name: /giriş yap/i }));
+    await user.type(screen.getByLabelText("Email"), "test@test.com");
+    await user.type(screen.getByLabelText("Password"), "Password123");
+    await user.click(screen.getByRole("button", { name: /sign in/i }));
 
     await waitFor(() => {
       expect(mockLogin).toHaveBeenCalledWith("test@test.com", "Password123");
@@ -100,12 +100,12 @@ describe("LoginPage", () => {
     const user = userEvent.setup();
     render(React.createElement(LoginPage));
 
-    await user.type(screen.getByLabelText("E-posta"), "bad@test.com");
-    await user.type(screen.getByLabelText("Şifre"), "WrongPass1");
-    await user.click(screen.getByRole("button", { name: /giriş yap/i }));
+    await user.type(screen.getByLabelText("Email"), "bad@test.com");
+    await user.type(screen.getByLabelText("Password"), "WrongPass1");
+    await user.click(screen.getByRole("button", { name: /sign in/i }));
 
     await waitFor(() => {
-      expect(screen.getByText("Geçersiz e-posta veya şifre")).toBeInTheDocument();
+      expect(screen.getByText("Invalid email or password")).toBeInTheDocument();
     });
   });
 
@@ -114,19 +114,19 @@ describe("LoginPage", () => {
     const user = userEvent.setup();
     render(React.createElement(LoginPage));
 
-    await user.type(screen.getByLabelText("E-posta"), "test@test.com");
-    await user.type(screen.getByLabelText("Şifre"), "Password123");
-    await user.click(screen.getByRole("button", { name: /giriş yap/i }));
+    await user.type(screen.getByLabelText("Email"), "test@test.com");
+    await user.type(screen.getByLabelText("Password"), "Password123");
+    await user.click(screen.getByRole("button", { name: /sign in/i }));
 
     await waitFor(() => {
-      expect(screen.getByText("Bir hata oluştu. Lütfen tekrar deneyin.")).toBeInTheDocument();
+      expect(screen.getByText("An error occurred. Please try again.")).toBeInTheDocument();
     });
   });
 
   it("should have a link to register page", () => {
     render(React.createElement(LoginPage));
 
-    const link = screen.getByText("Kayıt Ol");
+    const link = screen.getByText("Sign Up");
     expect(link).toBeInTheDocument();
     expect(link.closest("a")).toHaveAttribute("href", "/register");
   });

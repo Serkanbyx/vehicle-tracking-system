@@ -93,7 +93,7 @@ export function TripMapModal({ trip, onClose }: TripMapModalProps) {
       <DialogContent className="max-w-2xl">
         <DialogHeader>
           <DialogTitle>
-            Sefer Rotası
+            Trip Route
             {trip?.vehicle && ` — ${trip.vehicle.plate}`}
           </DialogTitle>
         </DialogHeader>
@@ -104,7 +104,7 @@ export function TripMapModal({ trip, onClose }: TripMapModalProps) {
             <div ref={containerRef} className="h-full w-full" />
           ) : (
             <div className="flex h-full items-center justify-center text-sm text-gray-400">
-              Rota verisi bulunamadı
+              No route data found
             </div>
           )}
         </div>

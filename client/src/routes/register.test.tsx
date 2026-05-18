@@ -48,23 +48,23 @@ describe("RegisterPage", () => {
   it("should render the registration form", () => {
     render(React.createElement(RegisterPage));
 
-    expect(screen.getByLabelText("İsim")).toBeInTheDocument();
-    expect(screen.getByLabelText("E-posta")).toBeInTheDocument();
-    expect(screen.getByLabelText("Şifre")).toBeInTheDocument();
-    expect(screen.getByLabelText("Şifre Tekrarı")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /kayıt ol/i })).toBeInTheDocument();
+    expect(screen.getByLabelText("Name")).toBeInTheDocument();
+    expect(screen.getByLabelText("Email")).toBeInTheDocument();
+    expect(screen.getByLabelText("Password")).toBeInTheDocument();
+    expect(screen.getByLabelText("Confirm Password")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /sign up/i })).toBeInTheDocument();
   });
 
   it("should show error when passwords do not match", async () => {
     const user = userEvent.setup();
     render(React.createElement(RegisterPage));
 
-    await user.type(screen.getByLabelText("Şifre"), "Password123");
-    await user.type(screen.getByLabelText("Şifre Tekrarı"), "Different456");
+    await user.type(screen.getByLabelText("Password"), "Password123");
+    await user.type(screen.getByLabelText("Confirm Password"), "Different456");
     await user.tab();
 
     await waitFor(() => {
-      expect(screen.getByText("Şifreler eşleşmiyor")).toBeInTheDocument();
+      expect(screen.getByText("Passwords do not match")).toBeInTheDocument();
     });
   });
 
@@ -72,12 +72,12 @@ describe("RegisterPage", () => {
     const user = userEvent.setup();
     render(React.createElement(RegisterPage));
 
-    const passwordInput = screen.getByLabelText("Şifre");
+    const passwordInput = screen.getByLabelText("Password");
     await user.type(passwordInput, "Ab1");
     await user.tab();
 
     await waitFor(() => {
-      expect(screen.getByText("Şifre en az 8 karakter olmalı")).toBeInTheDocument();
+      expect(screen.getByText("Password must be at least 8 characters")).toBeInTheDocument();
     });
   });
 
@@ -85,12 +85,12 @@ describe("RegisterPage", () => {
     const user = userEvent.setup();
     render(React.createElement(RegisterPage));
 
-    const passwordInput = screen.getByLabelText("Şifre");
+    const passwordInput = screen.getByLabelText("Password");
     await user.type(passwordInput, "12345678");
     await user.tab();
 
     await waitFor(() => {
-      expect(screen.getByText("Şifre en az bir harf içermeli")).toBeInTheDocument();
+      expect(screen.getByText("Password must contain at least one letter")).toBeInTheDocument();
     });
   });
 
@@ -99,11 +99,11 @@ describe("RegisterPage", () => {
     const user = userEvent.setup();
     render(React.createElement(RegisterPage));
 
-    await user.type(screen.getByLabelText("İsim"), "Test User");
-    await user.type(screen.getByLabelText("E-posta"), "new@test.com");
-    await user.type(screen.getByLabelText("Şifre"), "Password123");
-    await user.type(screen.getByLabelText("Şifre Tekrarı"), "Password123");
-    await user.click(screen.getByRole("button", { name: /kayıt ol/i }));
+    await user.type(screen.getByLabelText("Name"), "Test User");
+    await user.type(screen.getByLabelText("Email"), "new@test.com");
+    await user.type(screen.getByLabelText("Password"), "Password123");
+    await user.type(screen.getByLabelText("Confirm Password"), "Password123");
+    await user.click(screen.getByRole("button", { name: /sign up/i }));
 
     await waitFor(() => {
       expect(mockRegister).toHaveBeenCalledWith("Test User", "new@test.com", "Password123");
@@ -116,11 +116,11 @@ describe("RegisterPage", () => {
     const user = userEvent.setup();
     render(React.createElement(RegisterPage));
 
-    await user.type(screen.getByLabelText("İsim"), "Test User");
-    await user.type(screen.getByLabelText("E-posta"), "dupe@test.com");
-    await user.type(screen.getByLabelText("Şifre"), "Password123");
-    await user.type(screen.getByLabelText("Şifre Tekrarı"), "Password123");
-    await user.click(screen.getByRole("button", { name: /kayıt ol/i }));
+    await user.type(screen.getByLabelText("Name"), "Test User");
+    await user.type(screen.getByLabelText("Email"), "dupe@test.com");
+    await user.type(screen.getByLabelText("Password"), "Password123");
+    await user.type(screen.getByLabelText("Confirm Password"), "Password123");
+    await user.click(screen.getByRole("button", { name: /sign up/i }));
 
     await waitFor(() => {
       expect(screen.getByText("Email already in use")).toBeInTheDocument();
@@ -130,7 +130,7 @@ describe("RegisterPage", () => {
   it("should have a link to login page", () => {
     render(React.createElement(RegisterPage));
 
-    const link = screen.getByText("Giriş Yap");
+    const link = screen.getByText("Sign In");
     expect(link).toBeInTheDocument();
     expect(link.closest("a")).toHaveAttribute("href", "/login");
   });

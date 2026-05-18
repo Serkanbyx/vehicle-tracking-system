@@ -29,7 +29,7 @@ function SettingsNotificationsPage() {
       };
       updateUser({ preferences: prefs });
       authService.updateMe({ preferences: prefs }).catch(() => {
-        toast.error("Bildirim ayarları kaydedilemedi.");
+        toast.error("Failed to save notification settings.");
       });
     },
     [user, updateUser, notifications],
@@ -39,11 +39,11 @@ function SettingsNotificationsPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold">Bildirim Ayarları</h1>
+      <h1 className="text-2xl font-bold">Notification Settings</h1>
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">E-posta Bildirimleri</CardTitle>
+          <CardTitle className="text-base">Email Notifications</CardTitle>
         </CardHeader>
         <CardContent>
           <label htmlFor="notify-email" className="flex items-center gap-3">
@@ -52,14 +52,14 @@ function SettingsNotificationsPage() {
               checked={notifications.email ?? true}
               onCheckedChange={(v) => saveNotifications({ email: v })}
             />
-            <span className="text-sm">Uyarılar için e-posta bildirimi al</span>
+            <span className="text-sm">Receive email notifications for alerts</span>
           </label>
         </CardContent>
       </Card>
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Uygulama İçi Bildirimler</CardTitle>
+          <CardTitle className="text-base">In-App Notifications</CardTitle>
         </CardHeader>
         <CardContent>
           <label htmlFor="notify-inapp" className="flex items-center gap-3">
@@ -68,17 +68,17 @@ function SettingsNotificationsPage() {
               checked={notifications.inApp ?? true}
               onCheckedChange={(v) => saveNotifications({ inApp: v })}
             />
-            <span className="text-sm">Uygulama içi anlık bildirim göster</span>
+            <span className="text-sm">Show in-app push notifications</span>
           </label>
         </CardContent>
       </Card>
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Önem Eşiği</CardTitle>
+          <CardTitle className="text-base">Severity Threshold</CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-2">
-          <Label htmlFor="severity-threshold">Yalnızca bu düzey ve üzeri bildirimler gelsin</Label>
+          <Label htmlFor="severity-threshold">Only receive notifications at this level and above</Label>
           <Select
             id="severity-threshold"
             value={notifications.severityThreshold ?? "info"}
@@ -89,12 +89,12 @@ function SettingsNotificationsPage() {
             }
             className="max-w-xs"
           >
-            <option value="info">Bilgi (Tümü)</option>
-            <option value="warning">Uyarı ve üzeri</option>
-            <option value="critical">Yalnızca Kritik</option>
+            <option value="info">Info (All)</option>
+            <option value="warning">Warning and above</option>
+            <option value="critical">Critical only</option>
           </Select>
           <p className="text-xs text-gray-500">
-            Seçtiğiniz düzeyin altındaki bildirimler gösterilmez.
+            Notifications below the selected level will not be shown.
           </p>
         </CardContent>
       </Card>

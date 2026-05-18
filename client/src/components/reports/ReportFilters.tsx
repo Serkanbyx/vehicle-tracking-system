@@ -43,14 +43,14 @@ export function ReportFilters({ filters }: ReportFiltersProps) {
   return (
     <div className="flex flex-wrap items-end gap-3">
       <div className="flex flex-col gap-1.5">
-        <Label htmlFor="rp-vehicle">Araç</Label>
+        <Label htmlFor="rp-vehicle">Vehicle</Label>
         <Select
           id="rp-vehicle"
           value={filters.vehicleId ?? ""}
           onChange={(e) => setFilter("vehicleId", e.target.value)}
           className="w-44"
         >
-          <option value="">Tüm Araçlar</option>
+          <option value="">All Vehicles</option>
           {vehiclesData?.items.map((v) => (
             <option key={v.id} value={v.id}>
               {v.plate}
@@ -60,7 +60,7 @@ export function ReportFilters({ filters }: ReportFiltersProps) {
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <Label htmlFor="rp-from">Başlangıç</Label>
+        <Label htmlFor="rp-from">Start</Label>
         <Input
           id="rp-from"
           type="date"
@@ -71,7 +71,7 @@ export function ReportFilters({ filters }: ReportFiltersProps) {
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <Label htmlFor="rp-to">Bitiş</Label>
+        <Label htmlFor="rp-to">End</Label>
         <Input
           id="rp-to"
           type="date"
@@ -82,7 +82,7 @@ export function ReportFilters({ filters }: ReportFiltersProps) {
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <Label htmlFor="rp-min">Min Mesafe (km)</Label>
+        <Label htmlFor="rp-min">Min Distance (km)</Label>
         <Input
           id="rp-min"
           type="number"
@@ -100,7 +100,7 @@ export function ReportFilters({ filters }: ReportFiltersProps) {
 
       {hasFilters && (
         <Button variant="ghost" size="sm" onClick={clearAll}>
-          Temizle
+          Clear
         </Button>
       )}
     </div>

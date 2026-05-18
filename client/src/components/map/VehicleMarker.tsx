@@ -1,5 +1,4 @@
 import { formatDistanceToNow } from "date-fns";
-import { tr } from "date-fns/locale";
 import maplibregl from "maplibre-gl";
 import { useEffect, useRef } from "react";
 import { useSmoothPosition } from "@/hooks/use-smooth-position";
@@ -15,16 +14,15 @@ function buildPopupHtml(vehicle: LiveVehicle | undefined): string {
   const relTime = escapeHtml(
     formatDistanceToNow(new Date(vehicle.timestamp), {
       addSuffix: true,
-      locale: tr,
     }),
   );
 
   const statusLabel =
     vehicle.status === "moving"
-      ? "Hareket Halinde"
+      ? "Moving"
       : vehicle.status === "idle"
-        ? "Boşta"
-        : "Çevrimdışı";
+        ? "Idle"
+        : "Offline";
 
   const statusColor =
     vehicle.status === "moving" ? "#10b981" : vehicle.status === "idle" ? "#f59e0b" : "#6b7280";
@@ -36,12 +34,12 @@ function buildPopupHtml(vehicle: LiveVehicle | undefined): string {
         <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${statusColor}"></span>
         <span>${escapeHtml(statusLabel)}</span>
       </div>
-      <div style="color:#666;margin-bottom:2px;">Hız: <strong>${speed} km/h</strong></div>
-      <div style="color:#666;margin-bottom:6px;">Yön: ${vehicle.heading}°</div>
+      <div style="color:#666;margin-bottom:2px;">Speed: <strong>${speed} km/h</strong></div>
+      <div style="color:#666;margin-bottom:6px;">Heading: ${vehicle.heading}°</div>
       <div style="color:#999;font-size:11px;margin-bottom:8px;">${relTime}</div>
       <div style="display:flex;gap:8px;">
-        <a href="/vehicles/${escapeHtml(vehicle.id)}" style="color:#2563eb;text-decoration:none;font-size:12px;">Detay</a>
-        <a href="/vehicles/${escapeHtml(vehicle.id)}#history" style="color:#2563eb;text-decoration:none;font-size:12px;">Geçmiş</a>
+        <a href="/vehicles/${escapeHtml(vehicle.id)}" style="color:#2563eb;text-decoration:none;font-size:12px;">Details</a>
+        <a href="/vehicles/${escapeHtml(vehicle.id)}#history" style="color:#2563eb;text-decoration:none;font-size:12px;">History</a>
       </div>
     </div>
   `;

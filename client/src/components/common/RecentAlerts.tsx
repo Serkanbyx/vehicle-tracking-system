@@ -1,6 +1,5 @@
 import { Link } from "@tanstack/react-router";
 import { formatDistanceToNow } from "date-fns";
-import { tr } from "date-fns/locale";
 import { Bell } from "lucide-react";
 import { useEffect, useState } from "react";
 import { dashboardSocket } from "@/api";
@@ -31,12 +30,12 @@ export function RecentAlerts() {
       <CardHeader className="pb-3">
         <CardTitle className="flex items-center gap-2 text-base">
           <Bell className="h-4 w-4" />
-          Son Uyarılar
+          Recent Alerts
         </CardTitle>
       </CardHeader>
       <CardContent>
         {recent.length === 0 ? (
-          <p className="py-4 text-center text-sm text-gray-400">Henüz yeni uyarı yok</p>
+          <p className="py-4 text-center text-sm text-gray-400">No new alerts yet</p>
         ) : (
           <ul className="flex flex-col gap-2">
             {recent.map((alert) => (
@@ -64,7 +63,6 @@ export function RecentAlerts() {
                   <p className="text-xs text-gray-400">
                     {formatDistanceToNow(new Date(alert.createdAt), {
                       addSuffix: true,
-                      locale: tr,
                     })}
                   </p>
                 </div>
