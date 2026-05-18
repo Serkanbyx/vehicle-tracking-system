@@ -230,7 +230,7 @@ Clients should parse each frame as JSON with a top-level discriminator **`type`*
 │   │   ├── migrations/
 │   │   └── scripts/      # seed-admin, seed-test, gps-simulator
 │   └── test/e2e/         # Vitest + Supertest API tests
-├── STEPS.md              # Build curriculum / checklist
+├── docs/build-guide.md   # Build curriculum / checklist
 └── README.md
 ```
 
@@ -305,7 +305,7 @@ Tune chunk intervals and retention policies to match your SLA and storage budget
 
 ## Deployment
 
-See **STEPS.md — STEP 86** for production deployment guidance (hosting, env, migrations, and CDN/static assets).
+See **[docs/build-guide.md](docs/build-guide.md) — STEP 86** for production deployment guidance (hosting, env, migrations, and CDN/static assets).
 
 ## License
 

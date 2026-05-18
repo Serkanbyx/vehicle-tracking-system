@@ -1,11 +1,48 @@
 # Vehicle Tracking System — Step-by-Step Build Guide
 
+> **Archived: original build playbook.** This document is the original step-by-step roadmap used to build the Vehicle Tracking System from scratch. The codebase may have evolved since the guide was written — bug fixes, refactors, and production patches are applied directly to the source. See [../README.md](../README.md) for current setup, architecture, and deployment notes.
+
+---
+
 > **Project Summary:**
-> Vehicle Tracking System is a production-grade, end-to-end type-safe fleet monitoring platform. The backend is a **NestJS 10 + TypeScript** API backed by **PostgreSQL + PostGIS** (with `Location` table designed to be promoted to a TimescaleDB hypertable when fleet scale demands it). Real-time ingestion uses **native WebSocket** (`@nestjs/platform-ws`) with a custom room manager, split into two paths — `/ws/vehicles` for GPS devices and the built-in simulator, `/ws/dashboard` for the web client. The frontend is a **TanStack Start** SPA with **TanStack Router**, **TanStack Query**, **Zustand** (live socket state), **TanStack Form**, **MapLibre GL JS** (vector tiles, WebGL smooth marker animation), and **TailwindCSS v4** styled with shadcn/ui patterns. Three roles — **Admin**, **Fleet Manager**, **Viewer** — are guarded server-side by NestJS Passport strategies (JWT access + httpOnly refresh token rotation) and client-side by route guards. Observability via **Sentry** (errors) and **Better Stack** (Pino logs); lint/format via **Biome**; testing via **Vitest + Supertest + Playwright**. Deployed on **Railway** (backend) + **Vercel** (frontend) + **Supabase** (Postgres + PostGIS).
+> Vehicle Tracking System is a production-grade, end-to-end type-safe fleet monitoring platform. The backend is a **NestJS 10 + TypeScript** API backed by **PostgreSQL + PostGIS** (with `Location` table designed to be promoted to a TimescaleDB hypertable when fleet scale demands it). Real-time ingestion uses **native WebSocket** (`@nestjs/platform-ws`) with a custom room manager, split into two paths — `/ws/vehicles` for GPS devices and the built-in simulator, `/ws/dashboard` for the web client. The frontend is a **TanStack Start** SPA with **TanStack Router**, **TanStack Query**, **Zustand** (live socket state), **TanStack Form**, **MapLibre GL JS** (vector tiles, WebGL smooth marker animation), and **TailwindCSS v4** styled with shadcn/ui patterns. Three roles — **Admin**, **Fleet Manager**, **Viewer** — are guarded server-side by NestJS Passport strategies (JWT access + httpOnly refresh token rotation) and client-side by route guards. Observability via **Sentry** (errors) and **Better Stack** (Pino logs); lint/format via **Biome**; testing via **Vitest + Supertest + Playwright**. Deployed on **Render** (backend) + **Vercel** (frontend) + **Supabase** (Postgres + PostGIS).
 
 > Each step below is a self-contained prompt. Execute them in order. Each step is sized to fit one focused prompt session — small enough to be reviewable, large enough to ship a coherent unit of work.
 
 > Stack: NestJS 10, TypeScript 5, PostgreSQL 16 + PostGIS 3, TypeORM 0.3, native ws 8, `@nestjs/passport` + `@nestjs/jwt`, Cloudinary; TanStack Start (Vite 7 + React 19), TanStack Router/Query/Form, Zustand, MapLibre GL JS 4, Tailwind v4, Biome 1.9+, Vitest 2, Playwright 1.
+
+---
+
+## Global Build Rules (apply to EVERY step)
+
+- Do **not** run any `git` commands (`git init`, `git add`, `git commit`, `git push`, etc.). Version control is handled manually by the user via GitHub Desktop.
+- Do **not** install packages beyond those listed in the step. If a step does not mention a dependency, do not add one.
+- Do **not** start long-running processes (dev servers, watchers) unless the step explicitly asks for it.
+- Treat every step as self-contained: it should compile, pass lint, and be reviewable on its own.
+- Use **English** for all code identifiers (variables, functions, types, filenames). UI-facing strings use **Turkish**.
+- Follow the existing Biome configuration for formatting and linting. Do not override shared rules.
+- Prefer native/built-in APIs over third-party packages. Keep the dependency footprint minimal.
+
+---
+
+## Architecture at a Glance
+
+```mermaid
+flowchart LR
+  D[GPS Device / Simulator] -- location_update --> WS1["ws host/ws/vehicles"]
+  WS1 --> Ingest[LocationIngestionService]
+  Ingest --> DB[(PostgreSQL + PostGIS)]
+  Ingest --> Engine[AlertEngine]
+  Ingest --> Aggregator[TripAggregator]
+  Engine --> Room[RoomManager]
+  Aggregator --> Room
+  Room --> WS2["ws host/ws/dashboard"]
+  WS2 --> Client[TanStack SPA]
+  Client -- REST /api --> API[NestJS REST]
+  API --> DB
+```
+
+GPS devices and the built-in simulator push `location_update` frames over `/ws/vehicles`. `LocationIngestionService` persists each point, updates the vehicle's `lastLocation`, runs it through `AlertEngine` (speed / idle / geofence) and `TripAggregator`, then broadcasts via `RoomManager` to `/ws/dashboard` clients. The SPA consumes both the WebSocket stream (live markers, alerts) and REST endpoints (CRUD, history, reports, admin). Cloudinary handles file uploads; Sentry + Better Stack provide observability.
 
 ---
 
@@ -4857,4 +4894,4 @@ Run the full functional + security checklist (from STEP 40 + manual flows):
 
 ---
 
-**End of guide.** This STEPS.md is the single source of truth for building the Vehicle Tracking System on a NestJS + PostgreSQL/PostGIS + TanStack Start stack. Execute steps in order; each is self-contained, has explicit specifications, and includes the security context required for its scope. **Total: 86 steps across 23 phases — all completed.**
+**End of guide.** This build guide (`docs/build-guide.md`) is the single source of truth for building the Vehicle Tracking System on a NestJS + PostgreSQL/PostGIS + TanStack Start stack. Execute steps in order; each is self-contained, has explicit specifications, and includes the security context required for its scope. **Total: 86 steps across 23 phases — all completed.**
