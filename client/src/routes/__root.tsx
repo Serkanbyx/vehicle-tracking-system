@@ -1,8 +1,12 @@
 import * as Sentry from "@sentry/react";
-import { createRootRouteWithContext, Link, Outlet } from "@tanstack/react-router";
+import { createRootRouteWithContext, Link, Outlet, useRouterState } from "@tanstack/react-router";
 import { AlertTriangle, Compass, RefreshCw } from "lucide-react";
+import { Footer } from "@/components/layout/Footer";
+import { Navbar } from "@/components/layout/Navbar";
 import { Button } from "@/components/ui";
 import type { RouterContext } from "@/router";
+
+const AUTH_ROUTES = ["/login", "/register"];
 
 export const Route = createRootRouteWithContext<RouterContext>()({
   component: RootComponent,
@@ -11,9 +15,22 @@ export const Route = createRootRouteWithContext<RouterContext>()({
 });
 
 function RootComponent() {
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const isAuthPage = AUTH_ROUTES.includes(pathname);
+
   return (
     <Sentry.ErrorBoundary fallback={SentryFallback}>
-      <Outlet />
+      {isAuthPage ? (
+        <Outlet />
+      ) : (
+        <div className="flex min-h-full flex-col">
+          <Navbar />
+          <main className="flex-1">
+            <Outlet />
+          </main>
+          <Footer />
+        </div>
+      )}
     </Sentry.ErrorBoundary>
   );
 }
