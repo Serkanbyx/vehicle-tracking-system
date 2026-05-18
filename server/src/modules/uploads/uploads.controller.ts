@@ -8,17 +8,21 @@ import {
   UseInterceptors,
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
+import { ApiBearerAuth, ApiConsumes, ApiTags } from "@nestjs/swagger";
 import { Throttle } from "@nestjs/throttler";
 import { Roles } from "../../common/decorators/roles.decorator.js";
 import { UserRole } from "../../common/enums/user-role.enum.js";
 import { type UploadResult, UploadsService } from "./uploads.service.js";
 
+@ApiTags("Uploads")
+@ApiBearerAuth("JWT")
 @Controller("uploads")
 export class UploadsController {
   constructor(private readonly uploadsService: UploadsService) {}
 
   @Roles(UserRole.MANAGER, UserRole.ADMIN)
   @Throttle({ upload: { ttl: 3_600_000, limit: 30 } })
+  @ApiConsumes("multipart/form-data")
   @UseInterceptors(FileInterceptor("image"))
   @Post("driver")
   async uploadDriver(@UploadedFile() file: Express.Multer.File): Promise<UploadResult> {
@@ -32,6 +36,7 @@ export class UploadsController {
 
   @Roles(UserRole.MANAGER, UserRole.ADMIN)
   @Throttle({ upload: { ttl: 3_600_000, limit: 30 } })
+  @ApiConsumes("multipart/form-data")
   @UseInterceptors(FileInterceptor("image"))
   @Post("vehicle")
   async uploadVehicle(@UploadedFile() file: Express.Multer.File): Promise<UploadResult> {
@@ -44,6 +49,7 @@ export class UploadsController {
   }
 
   @Throttle({ upload: { ttl: 3_600_000, limit: 30 } })
+  @ApiConsumes("multipart/form-data")
   @UseInterceptors(FileInterceptor("image"))
   @Post("avatar")
   async uploadAvatar(@UploadedFile() file: Express.Multer.File): Promise<UploadResult> {

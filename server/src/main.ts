@@ -1,9 +1,10 @@
 import "./instrumentation";
-import { ValidationPipe } from "@nestjs/common";
+import { RequestMethod, ValidationPipe } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { NestFactory } from "@nestjs/core";
 import type { NestExpressApplication } from "@nestjs/platform-express";
 import { WsAdapter } from "@nestjs/platform-ws";
+import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import compression from "compression";
 import cookieParser from "cookie-parser";
 import helmet from "helmet";
@@ -37,7 +38,29 @@ async function bootstrap() {
   app.use(cookieParser());
   app.use(compression());
 
-  app.setGlobalPrefix("api");
+  app.setGlobalPrefix("api", {
+    exclude: [{ path: "/", method: RequestMethod.GET }],
+  });
+
+  const swaggerConfig = new DocumentBuilder()
+    .setTitle("Vehicle Tracking System")
+    .setDescription(
+      "Fleet visibility API with live GPS updates, geofences, alerts, trips, exports, and role-based access control.",
+    )
+    .setVersion(process.env.npm_package_version || "0.0.1")
+    .setContact("Serkanby", "https://serkanbayraktar.com/", undefined)
+    .addBearerAuth({ type: "http", scheme: "bearer", bearerFormat: "JWT" }, "JWT")
+    .addCookieAuth("refreshToken", { type: "apiKey", in: "cookie" }, "RefreshCookie")
+    .build();
+
+  const document = SwaggerModule.createDocument(app, swaggerConfig);
+  SwaggerModule.setup("api-docs", app, document, {
+    swaggerOptions: {
+      persistAuthorization: true,
+      tagsSorter: "alpha",
+      operationsSorter: "method",
+    },
+  });
 
   app.useGlobalFilters(new AllExceptionsFilter());
   app.useGlobalInterceptors(new TransformInterceptor());

@@ -1,9 +1,12 @@
 import { Controller, Get, Header, Param, ParseUUIDPipe, Query, Res } from "@nestjs/common";
+import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { Throttle } from "@nestjs/throttler";
 import type { Response } from "express";
 import { TripExportQueryDto, TripQueryDto, TripSummaryQueryDto } from "./dto/index.js";
 import { TripsService } from "./trips.service.js";
 
+@ApiTags("Trips")
+@ApiBearerAuth("JWT")
 @Controller("trips")
 export class TripsController {
   constructor(private readonly tripsService: TripsService) {}

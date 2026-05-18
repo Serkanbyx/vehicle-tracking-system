@@ -5,6 +5,7 @@ import { ThrottlerGuard, ThrottlerModule } from "@nestjs/throttler";
 import { SentryModule } from "@sentry/nestjs/setup";
 import { LoggerModule } from "nestjs-pino";
 import { HealthController } from "./common/controllers/health.controller";
+import { WelcomeController } from "./common/controllers/welcome.controller";
 import { JwtAuthGuard } from "./common/guards/jwt-auth.guard";
 import { RolesGuard } from "./common/guards/roles.guard";
 import { appConfig } from "./config/app.config";
@@ -96,7 +97,7 @@ import { VehiclesModule } from "./modules/vehicles/vehicles.module";
     UploadsModule,
     RealtimeModule,
   ],
-  controllers: [HealthController],
+  controllers: [HealthController, WelcomeController],
   providers: [
     { provide: APP_GUARD, useClass: ThrottlerGuard },
     { provide: APP_GUARD, useClass: JwtAuthGuard },

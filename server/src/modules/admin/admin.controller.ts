@@ -1,4 +1,5 @@
 import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Patch, Query } from "@nestjs/common";
+import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { Throttle } from "@nestjs/throttler";
 import { CurrentUser } from "../../common/decorators/current-user.decorator.js";
 import { Roles } from "../../common/decorators/roles.decorator.js";
@@ -6,6 +7,8 @@ import { UserRole } from "../../common/enums/user-role.enum.js";
 import { AdminService } from "./admin.service.js";
 import { AdminSetRoleDto, AdminSetStatusDto, AdminUserQueryDto } from "./dto/index.js";
 
+@ApiTags("Admin")
+@ApiBearerAuth("JWT")
 @Roles(UserRole.ADMIN)
 @Throttle({ admin: {} })
 @Controller("admin")

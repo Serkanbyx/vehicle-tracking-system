@@ -12,6 +12,7 @@ import {
   Query,
   Res,
 } from "@nestjs/common";
+import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { Throttle } from "@nestjs/throttler";
 import type { Response } from "express";
 import { CurrentUser } from "../../common/decorators/current-user.decorator.js";
@@ -32,6 +33,8 @@ import {
 } from "./dto/index.js";
 import { VehiclesService } from "./vehicles.service.js";
 
+@ApiTags("Vehicles")
+@ApiBearerAuth("JWT")
 @Controller("vehicles")
 export class VehiclesController {
   constructor(

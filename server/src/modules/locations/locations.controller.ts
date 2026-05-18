@@ -10,6 +10,7 @@ import {
   Query,
   UseGuards,
 } from "@nestjs/common";
+import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { Public } from "../../common/decorators/public.decorator.js";
 import { SimulatorKeyGuard } from "../../common/guards/simulator-key.guard.js";
 import { LocationIngestionService } from "../realtime/location-ingestion.service.js";
@@ -21,6 +22,8 @@ import type {
 } from "./dto/index.js";
 import { LocationsService } from "./locations.service.js";
 
+@ApiTags("Locations")
+@ApiBearerAuth("JWT")
 @Controller("vehicles/:vehicleId")
 export class LocationsController {
   constructor(

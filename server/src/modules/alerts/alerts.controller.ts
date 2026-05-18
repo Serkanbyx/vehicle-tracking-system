@@ -10,12 +10,15 @@ import {
   Post,
   Query,
 } from "@nestjs/common";
+import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { CurrentUser } from "../../common/decorators/current-user.decorator.js";
 import { Roles } from "../../common/decorators/roles.decorator.js";
 import { UserRole } from "../../common/enums/user-role.enum.js";
 import { AlertsService } from "./alerts.service.js";
 import { AckManyDto, AlertQueryDto } from "./dto/index.js";
 
+@ApiTags("Alerts")
+@ApiBearerAuth("JWT")
 @Controller("alerts")
 export class AlertsController {
   constructor(private readonly alertsService: AlertsService) {}

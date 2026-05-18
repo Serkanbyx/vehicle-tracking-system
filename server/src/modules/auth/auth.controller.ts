@@ -10,6 +10,7 @@ import {
   Res,
   UseGuards,
 } from "@nestjs/common";
+import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { Throttle } from "@nestjs/throttler";
 import type { Response } from "express";
 import { CurrentUser } from "../../common/decorators/current-user.decorator.js";
@@ -20,6 +21,8 @@ import type { User } from "../users/user.entity.js";
 import { AuthService } from "./auth.service.js";
 import { ChangePasswordDto, DeleteAccountDto, RegisterDto, UpdateMeDto } from "./dto/index.js";
 
+@ApiTags("Auth")
+@ApiBearerAuth("JWT")
 @Controller("auth")
 export class AuthController {
   constructor(private readonly authService: AuthService) {}

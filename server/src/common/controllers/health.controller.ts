@@ -1,7 +1,9 @@
 import { Controller, Get } from "@nestjs/common";
+import { ApiTags } from "@nestjs/swagger";
 import { SkipThrottle } from "@nestjs/throttler";
 import { Public } from "../decorators/public.decorator";
 
+@ApiTags("Health")
 @Controller("health")
 export class HealthController {
   @Get()

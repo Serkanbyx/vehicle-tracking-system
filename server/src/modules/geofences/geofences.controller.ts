@@ -11,6 +11,7 @@ import {
   Post,
   Query,
 } from "@nestjs/common";
+import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { CurrentUser } from "../../common/decorators/current-user.decorator.js";
 import { Roles } from "../../common/decorators/roles.decorator.js";
 import { UserRole } from "../../common/enums/user-role.enum.js";
@@ -23,6 +24,8 @@ import type {
 } from "./dto/index.js";
 import { GeofencesService } from "./geofences.service.js";
 
+@ApiTags("Geofences")
+@ApiBearerAuth("JWT")
 @Controller("geofences")
 export class GeofencesController {
   constructor(private readonly geofencesService: GeofencesService) {}
