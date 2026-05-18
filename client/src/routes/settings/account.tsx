@@ -4,7 +4,6 @@ import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import * as authService from "@/api/auth";
-import { requireAuth } from "@/components/guards";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -25,7 +24,6 @@ import {
 import { useAuth } from "@/context/auth.context";
 
 export const Route = createFileRoute("/settings/account")({
-  beforeLoad: requireAuth,
   component: SettingsAccountPage,
 });
 

@@ -5,7 +5,6 @@ import { useRef, useState } from "react";
 import { toast } from "sonner";
 import * as authService from "@/api/auth";
 import { uploadAvatar } from "@/api/uploads";
-import { requireAuth } from "@/components/guards";
 import {
   Avatar,
   AvatarFallback,
@@ -24,7 +23,6 @@ const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"];
 const MAX_SIZE = 5 * 1024 * 1024;
 
 export const Route = createFileRoute("/settings/profile")({
-  beforeLoad: requireAuth,
   component: SettingsProfilePage,
 });
 

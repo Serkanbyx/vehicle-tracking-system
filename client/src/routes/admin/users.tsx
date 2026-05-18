@@ -9,7 +9,6 @@ import type { ListAdminUsersQuery } from "@/api/admin";
 import { listAdminUsers, removeUser, setUserActive, setUserRole } from "@/api/admin";
 import type { User, UserRole } from "@/api/types";
 import { PageNavigator } from "@/components/common";
-import { requireAdmin } from "@/components/guards";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -48,7 +47,6 @@ interface UsersSearch {
 }
 
 export const Route = createFileRoute("/admin/users")({
-  beforeLoad: requireAdmin,
   validateSearch: (raw: Record<string, unknown>): UsersSearch => ({
     q: typeof raw.q === "string" ? raw.q : undefined,
     role: typeof raw.role === "string" ? raw.role : undefined,

@@ -3,12 +3,10 @@ import { useCallback } from "react";
 import { toast } from "sonner";
 import * as authService from "@/api/auth";
 import type { UserPreferences } from "@/api/types";
-import { requireAuth } from "@/components/guards";
 import { Card, CardContent, CardHeader, CardTitle, Label, Select, Switch } from "@/components/ui";
 import { useAuth } from "@/context/auth.context";
 
 export const Route = createFileRoute("/settings/notifications")({
-  beforeLoad: requireAuth,
   component: SettingsNotificationsPage,
 });
 

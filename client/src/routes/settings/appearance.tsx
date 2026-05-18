@@ -3,7 +3,6 @@ import { Monitor, Moon, Sun } from "lucide-react";
 import { useCallback } from "react";
 import { toast } from "sonner";
 import * as authService from "@/api/auth";
-import { requireAuth } from "@/components/guards";
 import {
   Card,
   CardContent,
@@ -18,7 +17,6 @@ import { useAuth } from "@/context/auth.context";
 import { usePreferences } from "@/context/preferences.context";
 
 export const Route = createFileRoute("/settings/appearance")({
-  beforeLoad: requireAuth,
   component: SettingsAppearancePage,
 });
 

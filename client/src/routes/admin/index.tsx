@@ -2,11 +2,9 @@ import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { Activity, AlertTriangle, Car, Route as RouteIcon, Shield, Users } from "lucide-react";
 import { getAdminStats } from "@/api/admin";
-import { requireAdmin } from "@/components/guards";
 import { Card, CardContent, CardHeader, CardTitle, Skeleton } from "@/components/ui";
 
 export const Route = createFileRoute("/admin/")({
-  beforeLoad: requireAdmin,
   component: AdminDashboardPage,
 });
 

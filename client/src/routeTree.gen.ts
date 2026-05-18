@@ -14,6 +14,8 @@ import { Route as RegisterRouteImport } from './routes/register'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as GeofencesRouteImport } from './routes/geofences'
 import { Route as AlertsRouteImport } from './routes/alerts'
+import { Route as AdminRouteImport } from './routes/admin'
+import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as VehiclesIndexRouteImport } from './routes/vehicles/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
@@ -53,6 +55,16 @@ const AlertsRoute = AlertsRouteImport.update({
   path: '/alerts',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -65,8 +77,8 @@ const VehiclesIndexRoute = VehiclesIndexRouteImport.update({
 } as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/admin/',
-  path: '/admin/',
-  getParentRoute: () => rootRouteImport,
+  path: '/',
+  getParentRoute: () => AdminRoute,
 } as any)
 const VehiclesNewRoute = VehiclesNewRouteImport.update({
   id: '/vehicles/new',
@@ -80,23 +92,23 @@ const VehiclesIdRoute = VehiclesIdRouteImport.update({
 } as any)
 const SettingsProfileRoute = SettingsProfileRouteImport.update({
   id: '/settings/profile',
-  path: '/settings/profile',
-  getParentRoute: () => rootRouteImport,
+  path: '/profile',
+  getParentRoute: () => SettingsRoute,
 } as any)
 const SettingsNotificationsRoute = SettingsNotificationsRouteImport.update({
   id: '/settings/notifications',
-  path: '/settings/notifications',
-  getParentRoute: () => rootRouteImport,
+  path: '/notifications',
+  getParentRoute: () => SettingsRoute,
 } as any)
 const SettingsAppearanceRoute = SettingsAppearanceRouteImport.update({
   id: '/settings/appearance',
-  path: '/settings/appearance',
-  getParentRoute: () => rootRouteImport,
+  path: '/appearance',
+  getParentRoute: () => SettingsRoute,
 } as any)
 const SettingsAccountRoute = SettingsAccountRouteImport.update({
   id: '/settings/account',
-  path: '/settings/account',
-  getParentRoute: () => rootRouteImport,
+  path: '/account',
+  getParentRoute: () => SettingsRoute,
 } as any)
 const ProfileIdRoute = ProfileIdRouteImport.update({
   id: '/profile/$id',
@@ -105,13 +117,13 @@ const ProfileIdRoute = ProfileIdRouteImport.update({
 } as any)
 const AdminUsersRoute = AdminUsersRouteImport.update({
   id: '/admin/users',
-  path: '/admin/users',
-  getParentRoute: () => rootRouteImport,
+  path: '/users',
+  getParentRoute: () => AdminRoute,
 } as any)
 const AdminFleetRoute = AdminFleetRouteImport.update({
   id: '/admin/fleet',
-  path: '/admin/fleet',
-  getParentRoute: () => rootRouteImport,
+  path: '/fleet',
+  getParentRoute: () => AdminRoute,
 } as any)
 const VehiclesIdEditRoute = VehiclesIdEditRouteImport.update({
   id: '/edit',
@@ -122,6 +134,8 @@ const VehiclesIdEditRoute = VehiclesIdEditRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/alerts': typeof AlertsRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/settings': typeof SettingsRouteWithChildren
   '/geofences': typeof GeofencesRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
@@ -142,6 +156,8 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/alerts': typeof AlertsRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/settings': typeof SettingsRouteWithChildren
   '/geofences': typeof GeofencesRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
@@ -155,7 +171,6 @@ export interface FileRoutesByTo {
   '/settings/profile': typeof SettingsProfileRoute
   '/vehicles/$id': typeof VehiclesIdRouteWithChildren
   '/vehicles/new': typeof VehiclesNewRoute
-  '/admin': typeof AdminIndexRoute
   '/vehicles': typeof VehiclesIndexRoute
   '/vehicles/$id/edit': typeof VehiclesIdEditRoute
 }
@@ -163,6 +178,8 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/alerts': typeof AlertsRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/settings': typeof SettingsRouteWithChildren
   '/geofences': typeof GeofencesRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
@@ -185,6 +202,8 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/alerts'
+    | '/admin'
+    | '/settings'
     | '/geofences'
     | '/login'
     | '/register'
@@ -205,6 +224,8 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/alerts'
+    | '/admin'
+    | '/settings'
     | '/geofences'
     | '/login'
     | '/register'
@@ -218,13 +239,14 @@ export interface FileRouteTypes {
     | '/settings/profile'
     | '/vehicles/$id'
     | '/vehicles/new'
-    | '/admin'
     | '/vehicles'
     | '/vehicles/$id/edit'
   id:
     | '__root__'
     | '/'
     | '/alerts'
+    | '/admin'
+    | '/settings'
     | '/geofences'
     | '/login'
     | '/register'
@@ -243,23 +265,65 @@ export interface FileRouteTypes {
     | '/vehicles/$id/edit'
   fileRoutesById: FileRoutesById
 }
-export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  AlertsRoute: typeof AlertsRoute
-  GeofencesRoute: typeof GeofencesRoute
-  LoginRoute: typeof LoginRoute
-  RegisterRoute: typeof RegisterRoute
-  ReportsRoute: typeof ReportsRoute
+
+interface AdminRouteChildren {
+  AdminIndexRoute: typeof AdminIndexRoute
   AdminFleetRoute: typeof AdminFleetRoute
   AdminUsersRoute: typeof AdminUsersRoute
-  ProfileIdRoute: typeof ProfileIdRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminIndexRoute: AdminIndexRoute,
+  AdminFleetRoute: AdminFleetRoute,
+  AdminUsersRoute: AdminUsersRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(
+  AdminRouteChildren,
+)
+
+interface SettingsRouteChildren {
   SettingsAccountRoute: typeof SettingsAccountRoute
   SettingsAppearanceRoute: typeof SettingsAppearanceRoute
   SettingsNotificationsRoute: typeof SettingsNotificationsRoute
   SettingsProfileRoute: typeof SettingsProfileRoute
+}
+
+const SettingsRouteChildren: SettingsRouteChildren = {
+  SettingsAccountRoute: SettingsAccountRoute,
+  SettingsAppearanceRoute: SettingsAppearanceRoute,
+  SettingsNotificationsRoute: SettingsNotificationsRoute,
+  SettingsProfileRoute: SettingsProfileRoute,
+}
+
+const SettingsRouteWithChildren = SettingsRoute._addFileChildren(
+  SettingsRouteChildren,
+)
+
+interface VehiclesIdRouteChildren {
+  VehiclesIdEditRoute: typeof VehiclesIdEditRoute
+}
+
+const VehiclesIdRouteChildren: VehiclesIdRouteChildren = {
+  VehiclesIdEditRoute: VehiclesIdEditRoute,
+}
+
+const VehiclesIdRouteWithChildren = VehiclesIdRoute._addFileChildren(
+  VehiclesIdRouteChildren,
+)
+
+export interface RootRouteChildren {
+  IndexRoute: typeof IndexRoute
+  AlertsRoute: typeof AlertsRoute
+  AdminRoute: typeof AdminRouteWithChildren
+  SettingsRoute: typeof SettingsRouteWithChildren
+  GeofencesRoute: typeof GeofencesRoute
+  LoginRoute: typeof LoginRoute
+  RegisterRoute: typeof RegisterRoute
+  ReportsRoute: typeof ReportsRoute
+  ProfileIdRoute: typeof ProfileIdRoute
   VehiclesIdRoute: typeof VehiclesIdRouteWithChildren
   VehiclesNewRoute: typeof VehiclesNewRoute
-  AdminIndexRoute: typeof AdminIndexRoute
   VehiclesIndexRoute: typeof VehiclesIndexRoute
 }
 
@@ -300,6 +364,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AlertsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -316,10 +394,10 @@ declare module '@tanstack/react-router' {
     }
     '/admin/': {
       id: '/admin/'
-      path: '/admin'
+      path: '/'
       fullPath: '/admin/'
       preLoaderRoute: typeof AdminIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AdminRoute
     }
     '/vehicles/new': {
       id: '/vehicles/new'
@@ -337,31 +415,31 @@ declare module '@tanstack/react-router' {
     }
     '/settings/profile': {
       id: '/settings/profile'
-      path: '/settings/profile'
+      path: '/profile'
       fullPath: '/settings/profile'
       preLoaderRoute: typeof SettingsProfileRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof SettingsRoute
     }
     '/settings/notifications': {
       id: '/settings/notifications'
-      path: '/settings/notifications'
+      path: '/notifications'
       fullPath: '/settings/notifications'
       preLoaderRoute: typeof SettingsNotificationsRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof SettingsRoute
     }
     '/settings/appearance': {
       id: '/settings/appearance'
-      path: '/settings/appearance'
+      path: '/appearance'
       fullPath: '/settings/appearance'
       preLoaderRoute: typeof SettingsAppearanceRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof SettingsRoute
     }
     '/settings/account': {
       id: '/settings/account'
-      path: '/settings/account'
+      path: '/account'
       fullPath: '/settings/account'
       preLoaderRoute: typeof SettingsAccountRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof SettingsRoute
     }
     '/profile/$id': {
       id: '/profile/$id'
@@ -372,17 +450,17 @@ declare module '@tanstack/react-router' {
     }
     '/admin/users': {
       id: '/admin/users'
-      path: '/admin/users'
+      path: '/users'
       fullPath: '/admin/users'
       preLoaderRoute: typeof AdminUsersRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AdminRoute
     }
     '/admin/fleet': {
       id: '/admin/fleet'
-      path: '/admin/fleet'
+      path: '/fleet'
       fullPath: '/admin/fleet'
       preLoaderRoute: typeof AdminFleetRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AdminRoute
     }
     '/vehicles/$id/edit': {
       id: '/vehicles/$id/edit'
@@ -394,35 +472,18 @@ declare module '@tanstack/react-router' {
   }
 }
 
-interface VehiclesIdRouteChildren {
-  VehiclesIdEditRoute: typeof VehiclesIdEditRoute
-}
-
-const VehiclesIdRouteChildren: VehiclesIdRouteChildren = {
-  VehiclesIdEditRoute: VehiclesIdEditRoute,
-}
-
-const VehiclesIdRouteWithChildren = VehiclesIdRoute._addFileChildren(
-  VehiclesIdRouteChildren,
-)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AlertsRoute: AlertsRoute,
+  AdminRoute: AdminRouteWithChildren,
+  SettingsRoute: SettingsRouteWithChildren,
   GeofencesRoute: GeofencesRoute,
   LoginRoute: LoginRoute,
   RegisterRoute: RegisterRoute,
   ReportsRoute: ReportsRoute,
-  AdminFleetRoute: AdminFleetRoute,
-  AdminUsersRoute: AdminUsersRoute,
   ProfileIdRoute: ProfileIdRoute,
-  SettingsAccountRoute: SettingsAccountRoute,
-  SettingsAppearanceRoute: SettingsAppearanceRoute,
-  SettingsNotificationsRoute: SettingsNotificationsRoute,
-  SettingsProfileRoute: SettingsProfileRoute,
   VehiclesIdRoute: VehiclesIdRouteWithChildren,
   VehiclesNewRoute: VehiclesNewRoute,
-  AdminIndexRoute: AdminIndexRoute,
   VehiclesIndexRoute: VehiclesIndexRoute,
 }
 export const routeTree = rootRouteImport

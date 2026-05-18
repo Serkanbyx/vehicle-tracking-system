@@ -9,7 +9,6 @@ import { getAdminFleet } from "@/api/admin";
 import type { VehicleType } from "@/api/types";
 import { bulkActivate } from "@/api/vehicles";
 import { StatusBadge } from "@/components/common";
-import { requireAdmin } from "@/components/guards";
 import { Badge, Button, Input, Select, Switch } from "@/components/ui";
 import { useDebounce } from "@/hooks/use-debounce";
 
@@ -21,7 +20,6 @@ interface FleetSearch {
 }
 
 export const Route = createFileRoute("/admin/fleet")({
-  beforeLoad: requireAdmin,
   validateSearch: (raw: Record<string, unknown>): FleetSearch => ({
     type: typeof raw.type === "string" ? raw.type : undefined,
     status: typeof raw.status === "string" ? raw.status : undefined,
