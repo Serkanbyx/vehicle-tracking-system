@@ -85,7 +85,18 @@ export class GeofencesService {
 
     qb.orderBy("g.createdAt", "DESC");
 
-    return qb.getMany();
+    const page = query.page ?? 1;
+    const limit = query.limit ?? 50;
+    qb.skip((page - 1) * limit).take(limit);
+
+    const [items, total] = await qb.getManyAndCount();
+
+    return {
+      items,
+      page,
+      totalPages: Math.ceil(total / limit) || 1,
+      total,
+    };
   }
 
   async findOne(id: string): Promise<Geofence> {
