@@ -106,14 +106,6 @@ jobs:
         run: npm ci
         working-directory: client
 
-      - name: Run database migrations
-        run: npm run mig:run
-        working-directory: server
-
-      - name: Seed admin user
-        run: npm run seed:admin
-        working-directory: server
-
       - name: Build server
         run: npm run build
         working-directory: server
@@ -124,6 +116,14 @@ jobs:
         env:
           VITE_API_URL: http://localhost:5000/api
           VITE_WS_URL: ws://localhost:5000
+
+      - name: Run database migrations
+        run: npm run mig:run:prod
+        working-directory: server
+
+      - name: Seed admin user
+        run: npm run seed:admin:prod
+        working-directory: server
 
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
