@@ -48,7 +48,7 @@ async function bootstrap() {
       "Fleet visibility API with live GPS updates, geofences, alerts, trips, exports, and role-based access control.",
     )
     .setVersion(process.env.npm_package_version || "0.0.1")
-    .setContact("Serkanby", "https://serkanbayraktar.com/", undefined)
+    .setContact("Serkanby", "https://serkanbayraktar.com/", "")
     .addBearerAuth({ type: "http", scheme: "bearer", bearerFormat: "JWT" }, "JWT")
     .addCookieAuth("refreshToken", { type: "apiKey", in: "cookie" }, "RefreshCookie")
     .build();
