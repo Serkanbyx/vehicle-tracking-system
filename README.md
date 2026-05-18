@@ -309,4 +309,4 @@ See **[docs/build-guide.md](docs/build-guide.md) — STEP 86** for production de
 
 ## License
 
-MIT © Open source template — adjust the copyright line for your organization.
+[PolyForm Noncommercial 1.0.0](LICENSE) © 2026 Serkan Bayraktar
