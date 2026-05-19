@@ -22,7 +22,6 @@
     "seed:admin": "ts-node src/scripts/seed-admin.ts",
     "seed:admin:prod": "node dist/scripts/seed-admin.js",
     "seed:test": "ts-node src/scripts/seed-test.ts",
-    "seed:test:prod": "node dist/scripts/seed-test.js",
     "seed:all": "npm run seed:admin && npm run seed:test",
     "simulate": "ts-node src/scripts/gps-simulator.ts",
     "test": "vitest run",
