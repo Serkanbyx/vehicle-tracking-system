@@ -199,9 +199,8 @@ flowchart LR
 
 - **TypeScript 5** — Static type checking across the full stack
 - **Vitest** — Fast unit and integration testing
-- **Playwright** — End-to-end browser testing
 - **Biome** — Fast linter and formatter (replaces ESLint + Prettier)
-- **GitHub Actions CI** — Automated lint, test, and E2E pipeline
+- **GitHub Actions CI** — Automated lint and test pipeline
 
 ---
 
@@ -558,7 +557,6 @@ client/
 │   ├── instrumentation.ts   # Sentry init
 │   ├── main.tsx             # entry point
 │   └── router.tsx           # TanStack Router instance
-├── e2e/                     # Playwright specs (auth, vehicle-crud, geofence, export, admin, settings, simulator)
 ├── vercel.json              # SPA rewrite rules
 ├── .env.example
 └── package.json
@@ -578,7 +576,7 @@ s5.2_Vehicle-Tracking-System/
 ├── assets/
 │   └── screenshots/         # README screenshot assets
 ├── .github/
-│   ├── workflows/ci.yml     # lint → test → E2E pipeline
+│   ├── workflows/ci.yml     # lint → test pipeline
 │   ├── ISSUE_TEMPLATE/      # bug report, feature request, config
 │   ├── PULL_REQUEST_TEMPLATE.md
 │   ├── CONTRIBUTING.md
@@ -703,7 +701,7 @@ cd server && npm run simulate
 - ✅ History playback with timeline player
 - ✅ Dark mode and user preference persistence
 - ✅ Sentry error tracking and structured logging with PII redaction
-- ✅ GitHub Actions CI pipeline (lint → test → E2E)
+- ✅ GitHub Actions CI pipeline (lint → test)
 - ✅ Configurable GPS simulator for development
 
 ### Future Features
